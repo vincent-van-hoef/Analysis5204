@@ -16,7 +16,6 @@
 #'   \item{group}{Group membership}
 #'   \item{creatinine}{LEvels of creatinine}
 #'   \item{ckd_epi}{Measure for kidney activity}
-#'   ...
 #' }
 #' @source Delivered by Johanna
 "plasma_metadata"

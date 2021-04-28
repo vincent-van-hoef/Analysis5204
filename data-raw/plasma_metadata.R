@@ -1,29 +1,29 @@
 ## code to prepare `plasma_metadata` dataset goes here
 
 # Create a list of the separate "blocks" of metadata in the raw data excel file
-if (!file.exists("data-raw/210303_Vasculitis.xlsx")) {
+if (!file.exists(system.file("extdata", "210303_Vasculitis.xlsx", package = "Analysis5204"))) {
   stop("Raw data seems to be missing from the data-raw folder!")
 }
 
 # Put original data file in data-raw
-raw <- 'data-raw/210303_Vasculitis.xlsx'
+raw <- system.file("extdata", "210303_Vasculitis.xlsx", package = "Analysis5204")
 
-active_disease <- readxl::read_excel('data-raw/210303_Vasculitis.xlsx',
+active_disease <- readxl::read_excel(raw,
                           sheet = "Plasma",
                           range = "A3:M72",
                           col_names = TRUE)
 
-healthy_controls <- readxl::read_excel('data-raw/210303_Vasculitis.xlsx',
+healthy_controls <- readxl::read_excel(raw,
                                      sheet = "Plasma",
                                      range = "O3:V141",
                                      col_names = TRUE)
 
-aav_remission <- readxl::read_excel('data-raw/210303_Vasculitis.xlsx',
+aav_remission <- readxl::read_excel(raw,
                                        sheet = "Plasma",
                                        range = "X3:AG48",
                                        col_names = TRUE)
 
-disease_controls <- readxl::read_excel('data-raw/210303_Vasculitis.xlsx',
+disease_controls <- readxl::read_excel(raw,
                                      sheet = "Plasma",
                                      range = "AI3:AS50",
                                      col_names = TRUE)
