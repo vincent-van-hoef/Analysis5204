@@ -12,12 +12,20 @@ A data frame with 95 rows and 19 variables:
 \item{birth_date}{date of birth}
 \item{age}{age of patient at sampling date}
 \item{sex}{gender; 1 for male, 0 for female}
-\item{Diagnosis}{diagnosis; 1 for GPA, 0 for MPA}
+\item{diagnosis}{diagnosis; 1 for GPA, 0 for MPA}
 \item{pr3-anca}{Presence of pr3 auto-antibody}
 \item{mpo-anca}{Presence of mpo auto-antibody}
 \item{group}{Group membership}
 \item{creatinine}{Levels of creatinine}
-\item{ckd_epi}{Measure for kidney activity}
+\item{ckd-epi}{Measure for kidney activity}
+\item{esr}{unknown}
+\item{match_case}{matching case}
+\item{match_set}{matching set}
+\item{sr}{unknown}
+\item{das28}{unknown}
+\item{cortisone}{unknown}
+\item{crp}{unknown}
+\item{disease}{disease type}
 }
 }
 \source{
