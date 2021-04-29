@@ -5,7 +5,7 @@
 \alias{plasma_metadata}
 \title{Clinical data of all the plasma samples}
 \format{
-A data frame with 299 rows and 19 variables:
+A data frame with 298 rows and 19 variables:
 \describe{
 \item{id}{ID code; unique for each sample}
 \item{sampling_date}{date of sampling}
@@ -37,5 +37,6 @@ plasma_metadata
 \description{
 A dataset containing the metadata and clinical data of the plasma samples.
 All samples have been put together in one data frame and the dates have been made uniform.
+Sample id have been lower cased and spaces removed. One sample did not have a counterpart in the data and was removed ("lun1065")
 }
 \keyword{datasets}

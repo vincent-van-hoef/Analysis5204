@@ -69,6 +69,12 @@ serum_metadata$birth_date[grep("^[0-9]{5}$", serum_metadata$birth_date)] <- as.c
 serum_metadata$birth_date[grep("^[0-9]{4}$", serum_metadata$birth_date)] <- as.character(lubridate::ymd(as.numeric(serum_metadata$birth_date[grep("^[0-9]{4}$", serum_metadata$birth_date)]), truncated = 2L))
 serum_metadata$birth_date <- lubridate::parse_date_time(serum_metadata$birth_date, orders = c("ymd", "y"))
 
+# Clean id
+serum_metadata$id <- tolower(serum_metadata$id)
+serum_metadata$id <- gsub(" ", "", serum_metadata$id)
+
+# Remove no counterpart in data
+serum_metadata <- serum_metadata[!serum_metadata$id %in% c("lin113", "sle_121/a", "sle_156/a"),]
 
 usethis::use_data(serum_metadata, overwrite = TRUE)
 

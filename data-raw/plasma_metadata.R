@@ -73,5 +73,12 @@ plasma_metadata$birth_date[grep("^[0-9]{5}$", plasma_metadata$birth_date)] <- as
 plasma_metadata$birth_date[grep("^[0-9]{4}$", plasma_metadata$birth_date)] <- as.character(lubridate::ymd(as.numeric(plasma_metadata$birth_date[grep("^[0-9]{4}$", plasma_metadata$birth_date)]), truncated = 2L))
 plasma_metadata$birth_date <- lubridate::parse_date_time(plasma_metadata$birth_date, orders = c("ymd", "y"))
 
+# Clean id
+plasma_metadata$id <- tolower(plasma_metadata$id)
+plasma_metadata$id <- gsub(" ", "", plasma_metadata$id)
+plasma_metadata$id <- gsub("!", "1", plasma_metadata$id)
+
+# Remove no counterpart in data
+plasma_metadata <- plasma_metadata[!plasma_metadata$id == "lun1065",]
 
 usethis::use_data(plasma_metadata, overwrite = TRUE)

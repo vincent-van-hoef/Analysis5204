@@ -5,7 +5,7 @@
 \alias{serum_metadata}
 \title{Clinical data of all the serum samples}
 \format{
-A data frame with 95 rows and 19 variables:
+A data frame with 92 rows and 19 variables:
 \describe{
 \item{id}{ID code; unique for each sample}
 \item{sampling_date}{date of sampling}
@@ -37,5 +37,6 @@ serum_metadata
 \description{
 A dataset containing the metadata and clinical data of the serum samples.
 All samples have been put together in one data frame and the dates have been made uniform.
+Sample id have been lower cased and spaces removed. Three samples did not have a counterpart in the data and were removed.
 }
 \keyword{datasets}
