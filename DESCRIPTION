@@ -14,6 +14,8 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports: 
@@ -21,8 +23,11 @@ Imports:
     dplyr,
     lubridate,
     data.table,
-    targets
+    targets,
+    ggplot2,
+    OlinkAnalyze
 Depends: 
     R (>= 2.10)
 URL: https://github.com/vincent-van-hoef/Analysis5204
 BugReports: https://github.com/vincent-van-hoef/Analysis5204/issues
+VignetteBuilder: knitr
