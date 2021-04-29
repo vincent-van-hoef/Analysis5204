@@ -1,12 +1,12 @@
 ## code to prepare `serum_metadata` dataset goes here
 
-# Create a list of the separate "blocks" of metadata in the raw data excel file
-if (!file.exists(system.file("extdata", "210303_Vasculitis.xlsx", package = "Analysis5204"))) {
-  stop("Raw data seems to be missing from the data-raw folder!")
-}
-
 # Put original data file in data-raw
-raw <- system.file("extdata", "210303_Vasculitis.xlsx", package = "Analysis5204")
+raw <- "inst/extdata/210303_Vasculitis.xlsx"
+
+# Create a list of the separate "blocks" of metadata in the raw data excel file
+if (!file.exists(raw)) {
+  stop("Raw data seems to be missing from the extdata folder!")
+}
 
 active_disease <- readxl::read_excel(raw,
                                      sheet = "Serum",
