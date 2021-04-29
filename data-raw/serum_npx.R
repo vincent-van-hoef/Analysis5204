@@ -1,6 +1,6 @@
 ## code to prepare `serum_npx` dataset goes here
 
-serum_npx <- OlinkAnalyze::read_NPX("inst/extdata/Biomarkörer_vid_ANCA_serum_NPX.xlsx")
+serum_npx <- OlinkAnalyze::read_NPX("./inst/extdata/Biomarkorer_vid_ANCA_serum_NPX.xlsx")
 
 # Match id to metdata
 serum_npx$SampleID <- tolower(serum_npx$SampleID)
