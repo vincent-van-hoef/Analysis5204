@@ -1,6 +1,6 @@
 ## code to prepare `plasma_npx` dataset goes here
 
-plasma_npx <- OlinkAnalyze::read_NPX("./inst/extdata/Biomarkorer_vid_ANCA_plasma_NPX.xlsxx")
+plasma_npx <- OlinkAnalyze::read_NPX("./inst/extdata/Biomarkorer_vid_ANCA_plasma_NPX.xlsx")
 
 # Match id to metdata
 plasma_npx$SampleID <- tolower(plasma_npx$SampleID)
