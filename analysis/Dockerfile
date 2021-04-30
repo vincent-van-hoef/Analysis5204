@@ -6,6 +6,9 @@ RUN apt-get update \
   && apt-get install -y \
     git \
     wget
+
+ARG CACHE_DATE=2021-01-01
+
 RUN . /etc/environment \
   && R -e 'devtools::install_github("Olink-Proteomics/OlinkRPackage/OlinkAnalyze")' \
   && R -e 'devtools::install_github("vincent-van-hoef/Analysis5204", dep=TRUE)'

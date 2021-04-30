@@ -21,7 +21,7 @@ olink_dist(npx, panel, filename, width = 7, height = 7)
 distance plot
 }
 \description{
-Create an Distance plot
+Create a Distance plot
 }
 \details{
 DETAILS

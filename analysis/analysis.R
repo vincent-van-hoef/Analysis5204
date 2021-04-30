@@ -1,7 +1,11 @@
 library("Analysis5204")
 library("ggplot2")
 
-# Create a Results directory in the top directory
-dir.create("Results/")
+# Raw data files are loaded automaticaly when loading the Analysis5204 package.
 
-olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", "Results/test.png")
+# Create a Results directory in the top directory
+plasma_qc_dir <- "Results/Plasma/QC/"
+dir.create(plasma_qc_dir, recursive = TRUE)
+
+olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", paste0(plasma_qc_dir, "plasma_CVIII_dist.png"))
+olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_dist.png"))
