@@ -12,18 +12,10 @@ combine an R package structure with a containerized environment.
 
 ## Installation
 
-You can install the released version of Analysis5204 from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("Analysis5204")
-```
-
-This will load the datasets into the global environment. These datasets
-have been preprocessed from the raw data. The code used to do this is
-contained in the [data-raw](data-raw) folder.
-
-And the development version from [GitHub](https://github.com/) with:
+This will load the datasets for plasma and serum (NPX and metadata) into
+the global environment. These datasets have been preprocessed from the
+raw data. The code used to do this is contained in the
+[data-raw](data-raw) folder.
 
 ``` r
 # install.packages("devtools")

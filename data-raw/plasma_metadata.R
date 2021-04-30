@@ -1,4 +1,5 @@
 ## code to prepare `plasma_metadata` dataset goes here
+library("dplyr")
 
 # Put original data file in data-raw
 raw <- "inst/extdata/210303_Vasculitis.xlsx"
