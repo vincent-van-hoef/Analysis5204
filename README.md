@@ -6,7 +6,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of Analysis5204 is to …
+The goal of Analysis5204 is to provide the code and data of the analysis
+\#5204. Besides the resulting analysis, it is also an experiment to
+combine an R package structure with a containerized environment.
 
 ## Installation
 
@@ -16,6 +18,10 @@ You can install the released version of Analysis5204 from
 ``` r
 install.packages("Analysis5204")
 ```
+
+This will load the datasets into the global environment. These datasets
+have been preprocessed from the raw data. The code used to do this is
+contained in the [data-raw](data-raw) folder.
 
 And the development version from [GitHub](https://github.com/) with:
 
@@ -30,6 +36,14 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(Analysis5204)
+#> Warning: replacing previous import 'car::recode' by 'dplyr::recode' when loading
+#> 'OlinkAnalyze'
+#> Registered S3 methods overwritten by 'lme4':
+#>   method                          from
+#>   cooks.distance.influence.merMod car 
+#>   influence.merMod                car 
+#>   dfbeta.influence.merMod         car 
+#>   dfbetas.influence.merMod        car
 ## basic example code
 ```
 
