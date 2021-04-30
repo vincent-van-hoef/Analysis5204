@@ -25,7 +25,7 @@ olink_dist <- function(npx, panel, filename, width = 7, height = 7) {
   scale_fill_manual(values=c("green", "red")) +
   theme(text = element_text(size=6),
         axis.text.x = element_text(angle = 90, vjust = 0.5))
-  ggsave(paste0("analysis/", filename), width = width, height = height)
+  ggsave(filename, width = width, height = height)
 }
 
 
