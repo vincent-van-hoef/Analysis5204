@@ -1,5 +1,5 @@
 #' @title Olink Dist Plot
-#' @description Create an Distance plot
+#' @description Create a Distance plot
 #' @param npx NPX dataset (output from OlinkAnalyze::read_NPX)
 #' @param panel Panel Name
 #' @param filename filename, the suffix will determine the filetype

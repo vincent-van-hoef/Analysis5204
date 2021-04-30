@@ -5,6 +5,7 @@
 .DS_Store
 inst/doc
 analysis/Results
+analysis/analysis.tex
 analysis/.local
 .local
 analysis/.config
