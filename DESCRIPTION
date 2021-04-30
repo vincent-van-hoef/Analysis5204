@@ -23,7 +23,6 @@ Imports:
     dplyr,
     lubridate,
     data.table,
-    targets,
     ggplot2,
     OlinkAnalyze
 Depends: 
