@@ -9,6 +9,3 @@ RUN apt-get update \
 RUN . /etc/environment \
   && R -e 'devtools::install_github("Olink-Proteomics/OlinkRPackage/OlinkAnalyze")' \
   && R -e 'devtools::install_github("vincent-van-hoef/Analysis5204", dep=TRUE)'
-
-COPY . /Analysis5204
-WORKDIR /Analysis5204

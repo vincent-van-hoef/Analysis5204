@@ -5,3 +5,7 @@
 .DS_Store
 inst/doc
 analysis/Results
+analysis/.local
+.local
+analysis/.config
+.config
