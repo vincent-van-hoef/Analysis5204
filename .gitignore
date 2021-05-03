@@ -5,7 +5,7 @@
 .httr-oauth
 .DS_Store
 inst/doc
-analysis/Results
+Results
 analysis/analysis.tex
 analysis/.local
 .local
