@@ -24,7 +24,8 @@ Imports:
     lubridate,
     data.table,
     ggplot2,
-    OlinkAnalyze
+    OlinkAnalyze,
+    SummarizedExperiment
 Depends: 
     R (>= 2.10)
 URL: https://github.com/vincent-van-hoef/Analysis5204
