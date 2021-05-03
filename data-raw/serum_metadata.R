@@ -2,7 +2,7 @@
 library("dplyr")
 
 # Put original data file in data-raw
-raw <- "inst/extdata/210303_Vasculitis.xlsx"
+raw <- "inst/extdata/210429_Vasculitis.xlsx"
 
 # Create a list of the separate "blocks" of metadata in the raw data excel file
 if (!file.exists(raw)) {

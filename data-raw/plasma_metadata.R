@@ -2,7 +2,7 @@
 library("dplyr")
 
 # Put original data file in data-raw
-raw <- "inst/extdata/210303_Vasculitis.xlsx"
+raw <- "inst/extdata/210429_Vasculitis.xlsx"
 
 # Create a list of the separate "blocks" of metadata in the raw data excel file
 if (!file.exists(raw)) {
@@ -28,15 +28,14 @@ disease_controls <- readxl::read_excel(raw,
                                      sheet = "Plasma",
                                      range = "AI3:AS50",
                                      col_names = TRUE)
+disease_controls <- disease_controls[!disease_controls$ID %in% c("UMU78", "IgA 2156"),]
 RA <- split(disease_controls, disease_controls$Disease)$RA
-IgA_nephritis <- split(disease_controls, disease_controls$Disease)$`IgA nephritis`
 SLE_nephritis <- split(disease_controls, disease_controls$Disease)$`SLE nephritis`
 
 plasmaList <- list("active_disease" = active_disease,
                    "healthy_controls" = healthy_controls,
                    "aav_remission" = aav_remission,
                    "RA" = RA,
-                   "IgA_nephritis" = IgA_nephritis,
                    "SLE_nephritis" = SLE_nephritis)
 
 ## Rename all columns
