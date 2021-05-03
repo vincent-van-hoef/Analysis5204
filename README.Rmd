@@ -22,33 +22,26 @@ The goal of Analysis5204 is to provide the code and data of the analysis #5204. 
 
 ## Installation
 
-This will load the datasets for plasma and serum (NPX and metadata) into the global environment. These datasets have been preprocessed from the raw data. The code used to do this is contained in the [data-raw](data-raw) folder.
+This will just load the datasets for plasma and serum (NPX and metadata) and helper functions into the global environment. These datasets have been preprocessed from the raw data. The code used to do this is contained in the [data-raw](data-raw) folder.
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("vincent-van-hoef/Analysis5204")
 ```
-## Example
 
-This is a basic example which shows you how to solve a common problem:
+If you want to rerun the analysis (or modify it), first clone the repo, then build the environment and access it. The code can then be accessed from the analysis folder in the rstudio instance packaged in the environment
 
-```{r example}
-library(Analysis5204)
-## basic example code
+```{bash, eval=FALSE, engine="sh"}
+git clone https://github.com/vincent-van-hoef/Analysis5204.git
+cd analysis
+docker build --build-arg CACHE_DATE=$(date +%Y-%m-%d:%H:%M:%S) --rm -t analysis5204:0.1 .
+cd ..
+docker run --rm -ti -p 8787:8787 -e PASSWORD=admin -v $(pwd):/home/rstudio analysis5204:0.1
+
+## open localhost in browser
+localhost:8787:8787
+
+## user: rstudio
+## password: admin
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
