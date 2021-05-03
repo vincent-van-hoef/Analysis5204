@@ -7,6 +7,8 @@ RUN apt-get update \
     git \
     wget
 
+RUN installGithub.r Olink-Proteomics/OlinkRPackage/OlinkAnalyze && rm -rf /tmp/downloaded_packages/
+
 ARG CACHE_DATE=2021-01-01
 
 RUN installGithub.r vincent-van-hoef/Analysis5204 && rm -rf /tmp/downloaded_packages/
