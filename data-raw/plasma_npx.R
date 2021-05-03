@@ -9,6 +9,6 @@ plasma_npx$SampleID <- gsub(" ", "", plasma_npx$SampleID)
 # Remove double sample
 plasma_npx <- plasma_npx[!plasma_npx$SampleID == "lu1082",]
 # Remove no counterpart in metadata
-plasma_npx <- plasma_npx[!plasma_npx$SampleID == "lun1059",]
+plasma_npx <- plasma_npx[!plasma_npx$SampleID %in% c("lun1059", "iga2156", "umu78"),]
 
 usethis::use_data(plasma_npx, overwrite = TRUE)
