@@ -10,4 +10,4 @@ RUN apt-get update \
 ARG CACHE_DATE=2021-01-01
 
 RUN . /etc/environment \
-  && installGithub.r vincent-van-hoef/Analysis5204
+  && installGithub.r -r https://cloud.r-project.org vincent-van-hoef/Analysis5204
