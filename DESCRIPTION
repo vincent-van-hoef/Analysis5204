@@ -27,6 +27,7 @@ Imports:
     OlinkAnalyze
 Depends: 
     R (>= 2.10)
+Remotes: Olink-Proteomics/OlinkRPackage/OlinkAnalyze
 URL: https://github.com/vincent-van-hoef/Analysis5204
 BugReports: https://github.com/vincent-van-hoef/Analysis5204/issues
 VignetteBuilder: knitr

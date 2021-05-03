@@ -10,5 +10,4 @@ RUN apt-get update \
 ARG CACHE_DATE=2021-01-01
 
 RUN . /etc/environment \
-  && R -e 'devtools::install_github("Olink-Proteomics/OlinkRPackage/OlinkAnalyze")' \
-  && R -e 'devtools::install_github("vincent-van-hoef/Analysis5204", dep=TRUE)'
+  && installGithub.r vincent-van-hoef/Analysis5204
