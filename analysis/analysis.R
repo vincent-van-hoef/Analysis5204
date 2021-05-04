@@ -1,13 +1,18 @@
+# Clear global env from earlier session
+rm(list=ls())
+
 library("Analysis5204")
+data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx"), package = "Analysis5204")
 library("ggplot2")
 library("SummarizedExperiment")
 library("pcaExplorer")
+library("emmeans")
 
 # Raw data files are loaded automatically when loading the Analysis5204 package.
 
 # First analyse plasma only
 
-# Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. As seen in the values correlate well between the panels so only the Inflammation data is kept for these proteins.
+# Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. As seen in the values correlate well between the panels so only the Inflammation data is kept for these proteins. Has to been done before making the summarizedExperiment because pivot_wider otherwise fails.
 doubles <- c("MCP-1", "OPG", "uPA")
 plasma_npx <- plasma_npx[!(plasma_npx$Assay %in% doubles & plasma_npx$Panel == "Olink CARDIOVASCULAR III"),]
 
@@ -20,7 +25,8 @@ npx <- plasma_npx %>%
 metadata <- plasma_metadata %>% 
   as.data.frame() %>% 
   tibble::column_to_rownames("id")
-plasma <- SummarizedExperiment(assays = list(npx = npx), colData = metadata)
+# Make sure order of assays columns and colData ros is the same!!
+plasma <- SummarizedExperiment(assays = list(npx = npx), colData = metadata[colnames(npx),])
 
 # correct classes
 colData(plasma)$age <- as.numeric(colData(plasma)$age)
@@ -28,6 +34,7 @@ colData(plasma)$crp <- as.numeric(colData(plasma)$crp)
 colData(plasma)$sr <- as.numeric(colData(plasma)$sr)
 colData(plasma)$esr <- as.numeric(colData(plasma)$esr)
 colData(plasma)$das28 <- as.numeric(colData(plasma)$das28)
+colData(plasma)$time_in_freezer <- as.numeric(colData(plasma)$time_in_freezer)
 colData(plasma)$sex <- as.factor(colData(plasma)$sex)
 colData(plasma)$cortisone <- as.factor(colData(plasma)$cortisone)
 colData(plasma)$diagnosis <- as.factor(colData(plasma)$diagnosis)
@@ -52,11 +59,55 @@ plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622")]
 # Impute 1 NA assays - better than throwing all sample away
 assay(plasma) <-  apply(assay(plasma), 2, function(x) ifelse(is.na(x), median(x, na.rm=T), x))
 
-# PCA
+# PCA - centering, no scaling
 pcaplot(plasma, 
         intgroup = "group", 
         ellipse = FALSE, 
         text_labels = FALSE, 
-        ntop = 50, 
+        ntop = 100, 
         pcX = 1, 
         pcY = 2)
+pcaobj_plasma <- prcomp(t(assay(plasma)))
+
+#Screeplot
+pcascree(pcaobj_plasma,type="pev",
+         title="Proportion of explained proportion of variance - plasma",
+         pc_nr = 20)
+
+# Correlate PCs
+res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
+plotPCcorrs(res_pca_plasma)
+
+# hi loadings
+hi_loadings(pcaobj_plasma,topN = 10)
+
+# Anova
+# Create a Results directory in the top directory 
+plasma_uni_dir <- "Results/Plasma/Univariate/"
+dir.create(plasma_uni_dir, recursive = TRUE)
+#Create olink-function compatible dataset; reduced to the summarizedExperiment samples
+obj <- plasma_npx %>% 
+  filter(SampleID %in% colnames(plasma)) %>% 
+  left_join(tibble::rownames_to_column(as.data.frame(colData(plasma))), by = c("SampleID" = "rowname"))
+
+ph_anova <- OlinkAnalyze::olink_anova_posthoc(df = obj, 
+                                              variable = "group", 
+                                              covariates = c("age", "ckd_epi"),
+                                              effect = "group",
+                                              verbose = FALSE)
+
+for(comp in unique(ph_anova$contrast)){
+  
+compname <- gsub(" - ", "_vs_", comp)
+dir.create(paste0(plasma_uni_dir, compname, "/"), recursive = TRUE)
+
+df_sub <- ph_anova %>% filter(contrast == comp)
+p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
+  geom_point() +
+  geom_hline(yintercept = -log10(0.05)) + 
+  geom_vline(xintercept = 0) +
+  #xlim(c(-3,3)) +
+  theme_bw()
+ggsave(paste0(plasma_uni_dir, compname, "/", compname, "_volcano_anova_posthoc.pdf"), plot = p1)
+
+}
