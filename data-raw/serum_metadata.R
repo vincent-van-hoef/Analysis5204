@@ -74,6 +74,9 @@ serum_metadata$birth_date <- lubridate::parse_date_time(serum_metadata$birth_dat
 serum_metadata$id <- tolower(serum_metadata$id)
 serum_metadata$id <- gsub(" ", "", serum_metadata$id)
 
+# Add time in freezer
+serum_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(serum_metadata$sampling_date)), "months")
+
 # Remove no counterpart in data
 serum_metadata <- serum_metadata[!serum_metadata$id %in% c("lin113", "sle_121/a", "sle_156/a"),]
 

@@ -78,6 +78,9 @@ plasma_metadata$id <- tolower(plasma_metadata$id)
 plasma_metadata$id <- gsub(" ", "", plasma_metadata$id)
 plasma_metadata$id <- gsub("!", "1", plasma_metadata$id)
 
+# Add time in freezer
+plasma_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(plasma_metadata$sampling_date)), "months")
+
 # Remove no counterpart in data
 plasma_metadata <- plasma_metadata[!plasma_metadata$id == "lun1065",]
 
