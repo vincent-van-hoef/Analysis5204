@@ -1,5 +1,6 @@
 # Clear global env from earlier session
 rm(list=ls())
+unlink("Results", recursive=TRUE)
 
 library("Analysis5204")
 data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx"), package = "Analysis5204")
@@ -48,8 +49,8 @@ colData(plasma)$`mpo-anca` <- as.factor(colData(plasma)$`mpo-anca`)
 plasma_qc_dir <- "Results/Plasma/QC/"
 dir.create(plasma_qc_dir, recursive = TRUE)
 
-olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", paste0(plasma_qc_dir, "plasma_CVIII_dist.png"))
-olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_dist.png"))
+olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", paste0(plasma_qc_dir, "plasma_CVIII_dist.png"), width = 12)
+olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_dist.png"), width = 12)
 
 plasma_qc <- OlinkAnalyze::olink_qc_plot(plasma_npx)
 ggsave(paste0(plasma_qc_dir, "plasma_qc.png"), plot = plasma_qc)
@@ -77,16 +78,12 @@ pcascree(pcaobj_plasma,type="pev",
 
 # Correlate PCs
 res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
-#res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi")])
 plotPCcorrs(res_pca_plasma)
 
 # hi loadings
 hi_loadings(pcaobj_plasma,topN = 10)
 
 # Anova
-# Create a Results directory in the top directory 
-plasma_uni_dir <- "Results/Plasma/Univariate/"
-dir.create(plasma_uni_dir, recursive = TRUE)
 #Create olink-function compatible dataset; reduced to the summarizedExperiment samples
 obj <- plasma_npx %>% 
   filter(SampleID %in% colnames(plasma)) %>% 
@@ -101,7 +98,9 @@ ph_anova <- OlinkAnalyze::olink_anova_posthoc(df = obj,
 for(comp in unique(ph_anova$contrast)){
   
 compname <- gsub(" - ", "_vs_", comp)
-dir.create(paste0(plasma_uni_dir, compname, "/"), recursive = TRUE)
+# Create a Results directory in the top directory 
+plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
+dir.create(plasma_uni_dir, recursive = TRUE)
 
 df_sub <- ph_anova %>% filter(contrast == comp)
 p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
@@ -110,7 +109,7 @@ p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
   geom_vline(xintercept = 0) +
   #xlim(c(-3,3)) +
   theme_bw()
-ggsave(paste0(plasma_uni_dir, compname, "/", compname, "_volcano_anova_posthoc.pdf"), plot = p1)
+ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
 
 tab <- df_sub %>%
   as.data.frame() %>%
@@ -118,14 +117,135 @@ tab <- df_sub %>%
   dplyr::slice_head(n=15) %>%
   gt::gt() %>%
   gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-gt::gtsave(tab, paste0(plasma_uni_dir, compname, "/", compname, "_Top15_table.pdf"))
+gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
 
-openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "/", compname, "_anova_posthoc_results.xlsx"))
+openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
 
 }
 
-## Almost equivalent to anova approach
-# stat <- obj %>% 
-# filter(Assay == "IL6") 
-# mymod <- glm(NPX ~ age + ckd_epi + group, data = stat)
-# summary(multicomp::glht(mymod, mcp(group)))
+# GPA - MPA
+gpa_mpa <- obj %>% 
+  filter(diagnosis %in% c("0", "1")) %>%
+  mutate(diagnosis = recode_factor(diagnosis, `0` = "MPA", `1` = "GPA")) %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "diagnosis", 
+                                              covariates = c("age", "ckd_epi"),
+                                              effect = "diagnosis",
+                                              verbose = FALSE)
+
+for(comp in unique(gpa_mpa$contrast)){
+  
+  compname <- gsub(" - ", "_vs_", comp)
+  # Create a Results directory in the top directory 
+  plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
+  dir.create(plasma_uni_dir, recursive = TRUE)
+  
+  df_sub <- gpa_mpa %>% filter(contrast == comp)
+  p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(0.05)) + 
+    geom_vline(xintercept = 0) +
+    #xlim(c(-3,3)) +
+    theme_bw()
+  ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
+  
+  tab <- df_sub %>%
+    as.data.frame() %>%
+    dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
+    dplyr::slice_head(n=15) %>%
+    gt::gt() %>%
+    gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
+  gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
+  
+  openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
+  
+}
+
+# pr3 - mpo
+pr3_mpo <- obj %>%
+  mutate(abs = dplyr::case_when(
+    pr3.anca == 1 ~ "PR3_pos", 
+    mpo.anca == 1 ~ "MPO_pos")) %>%
+  filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "abs", 
+                                    covariates = c("age", "ckd_epi"),
+                                    effect = "abs",
+                                    verbose = FALSE)
+
+for(comp in unique(pr3_mpo$contrast)){
+  
+  compname <- gsub(" - ", "_vs_", comp)
+  # Create a Results directory in the top directory 
+  plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
+  dir.create(plasma_uni_dir, recursive = TRUE)
+  
+  df_sub <- pr3_mpo %>% filter(contrast == comp)
+  p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(0.05)) + 
+    geom_vline(xintercept = 0) +
+    #xlim(c(-3,3)) +
+    theme_bw()
+  ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
+  
+  tab <- df_sub %>%
+    as.data.frame() %>%
+    dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
+    dplyr::slice_head(n=15) %>%
+    gt::gt() %>%
+    gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
+  gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
+  
+  openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
+  
+}
+
+
+# Create a Correlation directory in the top directory 
+for(marker in c("crp", "sr")){
+plasma_marker_corr_dir <- paste0("Results/Plasma/Correlation/", marker, "/")
+dir.create(plasma_marker_corr_dir, recursive = TRUE)
+
+# Calculate the pearson correlation
+pearson <- obj %>% 
+  filter(group == "active_disease") %>% 
+  group_by(Assay) %>%
+  do(broom::tidy(cor.test(.$NPX, .[[marker]]))) %>%
+  select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+  arrange(p.value)
+openxlsx::write.xlsx(pearson, paste0(plasma_marker_corr_dir, marker, "_pearson_correlation.xlsx"))
+# PLot the linear regression and R squared value per protein
+plots <- obj %>% 
+  filter(group == "active_disease") %>% 
+  group_by(Assay) %>%
+  group_modify(~tibble(plots=list(
+    ggplot(.) +
+      aes_string(x = "NPX", y = marker) +
+      geom_point() +
+      geom_smooth(method = "lm") +
+      theme_bw() +
+      ggtitle(.y[[1]]) +
+      stat_cor(aes(label = ..rr.label..), color = "red", geom = "label")
+    )))
+plasma_marker_corr_plot_dir <- paste0(plasma_marker_corr_dir, "regression_plots/")
+dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
+ for(fig in 1:nrow(plots)){
+   ggsave(plot=plots$plots[[fig]], paste0(plasma_marker_corr_plot_dir, plots$Assay[[fig]], "_regression.pdf"))
+   }
+}
+
+
+# Cortisone effect
+# Create a Results directory in the top directory 
+plasma_cortisone_dir <- paste0("Results/Plasma/Cortisone/")
+dir.create(plasma_cortisone_dir, recursive = TRUE)
+obj %>% 
+  filter(group == "active_disease") %>% 
+  filter(cortisone %in% c("0", "1")) %>% 
+  droplevels() %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "cortisone", 
+                                              covariates = c("age", "ckd_epi"),
+                                              effect = "cortisone",
+                                              verbose = FALSE) %>%
+  openxlsx::write.xlsx(paste0(plasma_cortisone_dir, "Cortisone_Effect_Plasma_ActiveAAV.xlsx"))
+
+
