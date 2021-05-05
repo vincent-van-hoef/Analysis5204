@@ -4,6 +4,7 @@ rm(list=ls())
 library("Analysis5204")
 data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx"), package = "Analysis5204")
 library("ggplot2")
+library("dplyr")
 library("SummarizedExperiment")
 library("pcaExplorer")
 library("emmeans")
@@ -117,7 +118,7 @@ tab <- df_sub %>%
   dplyr::slice_head(n=15) %>%
   gt::gt() %>%
   gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-gtsave(tab, paste0(plasma_uni_dir, compname, "/", compname, "_Top15_table.pdf"))
+gt::gtsave(tab, paste0(plasma_uni_dir, compname, "/", compname, "_Top15_table.pdf"))
 
 openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "/", compname, "_anova_posthoc_results.xlsx"))
 
