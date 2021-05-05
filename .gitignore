@@ -11,3 +11,6 @@ analysis/.local
 .local
 analysis/.config
 .config
+bin/
+.cache/
+.wget-hsts

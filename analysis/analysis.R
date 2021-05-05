@@ -76,6 +76,7 @@ pcascree(pcaobj_plasma,type="pev",
 
 # Correlate PCs
 res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
+#res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi")])
 plotPCcorrs(res_pca_plasma)
 
 # hi loadings
@@ -110,4 +111,20 @@ p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
   theme_bw()
 ggsave(paste0(plasma_uni_dir, compname, "/", compname, "_volcano_anova_posthoc.pdf"), plot = p1)
 
+tab <- df_sub %>%
+  as.data.frame() %>%
+  dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
+  dplyr::slice_head(n=15) %>%
+  gt::gt() %>%
+  gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
+gtsave(tab, paste0(plasma_uni_dir, compname, "/", compname, "_Top15_table.pdf"))
+
+openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "/", compname, "_anova_posthoc_results.xlsx"))
+
 }
+
+## Almost equivalent to anova approach
+# stat <- obj %>% 
+# filter(Assay == "IL6") 
+# mymod <- glm(NPX ~ age + ckd_epi + group, data = stat)
+# summary(multicomp::glht(mymod, mcp(group)))
