@@ -29,7 +29,9 @@ Imports:
     emmeans,
     lme4,
     gt,
-    ggpubr
+    ggpubr,
+    clusterProfiler,
+    sinew
 Depends: 
     R (>= 2.10)
 URL: https://github.com/vincent-van-hoef/Analysis5204

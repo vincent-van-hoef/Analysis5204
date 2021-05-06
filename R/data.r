@@ -102,3 +102,13 @@
 #'}
 #' @details DETAILS
 "serum_npx"
+
+#' @title GSEA Gene Set Collection
+#' @description Gene set collection from the Bader Lab, minimal clean up to provide better term names
+#' @format A data frame with 1214439 rows and 2 variables:
+#' \describe{
+#'   \item{\code{term}}{character Gene Set Name}
+#'   \item{\code{gene}}{character Gene} 
+#'}
+#' @details DETAILS
+"gsea_sets"

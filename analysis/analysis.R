@@ -1,24 +1,26 @@
-# Clear global env from earlier session
+# Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
 rm(list=ls())
 unlink("Results", recursive=TRUE)
 
 library("Analysis5204")
-data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx"), package = "Analysis5204")
+data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets"), package = "Analysis5204")
 library("ggplot2")
 library("dplyr")
 library("SummarizedExperiment")
 library("pcaExplorer")
 library("emmeans")
 
-# Raw data files are loaded automatically when loading the Analysis5204 package.
+#################################################################################
+# Raw data files are loaded automatically when loading the Analysis5204 package.#
+#################################################################################
 
-# First analyse plasma only
+# First analyze plasma only
 
 # Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. As seen in the values correlate well between the panels so only the Inflammation data is kept for these proteins. Has to been done before making the summarizedExperiment because pivot_wider otherwise fails.
 doubles <- c("MCP-1", "OPG", "uPA")
 plasma_npx <- plasma_npx[!(plasma_npx$Assay %in% doubles & plasma_npx$Panel == "Olink CARDIOVASCULAR III"),]
 
-# Make a data=metadata object
+# Make a SummarizedExperiment object
 npx <- plasma_npx %>% 
   dplyr::select(SampleID, Assay, NPX) %>% 
   tidyr::pivot_wider(names_from = Assay, values_from = NPX) %>%
@@ -27,7 +29,7 @@ npx <- plasma_npx %>%
 metadata <- plasma_metadata %>% 
   as.data.frame() %>% 
   tibble::column_to_rownames("id")
-# Make sure order of assays columns and colData ros is the same!!
+# Make sure order of assays columns and colData rows is the same!!
 plasma <- SummarizedExperiment(assays = list(npx = npx), colData = metadata[colnames(npx),])
 
 # correct classes
@@ -55,11 +57,11 @@ olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_d
 plasma_qc <- OlinkAnalyze::olink_qc_plot(plasma_npx)
 ggsave(paste0(plasma_qc_dir, "plasma_qc.png"), plot = plasma_qc)
 
-#One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622.
+#One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622).
 plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622")]
 
 # Impute 1 NA assays - better than throwing all sample away
-assay(plasma) <-  apply(assay(plasma), 2, function(x) ifelse(is.na(x), median(x, na.rm=T), x))
+assay(plasma) <- t(apply(assay(plasma), 1, function(x) ifelse(is.na(x), median(x, na.rm=T), x)))
 
 # PCA - centering, no scaling
 pcaplot(plasma, 
@@ -83,31 +85,56 @@ plotPCcorrs(res_pca_plasma)
 # hi loadings
 hi_loadings(pcaobj_plasma,topN = 10)
 
-# Anova
-#Create olink-function compatible dataset; reduced to the summarizedExperiment samples
+#########################
+### Univariate Analysis #
+#########################
+
+#Create olink-function compatible dataset; reduced to the summarizedExperiment samples for the statistical tests
 obj <- plasma_npx %>% 
   filter(SampleID %in% colnames(plasma)) %>% 
   left_join(tibble::rownames_to_column(as.data.frame(colData(plasma))), by = c("SampleID" = "rowname"))
 
-ph_anova <- OlinkAnalyze::olink_anova_posthoc(df = obj, 
+# Group comparisons
+grps <- OlinkAnalyze::olink_anova_posthoc(df = obj, 
                                               variable = "group", 
                                               covariates = c("age", "ckd_epi"),
                                               effect = "group",
                                               verbose = FALSE)
+# GPA - MPA
+gpa_mpa <- obj %>% 
+  filter(diagnosis %in% c("0", "1")) %>%
+  mutate(diagnosis = recode_factor(diagnosis, `0` = "MPA", `1` = "GPA")) %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "diagnosis", 
+                                    covariates = c("age", "ckd_epi"),
+                                    effect = "diagnosis",
+                                    verbose = FALSE)
 
-for(comp in unique(ph_anova$contrast)){
+# pr3 - mpo
+pr3_mpo <- obj %>%
+  mutate(abs = dplyr::case_when(
+    pr3.anca == 1 ~ "PR3_pos", 
+    mpo.anca == 1 ~ "MPO_pos")) %>%
+  filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "abs", 
+                                    covariates = c("age", "ckd_epi"),
+                                    effect = "abs",
+                                    verbose = FALSE)
+
+# Collect all results
+univariate_results <- rbind(grps, gpa_mpa, pr3_mpo)
+
+for(comp in unique(univariate_results$contrast)){
   
-compname <- gsub(" - ", "_vs_", comp)
 # Create a Results directory in the top directory 
+compname <- gsub(" - ", "_vs_", comp)
 plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
 dir.create(plasma_uni_dir, recursive = TRUE)
 
-df_sub <- ph_anova %>% filter(contrast == comp)
+df_sub <- univariate_results %>% filter(contrast == comp)
 p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
   geom_point() +
   geom_hline(yintercept = -log10(0.05)) + 
   geom_vline(xintercept = 0) +
-  #xlim(c(-3,3)) +
   theme_bw()
 ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
 
@@ -121,84 +148,16 @@ gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
 
 openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
 
+# GSEA
+plasma_gsea_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/GSEA/")
+dir.create(plasma_gsea_dir, recursive = TRUE)
+gsea_out <- gsea_olink_run(x=df_sub, gs=gsea_sets, save=TRUE, saveFolder = plasma_gsea_dir, contrastName = compname)
+gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_gsea_dir, nterms = 10, contrastName = compname)
 }
 
-# GPA - MPA
-gpa_mpa <- obj %>% 
-  filter(diagnosis %in% c("0", "1")) %>%
-  mutate(diagnosis = recode_factor(diagnosis, `0` = "MPA", `1` = "GPA")) %>%
-  OlinkAnalyze::olink_anova_posthoc(variable = "diagnosis", 
-                                              covariates = c("age", "ckd_epi"),
-                                              effect = "diagnosis",
-                                              verbose = FALSE)
-
-for(comp in unique(gpa_mpa$contrast)){
-  
-  compname <- gsub(" - ", "_vs_", comp)
-  # Create a Results directory in the top directory 
-  plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
-  dir.create(plasma_uni_dir, recursive = TRUE)
-  
-  df_sub <- gpa_mpa %>% filter(contrast == comp)
-  p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
-    geom_point() +
-    geom_hline(yintercept = -log10(0.05)) + 
-    geom_vline(xintercept = 0) +
-    #xlim(c(-3,3)) +
-    theme_bw()
-  ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
-  
-  tab <- df_sub %>%
-    as.data.frame() %>%
-    dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
-    dplyr::slice_head(n=15) %>%
-    gt::gt() %>%
-    gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-  gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
-  
-  openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
-  
-}
-
-# pr3 - mpo
-pr3_mpo <- obj %>%
-  mutate(abs = dplyr::case_when(
-    pr3.anca == 1 ~ "PR3_pos", 
-    mpo.anca == 1 ~ "MPO_pos")) %>%
-  filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
-  OlinkAnalyze::olink_anova_posthoc(variable = "abs", 
-                                    covariates = c("age", "ckd_epi"),
-                                    effect = "abs",
-                                    verbose = FALSE)
-
-for(comp in unique(pr3_mpo$contrast)){
-  
-  compname <- gsub(" - ", "_vs_", comp)
-  # Create a Results directory in the top directory 
-  plasma_uni_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/")
-  dir.create(plasma_uni_dir, recursive = TRUE)
-  
-  df_sub <- pr3_mpo %>% filter(contrast == comp)
-  p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
-    geom_point() +
-    geom_hline(yintercept = -log10(0.05)) + 
-    geom_vline(xintercept = 0) +
-    #xlim(c(-3,3)) +
-    theme_bw()
-  ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
-  
-  tab <- df_sub %>%
-    as.data.frame() %>%
-    dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
-    dplyr::slice_head(n=15) %>%
-    gt::gt() %>%
-    gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-  gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
-  
-  openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
-  
-}
-
+#############################
+##### Correlation Analysis ##
+#############################
 
 # Create a Correlation directory in the top directory 
 for(marker in c("crp", "sr")){
