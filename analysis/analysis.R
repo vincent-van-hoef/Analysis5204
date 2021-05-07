@@ -240,7 +240,7 @@ perf.plsda <- perf(plsda.res, validation = "Mfold", folds = 5,
 plot(perf.plsda, col = color.mixo(1:3), sd = TRUE, legend.position = "horizontal")
 MyResult.splsda <-splsda(t(assay(opls_obj)), factor(colData(opls_obj)$abs))
 plotIndiv(MyResult.splsda)
-plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0, cex = 2)
+plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0.5, cex = 2)
 vars <- selectVar(MyResult.splsda)
 plotLoadings(MyResult.splsda, contrib = "max", ndisplay = 15, comp = 2)
-#cim(MyResult.splsda)
+

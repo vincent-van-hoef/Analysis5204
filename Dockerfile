@@ -9,7 +9,7 @@ RUN apt-get update \
 
 RUN installGithub.r Olink-Proteomics/OlinkRPackage/OlinkAnalyze && rm -rf /tmp/downloaded_packages/
 
-RUN install2.r BiocManager && /usr/local/lib/R/site-library/littler/examples/installBioc.r pcaExplorer SummarizedExperiment clusterProfiler && rm -rf /tmp/downloaded_packages/
+RUN install2.r BiocManager && /usr/local/lib/R/site-library/littler/examples/installBioc.r pcaExplorer SummarizedExperiment clusterProfiler mixOmics && rm -rf /tmp/downloaded_packages/
 
 RUN wget --no-check-certificate -q -O - https://github.com/wch/webshot/releases/download/v0.3.1/phantomjs-2.1.1-linux-x86_64.tar.bz2 | tar xjC /opt
 RUN ln -s /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/phantomjs
