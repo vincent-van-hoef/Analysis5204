@@ -89,6 +89,10 @@ hi_loadings(pcaobj_plasma,topN = 10)
 ### Univariate Analysis #
 #########################
 
+test <- assay(plasma) %>% t() %>% cbind(colData(plasma) %>% as.data.frame() %>% select(group, age, ckd_epi))
+mod1 <- aov(IL6 ~ age + ckd_epi + group, data = test)
+mod1 %>% emmeans(pairwise ~ "group") %>% purrr::pluck("contrasts")
+
 #Create olink-function compatible dataset; reduced to the summarizedExperiment samples for the statistical tests
 obj <- plasma_npx %>% 
   filter(SampleID %in% colnames(plasma)) %>% 
@@ -111,7 +115,7 @@ gpa_mpa <- obj %>%
 
 # pr3 - mpo
 pr3_mpo <- obj %>%
-  mutate(abs = dplyr::case_when(
+ mutate(abs = dplyr::case_when(
     pr3.anca == 1 ~ "PR3_pos", 
     mpo.anca == 1 ~ "MPO_pos")) %>%
   filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
@@ -208,3 +212,35 @@ obj %>%
   openxlsx::write.xlsx(paste0(plasma_cortisone_dir, "Cortisone_Effect_Plasma_ActiveAAV.xlsx"))
 
 
+########################
+#### Multivariate ######
+########################
+
+opls_obj <- plasma[,plasma$group %in% c("active_disease", "healthy_controls")]
+
+MyResult.splsda <-splsda(t(assay(opls_obj)), factor(colData(opls_obj)$group))
+plotIndiv(MyResult.splsda)
+plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0.8, cex = 2)
+vars <- selectVar(MyResult.splsda)
+plotLoadings(MyResult.splsda, contrib = "max", ndisplay = 15)
+
+testExp <- plasma
+
+
+colData(testExp) <- colData(testExp) %>% 
+  as.data.frame() %>%
+  mutate(abs = dplyr::case_when(
+    pr3.anca == 1 ~ "PR3_pos", 
+    mpo.anca == 1 ~ "MPO_pos")) %>%
+  DataFrame()
+opls_obj <- testExp[,testExp$abs %in% c("PR3_pos", "MPO_pos")] 
+plsda.res <- plsda(t(assay(opls_obj)), factor(colData(opls_obj)$abs), ncomp = 5)
+perf.plsda <- perf(plsda.res, validation = "Mfold", folds = 5, 
+                   progressBar = FALSE, auc = TRUE, nrepeat = 10) 
+plot(perf.plsda, col = color.mixo(1:3), sd = TRUE, legend.position = "horizontal")
+MyResult.splsda <-splsda(t(assay(opls_obj)), factor(colData(opls_obj)$abs))
+plotIndiv(MyResult.splsda)
+plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0, cex = 2)
+vars <- selectVar(MyResult.splsda)
+plotLoadings(MyResult.splsda, contrib = "max", ndisplay = 15, comp = 2)
+#cim(MyResult.splsda)
