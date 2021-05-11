@@ -28,7 +28,11 @@ npx <- plasma_npx %>%
   t()
 metadata <- plasma_metadata %>% 
   as.data.frame() %>% 
-  tibble::column_to_rownames("id")
+  tibble::column_to_rownames("id") %>%
+  mutate(diagnosis = recode_factor(diagnosis, `0` = "MPA", `1` = "GPA")) %>%
+  mutate(abs = dplyr::case_when(
+    `pr3-anca` == 1 ~ "PR3_pos", 
+    `mpo-anca` == 1 ~ "MPO_pos")) 
 # Make sure order of assays columns and colData rows is the same!!
 plasma <- SummarizedExperiment(assays = list(npx = npx), colData = metadata[colnames(npx),])
 
@@ -46,6 +50,7 @@ colData(plasma)$disease <- as.factor(colData(plasma)$disease)
 colData(plasma)$group <- as.factor(colData(plasma)$group)
 colData(plasma)$`pr3-anca` <- as.factor(colData(plasma)$`pr3-anca`)
 colData(plasma)$`mpo-anca` <- as.factor(colData(plasma)$`mpo-anca`)
+colData(plasma)$abs <- as.factor(colData(plasma)$abs)
 
 # Create a Results directory in the top directory 
 plasma_qc_dir <- "Results/Plasma/QC/"
@@ -85,18 +90,53 @@ plotPCcorrs(res_pca_plasma)
 # hi loadings
 hi_loadings(pcaobj_plasma,topN = 10)
 
+
+###########################
+### Heatmap ###############
+###########################
+
+keep <- names(head(sort(apply(assay(plasma), 1, sd), decreasing = TRUE), 100))
+hm_data <- t(scale(t(assay(plasma)[keep,])))
+
+ha <- HeatmapAnnotation(group = colData(plasma)$group, col = list(group = c("healthy_controls" = "green",
+                                                                         "active_disease" = "red",
+                                                                         "aav_remission" = "yellow",
+                                                                         "RA" = "blue",
+                                                                         "SLE_nephritis" = "pink")))
+
+pdf(paste0(plasma_qc_dir, "Heatmap_AllGroups_100_Variable_Prots.pdf"))
+hm <- Heatmap(hm_data, 
+        top_annotation = ha,
+        name = "Z-score",
+        show_column_names = FALSE,
+        row_names_gp = gpar(fontsize = 5),
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        clustering_distance_columns = "euclidean",
+        clustering_method_columns = "complete"
+        )
+print(hm)
+dev.off()
+
 #########################
 ### Univariate Analysis #
 #########################
 
-test <- assay(plasma) %>% t() %>% cbind(colData(plasma) %>% as.data.frame() %>% select(group, age, ckd_epi))
-mod1 <- aov(IL6 ~ age + ckd_epi + group, data = test)
-mod1 %>% emmeans(pairwise ~ "group") %>% purrr::pluck("contrasts")
+#test <- assay(plasma) %>% t() %>% cbind(colData(plasma) %>% as.data.frame() %>% select(group, age, ckd_epi))
+#mod1 <- aov(IL6 ~ age + ckd_epi + group, data = test)
+#mod1 %>% emmeans(pairwise ~ "group") %>% purrr::pluck("contrasts")
 
 #Create olink-function compatible dataset; reduced to the summarizedExperiment samples for the statistical tests
 obj <- plasma_npx %>% 
   filter(SampleID %in% colnames(plasma)) %>% 
   left_join(tibble::rownames_to_column(as.data.frame(colData(plasma))), by = c("SampleID" = "rowname"))
+
+# Collect samplenames for later comparison selecting of names in heatmap and multivar
+sampSel <- obj %>% 
+  dplyr::select(SampleID,group, abs, diagnosis) %>% 
+  distinct() %>% 
+  tidyr::pivot_longer(cols = -SampleID)
+  
 
 # Group comparisons
 grps <- OlinkAnalyze::olink_anova_posthoc(df = obj, 
@@ -106,8 +146,7 @@ grps <- OlinkAnalyze::olink_anova_posthoc(df = obj,
                                               verbose = FALSE)
 # GPA - MPA
 gpa_mpa <- obj %>% 
-  filter(diagnosis %in% c("0", "1")) %>%
-  mutate(diagnosis = recode_factor(diagnosis, `0` = "MPA", `1` = "GPA")) %>%
+  filter(diagnosis %in% c("MPA", "GPA")) %>%
   OlinkAnalyze::olink_anova_posthoc(variable = "diagnosis", 
                                     covariates = c("age", "ckd_epi"),
                                     effect = "diagnosis",
@@ -115,9 +154,6 @@ gpa_mpa <- obj %>%
 
 # pr3 - mpo
 pr3_mpo <- obj %>%
- mutate(abs = dplyr::case_when(
-    pr3.anca == 1 ~ "PR3_pos", 
-    mpo.anca == 1 ~ "MPO_pos")) %>%
   filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
   OlinkAnalyze::olink_anova_posthoc(variable = "abs", 
                                     covariates = c("age", "ckd_epi"),
@@ -157,6 +193,47 @@ plasma_gsea_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Univariate/
 dir.create(plasma_gsea_dir, recursive = TRUE)
 gsea_out <- gsea_olink_run(x=df_sub, gs=gsea_sets, save=TRUE, saveFolder = plasma_gsea_dir, contrastName = compname)
 gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_gsea_dir, nterms = 10, contrastName = compname)
+
+
+# Heatmap
+# collect samples
+hm_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+# Collect prots
+keep_sig <- df_sub %>% dplyr::filter(Adjusted_pval < 0.05) %>% dplyr::pull(Assay)
+# Extract data
+hm_data <- t(scale(t(assay(plasma)[keep_sig,hm_samps ])))
+
+anots <- sampSel %>% 
+  dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% 
+  left_join(data.frame(name=hm_samps), by = c("SampleID" = "name")) %>% 
+  pull(value) %>%
+  droplevels()
+ha <- HeatmapAnnotation(group = anots, col = list(group = c("healthy_controls" = "green",
+                                                            "active_disease" = "red",
+                                                            "aav_remission" = "yellow",
+                                                            "RA" = "blue",
+                                                            "SLE_nephritis" = "pink",
+                                                            "MPO_pos" = "green",
+                                                            "PR3_pos" = "red",
+                                                            "GPA" = "green",
+                                                            "MPA" = "red")))
+
+pdf(paste0(plasma_uni_dir, "Heatmap_Sig_Prots_Prots.pdf"))
+hm <- Heatmap(hm_data, 
+        top_annotation = ha,
+        name = "Z-score",
+        show_column_names = FALSE,
+        row_names_gp = gpar(fontsize = 5),
+        clustering_distance_rows = "euclidean",
+        clustering_method_rows = "complete",
+        clustering_distance_columns = "euclidean",
+        clustering_method_columns = "complete"
+)
+print(hm)
+dev.off()
+
+
+
 }
 
 #############################
@@ -173,7 +250,7 @@ pearson <- obj %>%
   filter(group == "active_disease") %>% 
   group_by(Assay) %>%
   do(broom::tidy(cor.test(.$NPX, .[[marker]]))) %>%
-  select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+  dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
   arrange(p.value)
 openxlsx::write.xlsx(pearson, paste0(plasma_marker_corr_dir, marker, "_pearson_correlation.xlsx"))
 # PLot the linear regression and R squared value per protein
@@ -187,7 +264,7 @@ plots <- obj %>%
       geom_smooth(method = "lm") +
       theme_bw() +
       ggtitle(.y[[1]]) +
-      stat_cor(aes(label = ..rr.label..), color = "red", geom = "label")
+      ggpubr::stat_cor(aes(label = ..rr.label..), color = "red", geom = "label")
     )))
 plasma_marker_corr_plot_dir <- paste0(plasma_marker_corr_dir, "regression_plots/")
 dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
@@ -216,31 +293,54 @@ obj %>%
 #### Multivariate ######
 ########################
 
-opls_obj <- plasma[,plasma$group %in% c("active_disease", "healthy_controls")]
+for(comp in unique(univariate_results$contrast)){
+# Create a Results directory in the top directory 
+compname <- gsub(" - ", "_vs_", comp)
+plasma_multi_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Multivariate/")
+dir.create(plasma_multi_dir, recursive = TRUE)
 
-MyResult.splsda <-splsda(t(assay(opls_obj)), factor(colData(opls_obj)$group))
-plotIndiv(MyResult.splsda)
-plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0.8, cex = 2)
-vars <- selectVar(MyResult.splsda)
-plotLoadings(MyResult.splsda, contrib = "max", ndisplay = 15)
+pls_obj <- plasma[,sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)]
 
-testExp <- plasma
+plsda.res <-splsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
+plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
 
+pdf(paste0(plasma_multi_dir, compname, "_ClassificationError_5comp.pdf"))
+plot(plsda.perf)
+dev.off()
 
-colData(testExp) <- colData(testExp) %>% 
+plotIndiv(plsda.res, comp = c(1:2))
+ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp.pdf"))
+
+openxlsx::write.xlsx(list(loadings=plsda.res$loadings$X, scores=plsda.res$variates$X),
+                     paste0(plasma_multi_dir, compname, "_Loadings_Scores.xlsx"),
+                     row.names=TRUE)
+
+pdf(paste0(plasma_multi_dir, compname, "_Loadings_Comp1_Top15.pdf"))
+plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 1)
+dev.off()
+pdf(paste0(plasma_multi_dir, compname, "_Loadings_Comp2_Top15.pdf"))
+plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 2)
+dev.off()
+
+# Colect 10 highest absolute loadings
+high_c1 <- plsda.res$loadings$X %>%
   as.data.frame() %>%
-  mutate(abs = dplyr::case_when(
-    pr3.anca == 1 ~ "PR3_pos", 
-    mpo.anca == 1 ~ "MPO_pos")) %>%
-  DataFrame()
-opls_obj <- testExp[,testExp$abs %in% c("PR3_pos", "MPO_pos")] 
-plsda.res <- plsda(t(assay(opls_obj)), factor(colData(opls_obj)$abs), ncomp = 5)
-perf.plsda <- perf(plsda.res, validation = "Mfold", folds = 5, 
-                   progressBar = FALSE, auc = TRUE, nrepeat = 10) 
-plot(perf.plsda, col = color.mixo(1:3), sd = TRUE, legend.position = "horizontal")
-MyResult.splsda <-splsda(t(assay(opls_obj)), factor(colData(opls_obj)$abs))
-plotIndiv(MyResult.splsda)
-plotVar(MyResult.splsda, var.names=TRUE, cutoff = 0.5, cex = 2)
-vars <- selectVar(MyResult.splsda)
-plotLoadings(MyResult.splsda, contrib = "max", ndisplay = 15, comp = 2)
+  arrange(-abs(comp1)) %>%
+  head(5) %>% purrr::pluck(rownames)
+high_c2 <- plsda.res$loadings$X %>%
+  as.data.frame() %>%
+  arrange(-abs(comp2)) %>%
+  head(5) %>% purrr::pluck(rownames)
+high_loads <- c(high_c1, high_c2)
 
+
+ind.coord = plsda.res$variates$X[, 1:2]
+var.coord = t(cor(ind.coord, plsda.res$X))[high_loads,1:2]
+bip <- ggplot()+
+  geom_point(data = ind.coord, aes(x=comp1, y=comp2, col = plsda.res$Y))+
+  geom_segment(data = var.coord, aes(x=0,y=0,xend=comp1*10,yend=comp2*10),
+               arrow=arrow(length=unit(0.1,"cm")), color = "#DCDCDC") +
+  theme_bw() +
+  geom_text(data = var.coord, aes(x=comp1*10, y=comp2*10, label=rownames(var.coord)),color="#006400")
+ggsave(paste0(plasma_multi_dir, compname, "_Biplot.pdf"), plot=bip)
+}
