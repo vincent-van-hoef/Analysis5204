@@ -103,12 +103,25 @@
 #' @details DETAILS
 "serum_npx"
 
+#' @title Luminex Data
+#' @description Luminex data for 4 additional proteins; data has been filtered to only include the samples of the olink data
+#' @format A data frame with 294 rows and 5 variables:
+#' \describe{
+#'   \item{\code{Sample.ID}}{character Sample ID, formatting matched to olink sample names}
+#'   \item{\code{CCL18/PARC}}{character pg/ml undiluted sample}
+#'   \item{\code{CA15-3/MUC-1}}{character pg/ml undiluted sample}
+#'   \item{\code{TIMP-1}}{character pg/ml undiluted sample}
+#'   \item{\code{C5a}}{character pg/ml undiluted sample}
+#'}
+#' @details DETAILS
+"lum_dat"
+
 #' @title GSEA Gene Set Collection
 #' @description Gene set collection from the Bader Lab, minimal clean up to provide better term names
 #' @format A data frame with 1214439 rows and 2 variables:
 #' \describe{
 #'   \item{\code{term}}{character Gene Set Name}
-#'   \item{\code{gene}}{character Gene} 
+#'   \item{\code{gene}}{character Gene}
 #'}
 #' @details DETAILS
 "gsea_sets"
