@@ -22,7 +22,12 @@ lum_dat <- conc %>%
          Sample.ID = gsub(" ", "", Sample.ID),
          Sample.ID = gsub("vaska648a_2", "vaska648_2", Sample.ID)) %>%
   dplyr::filter(!grepl('_rep', Sample.ID)) %>%
-  dplyr::filter(!Sample.ID %in% c("lu1082","vaska637","umu78","lun1059","iga2156","ra1622"))
+  dplyr::filter(!Sample.ID %in% c("lu1082", "umu78","lun1059","iga2156"))
+
+lum_dat$`CCL18/PARC` <- as.numeric(lum_dat$`CCL18/PARC`)
+lum_dat$`CA15-3/MUC-1` <- as.numeric(lum_dat$`CA15-3/MUC-1`)
+lum_dat$`TIMP-1` <- as.numeric(lum_dat$`TIMP-1`)
+lum_dat$C5a <- as.numeric(lum_dat$C5a)
 
 
 usethis::use_data(lum_dat, overwrite = TRUE)
