@@ -20,6 +20,11 @@ raw data. The code used to do this is contained in the
 ``` r
 # install.packages("devtools")
 devtools::install_github("vincent-van-hoef/Analysis5204")
+
+cd analysis/
+docker build --build-arg CACHE_DATE="$(date)" -t analysis5204:0.1 .
+cd ..
+docker run --rm -ti -p 8787:8787 -e PASSWORD=admin -v $(pwd):/home/rstudio analysis5204:0.1
 ```
 
 ## Example
