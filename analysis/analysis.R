@@ -22,13 +22,19 @@ doubles <- c("MCP-1", "OPG", "uPA")
 plasma_npx <- plasma_npx[!(plasma_npx$Assay %in% doubles & plasma_npx$Panel == "Olink CARDIOVASCULAR III"),]
 
 # Add 4 additional luminex proteins to plasma_npx; they are on a log2 scale (like the NPX data) - similar result of running anova seprately or including wiht other samples
+lum_dat$`CCL18/PARC` <- as.numeric(lum_dat$`CCL18/PARC`)
+lum_dat$`CA15-3/MUC-1` <- as.numeric(lum_dat$`CA15-3/MUC-1`)
+lum_dat$`TIMP-1` <- as.numeric(lum_dat$`TIMP-1`)
+lum_dat$C5a <- as.numeric(lum_dat$C5a)
 lum_clean <- lum_dat %>% 
   mutate(`CCL18/PARC` = log2(`CCL18/PARC`),
          `CA15-3/MUC-1` = log2(`CA15-3/MUC-1`),
          `TIMP-1` = log2(`TIMP-1`),
          C5a = log2(C5a)) %>%
-  tidyr::pivot_longer(cols = c(`CCL18/PARC`, `CA15-3/MUC-1`, `TIMP-1`, C5a), names_to = "Assay", values_to = "NPX") %>%
-  mutate(Panel = "CARDIOVASCULAR III",
+  mutate(`CCL18_PARC` = `CCL18/PARC`,
+         `CA15-3_MUC-1` = `CA15-3/MUC-1`) %>%
+  tidyr::pivot_longer(cols = c(`CCL18_PARC`, `CA15-3_MUC-1`, `TIMP-1`, C5a), names_to = "Assay", values_to = "NPX") %>%
+  mutate(Panel = "Olink CARDIOVASCULAR III",
          MissingFreq = 0,
          Panel_Version = "Lum",
          PlateID = 1,
@@ -37,19 +43,19 @@ lum_clean <- lum_dat %>%
          Normalization = "Log Normalized",
          UniProt = case_when(
            Assay == "TIMP-1" ~ "P01033",
-           Assay == "CCL18/PARC" ~ "P55774",
-           Assay == "CA15-3/MUC-1" ~ "P15941",
+           Assay == "CCL18_PARC" ~ "P55774",
+           Assay == "CA15-3_MUC-1" ~ "P15941",
            Assay == "C5a" ~ "P01031"),
          OlinkID = case_when(
            Assay == "TIMP-1" ~ "OID50001",
-           Assay == "CCL18/PARC" ~ "OID50002",
-           Assay == "CA15-3/MUC-1" ~ "OID50003",
+           Assay == "CCL18_PARC" ~ "OID50002",
+           Assay == "CA15-3_MUC-1" ~ "OID50003",
            Assay == "C5a" ~ "OID50004")) %>%
   rename(SampleID = Sample.ID) %>%
-  tibble::rowid_to_column("Index") %>%
-  dplyr::select(SampleID, Index,OlinkID,UniProt, Assay,MissingFreq , Panel,Panel_Version, PlateID,QC_Warning, LOD,  NPX, Normalization)
+  left_join(plasma_npx %>% dplyr::select(SampleID, Index) %>% distinct()) %>%
+  dplyr::select(SampleID, Index, OlinkID,UniProt, Assay,MissingFreq , Panel,Panel_Version, PlateID,QC_Warning, LOD,  NPX, Normalization)
 
-plasma_npx <- rbind(plasma_npx, lum_clean) %>% mutate(Index = row_number())
+plasma_npx <- rbind(plasma_npx, lum_clean)
 
 # Make a SummarizedExperiment object
 npx <- plasma_npx %>% 
