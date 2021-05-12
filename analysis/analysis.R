@@ -9,6 +9,7 @@ library("dplyr")
 library("SummarizedExperiment")
 library("pcaExplorer")
 library("emmeans")
+library("ComplexHeatmap")
 
 #################################################################################
 # Raw data files are loaded automatically when loading the Analysis5204 package.#
