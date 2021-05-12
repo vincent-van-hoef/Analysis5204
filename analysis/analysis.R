@@ -270,8 +270,6 @@ hm <- Heatmap(hm_data,
 print(hm)
 dev.off()
 
-
-
 }
 
 #############################
@@ -314,17 +312,43 @@ dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
 
 # Cortisone effect
 # Create a Results directory in the top directory 
-plasma_cortisone_dir <- paste0("Results/Plasma/Cortisone/")
-dir.create(plasma_cortisone_dir, recursive = TRUE)
-obj %>% 
+cortisone_res <- obj %>% 
   filter(group == "active_disease") %>% 
   filter(cortisone %in% c("0", "1")) %>% 
   droplevels() %>%
+  mutate(cortisone = recode_factor(cortisone, `1` = "Cortisone", `0` = "No_Cortisone")) %>%
   OlinkAnalyze::olink_anova_posthoc(variable = "cortisone", 
                                               covariates = c("age", "ckd_epi"),
                                               effect = "cortisone",
-                                              verbose = FALSE) %>%
-  openxlsx::write.xlsx(paste0(plasma_cortisone_dir, "Cortisone_Effect_Plasma_ActiveAAV.xlsx"))
+                                              verbose = FALSE)
+
+  # Create a Results directory in the top directory 
+  compname <- gsub(" - ", "_vs_", unique(cortisone_res$contrast))
+  plasma_cort_uni_dir <- paste0("Results/Plasma/Cortisone/",compname, "/Univariate/")
+  dir.create(plasma_cort_uni_dir, recursive = TRUE)
+  
+  p1 <- ggplot(cortisone_res, aes(x=estimate, y = -log10(Adjusted_pval))) +
+    geom_point() +
+    geom_hline(yintercept = -log10(0.05)) + 
+    geom_vline(xintercept = 0) +
+    theme_bw()
+  ggsave(paste0(plasma_cort_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
+  
+  tab <- cortisone_res %>%
+    as.data.frame() %>%
+    dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
+    dplyr::slice_head(n=15) %>%
+    gt::gt() %>%
+    gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
+  gt::gtsave(tab, paste0(plasma_cort_uni_dir, compname, "_Top15_table.pdf"))
+  
+  openxlsx::write.xlsx(cortisone_res, paste0(plasma_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
+  
+  # GSEA
+  plasma_cort_gsea_dir <- paste0("Results/Plasma/Cortisone/", compname, "/Univariate/GSEA/")
+  dir.create(plasma_cort_gsea_dir, recursive = TRUE)
+  gsea_out <- gsea_olink_run(x=cortisone_res, gs=gsea_sets, save=TRUE, saveFolder = plasma_cort_gsea_dir, contrastName = compname)
+  gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_cort_gsea_dir, nterms = 10, contrastName = compname)
 
 
 ########################
