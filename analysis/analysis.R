@@ -272,6 +272,52 @@ dev.off()
 
 }
 
+
+##############################
+#### NEA render #########
+##############################
+
+stringdb <- readr::read_delim("https://stringdb-static.org/download/protein.links.v11.0/9606.protein.links.v11.0.txt.gz", delim = " ") %>% 
+  dplyr::filter(combined_score > 800) %>%
+  dplyr::select(protein1, protein2)
+# Convert to gene symbol
+conv <- readr::read_delim("https://stringdb-static.org/download/protein.info.v11.0/9606.protein.info.v11.0.txt.gz", delim="\t") %>%
+  dplyr::select(protein_external_id, preferred_name)
+net <- stringdb %>% 
+  left_join(conv, by = c("protein1" = "protein_external_id")) %>% 
+  rename(protein_A = preferred_name)%>%
+  left_join(conv, by = c("protein2" = "protein_external_id")) %>% 
+  rename(protein_B = preferred_name) %>%
+  dplyr::select(protein_A, protein_B) %>%
+  as.matrix()
+
+fgs <- lapply(split(gsea_sets, f = gsea_sets$term), function(x) x$gene)
+names(fgs) <- gsub("%.*$", "", names(fgs))
+
+sigList <- lapply(split(univariate_results, univariate_results$contrast), function(x) x %>% dplyr::filter(Adjusted_pval < 0.25 & estimate > 0.5) %>% pull(Assay)) 
+
+# Filter out the fgs without genes in the network
+labels <- unique(c(net[,1], net[,2]))
+keep <- sapply(fgs, function(x) sum(x %in% labels) > 0)
+fgs_in_net <- fgs[keep]
+
+sigs <- unique(unlist(sigList))
+keep_sigs <- sapply(fgs_in_net, function(x) sum(x %in% sigs) > 0)
+fgs_in_net_sig <- fgs_in_net[keep_sigs]
+
+fgs_in_net_sig <- fgs_in_net_sig[lengths(fgs_in_net_sig) > 3 & lengths(fgs_in_net_sig) < 500]
+
+labels_ordered <- sort(labels)
+neat.res <- neat::neat(alist = sigList[1], blist = fgs_in_net_sig, network = net, nettype ="undirected", nodes = labels_ordered, alpha = 0.05)
+
+neat_res <- lapply(split(test, test$A), function(x) as.data.frame(x))
+neat_res <- lapply(neat_res, function(x) x %>% arrange(adjusted_p))
+
+
+neat_res <- do.call(rbind, neat_res)
+
+neat_res %>% group_by(A) %>% arrange(adjusted_p)
+
 #############################
 ##### Correlation Analysis ##
 #############################
@@ -287,7 +333,9 @@ pearson <- obj %>%
   group_by(Assay) %>%
   do(broom::tidy(cor.test(.$NPX, .[[marker]]))) %>%
   dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
-  arrange(p.value)
+  ungroup()  %>%
+  mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+  arrange(pval.adj)
 openxlsx::write.xlsx(pearson, paste0(plasma_marker_corr_dir, marker, "_pearson_correlation.xlsx"))
 # PLot the linear regression and R squared value per protein
 plots <- obj %>% 
@@ -300,7 +348,7 @@ plots <- obj %>%
       geom_smooth(method = "lm") +
       theme_bw() +
       ggtitle(.y[[1]]) +
-      ggpubr::stat_cor(aes(label = ..rr.label..), color = "red", geom = "label")
+      ggpubr::stat_cor(aes(label = ..r.label..), color = "red", geom = "label")
     )))
 plasma_marker_corr_plot_dir <- paste0(plasma_marker_corr_dir, "regression_plots/")
 dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
@@ -309,8 +357,10 @@ dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
    }
 }
 
+#########################
+#### Cortisone ##########
+#########################
 
-# Cortisone effect
 # Create a Results directory in the top directory 
 cortisone_res <- obj %>% 
   filter(group == "active_disease") %>% 
@@ -350,6 +400,47 @@ cortisone_res <- obj %>%
   gsea_out <- gsea_olink_run(x=cortisone_res, gs=gsea_sets, save=TRUE, saveFolder = plasma_cort_gsea_dir, contrastName = compname)
   gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_cort_gsea_dir, nterms = 10, contrastName = compname)
 
+  
+###########################
+###### BVAS Correlation ###
+###########################
+
+# Create a Correlation directory in the top directory 
+
+    plasma_bvas_corr_dir <- paste0("Results/Plasma/Correlation/bvas/")
+    dir.create(plasma_bvas_corr_dir, recursive = TRUE)
+    
+    # Calculate the pearson correlation
+    bvas_list <- obj %>% 
+      filter(group == "active_disease") %>% 
+      group_by(Assay) %>%
+      dplyr::filter(bvas > 0) %>%
+      do(broom::tidy(cor.test(.$NPX, .$bvas))) %>%
+      dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+      ungroup()  %>%
+      mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+      arrange(pval.adj)
+    openxlsx::write.xlsx(bvas_list, paste0(plasma_bvas_corr_dir, "bvas_pearson_correlation.xlsx"))
+    # PLot the linear regression and R squared value per protein
+    plots <- obj %>% 
+      filter(group == "active_disease") %>% 
+      group_by(Assay) %>%
+      dplyr::filter(bvas > 0) %>%
+      group_modify(~tibble(plots=list(
+        ggplot(.) +
+          aes_string(x = "NPX", y = "bvas") +
+          geom_point() +
+          geom_smooth(method = "lm") +
+          theme_bw() +
+          ggtitle(.y[[1]]) +
+          ggpubr::stat_cor(aes(label = ..r.label..), color = "red", geom = "label")
+      )))
+    plasma_marker_corr_plot_dir <- paste0(plasma_bvas_corr_dir, "regression_plots/")
+    dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
+    for(fig in 1:nrow(plots)){
+      ggsave(plot=plots$plots[[fig]], paste0(plasma_marker_corr_plot_dir, plots$Assay[[fig]], "_bvas_correlation.pdf"))
+    }
+  
 
 ########################
 #### Multivariate ######
