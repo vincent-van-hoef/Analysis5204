@@ -78,6 +78,23 @@ plasma_metadata$id <- tolower(plasma_metadata$id)
 plasma_metadata$id <- gsub(" ", "", plasma_metadata$id)
 plasma_metadata$id <- gsub("!", "1", plasma_metadata$id)
 
+
+# Add the BVAS scores
+bvas <- "inst/extdata/210429 all BVAS active disease final score only.xlsx"
+plasma_bvas <- readxl::read_excel(bvas,
+                                  sheet = "Plasma",
+                                  range = "A3:CG73",
+                                  col_names = FALSE) %>%
+  dplyr::select(...1, ...85) %>%
+  dplyr::rename(ID = ...1, bvas = ...85) %>%
+  mutate(ID = tolower(gsub(" ", "", ID))) %>%
+  mutate(ID = gsub("vaska122", "vaska122_1", ID),
+         ID = gsub("vaska089", "vaska089_1", ID),
+         ID = gsub("vaska648", "vaska648_2", ID),
+         ID = gsub("vaska114", "vaska114_2", ID),
+         ID = gsub("daniel56", "danie56", ID))
+plasma_metadata <- plasma_metadata %>% left_join(plasma_bvas, by = c("id" = "ID"))
+
 # Add time in freezer
 plasma_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(plasma_metadata$sampling_date)), "months")
 

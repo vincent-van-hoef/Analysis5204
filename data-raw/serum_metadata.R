@@ -74,6 +74,19 @@ serum_metadata$birth_date <- lubridate::parse_date_time(serum_metadata$birth_dat
 serum_metadata$id <- tolower(serum_metadata$id)
 serum_metadata$id <- gsub(" ", "", serum_metadata$id)
 
+
+# Add the BVAS scores
+bvas <- "inst/extdata/210429 all BVAS active disease final score only.xlsx"
+serum_bvas <- readxl::read_excel(bvas,
+                                  sheet = "Serum",
+                                  range = "A3:CG29",
+                                  col_names = FALSE) %>%
+  dplyr::select(...1, ...85) %>%
+  dplyr::rename(ID = ...1, bvas = ...85) %>%
+  mutate(ID = tolower(gsub(" ", "", ID))) %>%
+  mutate(ID = gsub("^u", "upp", ID))
+serum_metadata <- serum_metadata %>% left_join(serum_bvas, by = c("id" = "ID"))
+
 # Add time in freezer
 serum_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(serum_metadata$sampling_date)), "months")
 
