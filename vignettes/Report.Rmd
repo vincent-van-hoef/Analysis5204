@@ -80,7 +80,7 @@ One sample sample (VASKA637) is filtered out due to technical concerns (failed s
 
 **Shown here are the results for the plasma samples. The QC of the serum samples is available in the folder /Serum/QC/**
 
-### Data Distribution
+## Data Distribution
 
 A general overview of the data distribution per plasma sample per panel, and ordered by the median value on that panel is shown in Figure \@ref(fig:plDistrBox). They show one boxplot per sample and can be colored by any feature, but by default are colored by whether the sample passed technical QC (“QC_Warning” status as defined by Olink). The things to look for in this plot are odd distributions, deviant medians and patterns among the outlier assays. Overall, distributions are fairly similar and the medians are comparable. Two samples in the INFLAMMATION panel are deemed to have failed the technical QC, but a further investigation has to show whether to remove them from the dataset.
 
@@ -96,10 +96,44 @@ knitr::include_graphics(c("../Results/Plasma/QC/plasma_qc.png"))
 ```
 ## PCA
 
-Using [Principal Component Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), we examine the structure of the data by projecting the samples on a two-dimensional graph using the two first principal components. These components are linear combinations of the proteins that explain the most variation between those samples. These plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances should be biologically interpretable. A plot of PC1 vs PC2 using the 100 most variable proteins and colored by their biological/experimental group is shown in Figure \@ref(fig:plPCA). Each point corresponds to a sample plotted by PC1 and PC2. The different experimental groups do seem to differ, especially along PC1. Also, the healthy control samples seem to cluster more together than the active or other control samples.
+Using [Principal Component Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), we examine the structure of the data by projecting the samples on a two-dimensional graph using the two first principal components (PC). These components are linear combinations of the proteins that explain the most variation between those samples. These plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances should be biologically interpretable. A plot of PC1 vs PC2 using the 100 most variable proteins and colored by their biological/experimental group is shown in Figure \@ref(fig:plPCA). Each point corresponds to a sample plotted by PC1 and PC2. The different experimental groups do seem to differ, especially along PC1. Also, the healthy control samples seem to cluster more together than the active or other control samples.
 
 ```{r plPCA, fig.show='hold', out.width="100%", fig.align='center', fig.cap="PCA plot of all plasma samples coloured by biological group."}
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_pca_100.png"))
 ```
 
 In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a screeplot showing the explained variation per PC and a barplot showing the top and bottom genes contributing to the variation on PC1.
+
+# Differential Expression
+
+To compare the different sample groups against each other we applied two complementary statistical techniques: univariate ANOVA and multivariate pls-da. ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly straightforward to interpret and will return the most differential expressed proteins and how much they differ between the groups. The multivariate pls-da technique is harder to interpret but can take correlations among the proteins into account and might therefore result in a more robust set of proteins to serve as markers distinguishing the groups. It will however not return an estimate of the different expression among the groups, but rather a measure of how important a certain protein is in separating the subgroups.
+
+For the ANOVA analysis, a correction for the patient *age* and *ckd_epi* level was applied to the linear model.
+
+## Univariate Analysis
+
+Anova will be used to assess whether the protein expression varies significantly across the different sample groups, one protein at a time. If this is the case, a post-hoc test will compare all pairwise group comparisons to determine which comparisons are in fact resulting in the differential expression. 
+
+As a result 
+
+
+For the ANOVA analysis, a correction for the patient *age* and *ckd_epi* level was applied to the linear model.
+
+### Gene-level
+
+### GSEA
+
+### NEA
+
+## Multivariate analysis
+
+# Correlation
+
+## crp 
+
+## sr 
+
+## bvas 
+
+# Cortisone 
+

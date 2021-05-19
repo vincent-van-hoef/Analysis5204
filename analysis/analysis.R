@@ -177,11 +177,6 @@ dev.off()
 ### Univariate Analysis #
 #########################
 
-#test <- assay(plasma) %>% t() %>% cbind(colData(plasma) %>% as.data.frame() %>% select(group, age, ckd_epi))
-#mod1 <- aov(IL6 ~ age + ckd_epi + group, data = test)
-#mod1 %>% emmeans(pairwise ~ "group") %>% purrr::pluck("contrasts")
-
-
 #Create olink-function compatible dataset; reduced to the summarizedExperiment samples for the statistical tests
 obj <- plasma_npx %>% 
   filter(SampleID %in% colnames(plasma)) %>% 
