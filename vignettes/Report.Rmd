@@ -10,11 +10,14 @@ output:
       in_header: "/home/rstudio/inst/style/header.tex"
       before_body: "/home/rstudio/inst/style//before_body.tex"
       after_body: "/home/rstudio/inst/style//after_body.tex"
+header-includes:
+  - \usepackage{subfig}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
+  echo=FALSE,
   comment = "#>"
 )
 ```
@@ -47,6 +50,40 @@ To accomplish this, following analyses have been agreed upon:
 
 ## Clinical Data
 
-The metadata for the separate subgroups was combined into a single metadata dataframe per tissue. Column names were cleaned and made consistent between the different subgroups to allow for easier handling in R. Further cleaning of the dates was performed in R using the *lubridate* package and annotations such as age, time in freezer, BVAS score and site of sample origin were added as well. Samples with no NPX data were removed from the metadata of plasma ("lun1065") and/or serum (("lin113", "sle_121/a" and "sle_156/a").
+The metadata for the separate subgroups was combined into a single metadata dataframe per tissue. Column names were cleaned and made consistent between the different subgroups to allow for easier handling in R. Further cleaning of the dates was performed in R using the *lubridate* package and annotations such as age, time in freezer, BVAS score and site of sample origin were added as well. Samples without Olink data were removed from the metadata of plasma ("lun1065") and/or serum (("lin113", "sle_121/a" and "sle_156/a").
 
 The resulting metadata for serum and plasma separately is saved in the folder **Results/Plasma/plasma_metadata.csv** and **Results/Serum/serum_metadata.csv** respectively.
+
+View the code for the preprocessing of the metadata of the [plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R) and the [serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R) by clicking on the hyperlinks.
+
+## Expression Data
+
+Names of the samples were cleaned and modified to correspond to the metadata. Three samples that were present in the expression data but had no metadata were removed ("lun1059", "iga2156" and "umu78").
+
+Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. The expression values correlate well between the panels so only the Inflammation data is kept for these proteins.
+
+View the code for the preprocessing of the experimental data of the [plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R) and the [serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R) by clicking on the hyperlinks.
+
+All data and metadata can also be accessed via R:
+
+```{r, eval = FALSE, echo=TRUE}
+# install.packages("devtools")
+devtools::install_github("vincent-van-hoef/Analysis5204")
+library("Analysis5204")
+data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"), 
+      package = "Analysis5204")
+```
+
+# Quality Control
+
+One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport).
+
+
+### Data Distribution
+
+A general overview of the data distribution per plasma sample per panel, and ordered by the median value on that panel is shown in Figure \@ref(fig:plDistrBox). They show one boxplot per sample and can be colored by any feature, but by default are colored by whether the sample passed technical QC (“QC_Warning” status as defined by Olink). The things to look for in this plot are odd distributions, deviant medians and patterns among the outlier assays. Overall, distributions are fairly similar and the medians are comparable. Two samples in the INFLAMMATION panel are deemed to have failed the technical QC, but a further investigation has to show whether to remove them from the dataset.
+
+```{r plDistrBox, out.width="49%",out.height="49%",fig.show='hold', fig.align='center', fig.cap="Boxplots of NPX distribution per sample by panel ordered by median NPX value", fig.subcap=c("Cardiovascular III", "Inflammation")}
+knitr::include_graphics(c("../Results/Plasma/QC/plasma_CVIII_dist.png",
+"../Results/Plasma/QC/plasma_INF_dist.png"))
+```
