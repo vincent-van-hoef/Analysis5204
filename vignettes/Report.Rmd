@@ -78,6 +78,7 @@ data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gse
 
 One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport).
 
+**Shown here are the results for the plasma samples. The QC of the serum samples is available in the folder /Serum/QC/**
 
 ### Data Distribution
 
@@ -87,3 +88,18 @@ A general overview of the data distribution per plasma sample per panel, and ord
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_CVIII_dist.png",
 "../Results/Plasma/QC/plasma_INF_dist.png"))
 ```
+
+The distribution plot can get difficult to read when there are a large number of samples or many panels. Plotting the interquartile range (IQR) vs the median shows an alternative view on the data distributions (Figure \@ref(fig:plIQR)). Most samples cluster together, some samples have a slightly more extreme IQR. Even though two samples are marked with QC warnings, their data distributions (and PCA plot - data not shown) look ok. According to the Olink data analysis tutorial, this means the samples can be kept for downstream analysis so they were retained for further analysis.
+
+```{r plIQR, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Interquartile range versus median per sample by panel ordered by median NPX value. Dashed lines indicate 3 standard deviations from the median or IQR mean."}
+knitr::include_graphics(c("../Results/Plasma/QC/plasma_qc.png"))
+```
+## PCA
+
+Using [Principal Component Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), we examine the structure of the data by projecting the samples on a two-dimensional graph using the two first principal components. These components are linear combinations of the proteins that explain the most variation between those samples. These plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances should be biologically interpretable. A plot of PC1 vs PC2 using the 100 most variable proteins and colored by their biological/experimental group is shown in Figure \@ref(fig:plPCA). Each point corresponds to a sample plotted by PC1 and PC2. The different experimental groups do seem to differ, especially along PC1. Also, the healthy control samples seem to cluster more together than the active or other control samples.
+
+```{r plPCA, fig.show='hold', out.width="100%", fig.align='center', fig.cap="PCA plot of all plasma samples coloured by biological group."}
+knitr::include_graphics(c("../Results/Plasma/QC/plasma_pca_100.png"))
+```
+
+In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a screeplot showing the explained variation per PC and a barplot showing the top and bottom genes contributing to the variation on PC1.
