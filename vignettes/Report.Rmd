@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The ANCA-associated vasculitides are rare but severe autoimmune disorders. Tools for improved diagnostics and prognostics are needed. In this project, 184 proteins (Olink; CARDIOVASCULAR III and INFLAMMATION panels) were measured in serum or plasma samples from patients with ANCA-associated vasculitis and several controls (healthy, remission, disease control), in order to identify biomarkers for active disease, organ involvement and accurate diagnosis.
+The ANCA-associated vasculitides are rare but severe autoimmune disorders. Tools for improved diagnostics and prognostics are needed. In this project, 184 proteins (Olink; CARDIOVASCULAR III and INFLAMMATION panels) and four additional proteins (Luminex data) were measured in serum or plasma samples from patients with ANCA-associated vasculitis and several controls (healthy, remission, disease control), in order to identify biomarkers for active disease, organ involvement and accurate diagnosis.
 
 To accomplish this, following analyses have been agreed upon:
 
@@ -36,8 +36,17 @@ To accomplish this, following analyses have been agreed upon:
   - MPO-ANCA+ vs PR3-ANCA+
   - (Comparison between affected organs)
 * Serum and plasma Samples will be analyzed separately
-* Pathway analysis of differentially expressed proteins using KEGG, GO, MsigDB, ... gene set collections
+* Pathway analysis of differential expressed proteins using KEGG, GO, MsigDB, ... gene set collections
+* Correlation of proteins with the inflammation markers and BVAS scores
+* Effect of cortisone treatment on protein expression
 * Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate ML techniques)
 
-**This report describes the performed analyses and the resulting output. The full results and plots are found in the accompanying folder ``r params$save``.**
+**This report describes the performed analyses and a selection of the resulting output of the plasma results only. The full results and all plots are found in the accompanying Results folder.**
 
+# Data Cleaning
+
+## Clinical Data
+
+The metadata for the separate subgroups was combined into a single metadata dataframe per tissue. Column names were cleaned and made consistent between the different subgroups to allow for easier handling in R. Further cleaning of the dates was performed in R using the *lubridate* package and annotations such as age, time in freezer, BVAS score and site of sample origin were added as well. Samples with no NPX data were removed from the metadata of plasma ("lun1065") and/or serum (("lin113", "sle_121/a" and "sle_156/a").
+
+The resulting metadata for serum and plasma separately is saved in the folder **Results/Plasma/plasma_metadata.csv** and **Results/Serum/serum_metadata.csv** respectively.

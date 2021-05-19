@@ -104,6 +104,9 @@ ggsave(paste0(plasma_qc_dir, "plasma_qc.png"), plot = plasma_qc)
 #One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622).
 plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622")]
 
+# Save metadata
+write.csv2(colData(plasma), "Results/Plasma/plasma_metadata.csv", row.names = TRUE)
+
 # Impute 1 NA assays - better than throwing all sample away
 assay(plasma) <- t(apply(assay(plasma), 1, function(x) ifelse(is.na(x), median(x, na.rm=T), x)))
 
@@ -559,6 +562,10 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     
     #One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622).
     serum <- serum[,!colnames(serum) %in% c("vaska637", "ra1622")]
+    
+    
+    # Save metadata
+    write.csv2(colData(serum), "Results/Plasma/serum_metadata.csv", row.names = TRUE)
     
     # PCA - centering, no scaling
     pcaplot(serum, 
