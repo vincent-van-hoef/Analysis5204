@@ -111,27 +111,40 @@ write.csv2(colData(plasma), "Results/Plasma/plasma_metadata.csv", row.names = TR
 assay(plasma) <- t(apply(assay(plasma), 1, function(x) ifelse(is.na(x), median(x, na.rm=T), x)))
 
 # PCA - centering, no scaling
-pcaplot(plasma, 
+pl_pca <- pcaplot(plasma, 
         intgroup = "group", 
         ellipse = FALSE, 
         text_labels = FALSE, 
         ntop = 100, 
         pcX = 1, 
         pcY = 2)
+ggsave(paste0(plasma_qc_dir, "plasma_pca_100.png"), plot = pl_pca)
+
+pl_pca_13 <- pcaplot(plasma, 
+                  intgroup = "group", 
+                  ellipse = FALSE, 
+                  text_labels = FALSE, 
+                  ntop = 100, 
+                  pcX = 1, 
+                  pcY = 3)
+ggsave(paste0(plasma_qc_dir, "plasma_pca_100_pc13.png"), plot = pl_pca_13)
+
 pcaobj_plasma <- prcomp(t(assay(plasma)))
 
 #Screeplot
-pcascree(pcaobj_plasma,type="pev",
+pl_pca_scree <- pcascree(pcaobj_plasma,type="pev",
          title="Proportion of explained proportion of variance - plasma",
          pc_nr = 20)
+ggsave(paste0(plasma_qc_dir, "plasma_pca_scree.png"), plot = pl_pca_scree)
 
 # Correlate PCs
 res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
 plotPCcorrs(res_pca_plasma)
 
 # hi loadings
+pdf(paste0(plasma_qc_dir, "plasma_pca_pc1_loadings.pdf"))
 hi_loadings(pcaobj_plasma,topN = 10)
-
+dev.off()
 
 ###########################
 ### Heatmap ###############
@@ -568,26 +581,40 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     write.csv2(colData(serum), "Results/Plasma/serum_metadata.csv", row.names = TRUE)
     
     # PCA - centering, no scaling
-    pcaplot(serum, 
+    se_pca <- pcaplot(serum, 
             intgroup = "group", 
             ellipse = FALSE, 
             text_labels = FALSE, 
             ntop = 100, 
             pcX = 1, 
             pcY = 2)
+    ggsave(paste0(serum_qc_dir, "serum_pca_100.png"), plot = se_pca)
+    
+    se_pca_13 <- pcaplot(serum, 
+                      intgroup = "group", 
+                      ellipse = FALSE, 
+                      text_labels = FALSE, 
+                      ntop = 100, 
+                      pcX = 1, 
+                      pcY = 3)
+    ggsave(paste0(serum_qc_dir, "serum_pca_100_pc13.png"), plot = se_pca_13)
+    
     pcaobj_serum <- prcomp(t(assay(serum)))
     
     #Screeplot
-    pcascree(pcaobj_serum,type="pev",
+    se_pca_scree <- pcascree(pcaobj_serum,type="pev",
              title="Proportion of explained proportion of variance - serum",
              pc_nr = 20)
+    ggsave(paste0(serum_qc_dir, "serum_pca_scree.png"), plot = se_pca_scree)
     
     # Correlate PCs
     res_pca_serum <- correlatePCs(pcaobj_serum,colData(serum)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
     plotPCcorrs(res_pca_serum)
     
     # hi loadings
+    pdf(paste0(serum_qc_dir, "serum_pca_pc1_loadings.pdf"))
     hi_loadings(pcaobj_serum,topN = 10)
+    dev.off()
     
     
     ###########################
