@@ -1,3 +1,5 @@
+# TODO #4 Update BVAS Scores
+
 # Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
 rm(list=ls())
 unlink("Results", recursive=TRUE)
@@ -11,14 +13,11 @@ library("pcaExplorer")
 library("emmeans")
 library("ComplexHeatmap")
 
-#################################################################################
-# Raw data files are loaded automatically when loading the Analysis5204 package.#
-#################################################################################
+################################################################################
+# Raw data files are loaded automatically when loading the Analysis5204 package.
+################################################################################
 
 # First analyze plasma only
-
-# TODO #2 First issue attempt
-
 
 # Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. As seen in the values correlate well between the panels so only the Inflammation data is kept for these proteins. Has to been done before making the summarizedExperiment because pivot_wider otherwise fails.
 doubles <- c("MCP-1", "OPG", "uPA")
