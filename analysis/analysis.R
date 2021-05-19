@@ -17,6 +17,9 @@ library("ComplexHeatmap")
 
 # First analyze plasma only
 
+# TODO #2 First issue attempt
+
+
 # Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. As seen in the values correlate well between the panels so only the Inflammation data is kept for these proteins. Has to been done before making the summarizedExperiment because pivot_wider otherwise fails.
 doubles <- c("MCP-1", "OPG", "uPA")
 plasma_npx <- plasma_npx[!(plasma_npx$Assay %in% doubles & plasma_npx$Panel == "Olink CARDIOVASCULAR III"),]
@@ -89,7 +92,7 @@ colData(plasma)$`pr3-anca` <- as.factor(colData(plasma)$`pr3-anca`)
 colData(plasma)$`mpo-anca` <- as.factor(colData(plasma)$`mpo-anca`)
 colData(plasma)$abs <- as.factor(colData(plasma)$abs)
 
-# Create a Results directory in the top directory 
+# Create a Results directory in the top directory
 plasma_qc_dir <- "Results/Plasma/QC/"
 dir.create(plasma_qc_dir, recursive = TRUE)
 
