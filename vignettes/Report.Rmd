@@ -1,7 +1,7 @@
 ---
 urlcolor: blue
 link-citations: yes
-output: 
+output:
   bookdown::pdf_document2:
     keep_tex: false
     citation_package: natbib
@@ -25,7 +25,13 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-The ANCA-associated vasculitides are rare but severe autoimmune disorders. Tools for improved diagnostics and prognostics are needed. In this project, 184 proteins (Olink; CARDIOVASCULAR III and INFLAMMATION panels) and four additional proteins (Luminex data) were measured in serum or plasma samples from patients with ANCA-associated vasculitis and several controls (healthy, remission, disease control), in order to identify biomarkers for active disease, organ involvement and accurate diagnosis.
+The ANCA-associated vasculitides are rare but severe autoimmune disorders.
+Tools for improved diagnostics and prognostics are needed. In this project, 184
+proteins (Olink; CARDIOVASCULAR III and INFLAMMATION panels) and four
+additional proteins (Luminex data) were measured in serum or plasma samples
+from patients with ANCA-associated vasculitis and several controls (healthy,
+remission, disease control), in order to identify biomarkers for active
+disease, organ involvement and accurate diagnosis.
 
 To accomplish this, following analyses have been agreed upon:
 
@@ -35,7 +41,7 @@ To accomplish this, following analyses have been agreed upon:
   - Active AAV vs Healthy
   - Active AAV vs Remission AAV
   - Active AAV vs Disease Control
-  - GPA vs MPA 
+  - GPA vs MPA
   - MPO-ANCA+ vs PR3-ANCA+
   - (Comparison between affected organs)
 * Serum and plasma Samples will be analyzed separately
@@ -44,25 +50,47 @@ To accomplish this, following analyses have been agreed upon:
 * Effect of cortisone treatment on protein expression
 * Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate ML techniques)
 
-**This report describes the performed analyses and a selection of the resulting output of the plasma results only. The full results and all plots are found in the accompanying Results folder.**
+**This report describes the performed analyses and a selection of the resulting
+output of the plasma results only. The full results and all plots are found in
+the accompanying Results folder.**
 
 # Data Cleaning
 
 ## Clinical Data
 
-The metadata for the separate subgroups was combined into a single metadata dataframe per tissue. Column names were cleaned and made consistent between the different subgroups to allow for easier handling in R. Further cleaning of the dates was performed in R using the *lubridate* package and annotations such as age, time in freezer, BVAS score and site of sample origin were added as well. Samples without Olink data were removed from the metadata of plasma ("lun1065") and/or serum (("lin113", "sle_121/a" and "sle_156/a").
+The metadata for the separate subgroups was combined into a single metadata
+dataframe per tissue. Column names were cleaned and made consistent between the
+different subgroups to allow for easier handling in R. Further cleaning of the
+dates was performed in R using the *lubridate* package and annotations such as
+age, time in freezer, BVAS score and site of sample origin were added as well.
+Samples without Olink data were removed from the metadata of plasma ("lun1065")
+and/or serum (("lin113", "sle_121/a" and "sle_156/a").
 
-The resulting metadata for serum and plasma separately is saved in the folder **Results/Plasma/plasma_metadata.csv** and **Results/Serum/serum_metadata.csv** respectively.
+The resulting metadata for serum and plasma separately is saved in the folder
+**Results/Plasma/plasma_metadata.csv** and **Results/Serum/serum_metadata.csv**
+respectively.
 
-View the code for the preprocessing of the metadata of the [plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R) and the [serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R) by clicking on the hyperlinks.
+View the code for the preprocessing of the metadata of the
+[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R)
+and the
+[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R)
+by clicking on the hyperlinks.
 
 ## Expression Data
 
-Names of the samples were cleaned and modified to correspond to the metadata. Three samples that were present in the expression data but had no metadata were removed ("lun1059", "iga2156" and "umu78").
+Names of the samples were cleaned and modified to correspond to the metadata.
+Three samples that were present in the expression data but had no metadata were
+removed ("lun1059", "iga2156" and "umu78").
 
-Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and the Inflammation panel. The expression values correlate well between the panels so only the Inflammation data is kept for these proteins.
+Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and
+the Inflammation panel. The expression values correlate well between the panels
+so only the Inflammation data is kept for these proteins.
 
-View the code for the preprocessing of the experimental data of the [plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R) and the [serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R) by clicking on the hyperlinks.
+View the code for the preprocessing of the experimental data of the
+[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R)
+and the
+[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R)
+by clicking on the hyperlinks.
 
 All data and metadata can also be accessed via R:
 
@@ -70,56 +98,123 @@ All data and metadata can also be accessed via R:
 # install.packages("devtools")
 devtools::install_github("vincent-van-hoef/Analysis5204")
 library("Analysis5204")
-data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"), 
+data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"),
       package = "Analysis5204")
 ```
 
 # Quality Control
 
-One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport).
+One sample sample (VASKA637) is filtered out due to technical concerns (failed
+sample according to Olink QC rapport).
 
-**Shown here are the results for the plasma samples. The QC of the serum samples is available in the folder /Serum/QC/**
+**Shown here are the results for the plasma samples. The QC of the serum
+samples is available in the folder /Serum/QC/**
 
 ## Data Distribution
 
-A general overview of the data distribution per plasma sample per panel, and ordered by the median value on that panel is shown in Figure \@ref(fig:plDistrBox). They show one boxplot per sample and can be colored by any feature, but by default are colored by whether the sample passed technical QC (“QC_Warning” status as defined by Olink). The things to look for in this plot are odd distributions, deviant medians and patterns among the outlier assays. Overall, distributions are fairly similar and the medians are comparable. Two samples in the INFLAMMATION panel are deemed to have failed the technical QC, but a further investigation has to show whether to remove them from the dataset.
+A general overview of the data distribution per plasma sample per panel, and
+ordered by the median value on that panel is shown in Figure
+\@ref(fig:plDistrBox). They show one boxplot per sample and can be colored by
+any feature, but by default are colored by whether the sample passed technical
+QC (“QC_Warning” status as defined by Olink). The things to look for in this
+plot are odd distributions, deviant medians and patterns among the outlier
+assays. Overall, distributions are fairly similar and the medians are
+comparable. Two samples in the INFLAMMATION panel are deemed to have failed the
+technical QC, but a further investigation has to show whether to remove them
+from the dataset.
 
 ```{r plDistrBox, out.width="49%",out.height="49%",fig.show='hold', fig.align='center', fig.cap="Boxplots of NPX distribution per sample by panel ordered by median NPX value", fig.subcap=c("Cardiovascular III", "Inflammation")}
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_CVIII_dist.png",
 "../Results/Plasma/QC/plasma_INF_dist.png"))
 ```
 
-The distribution plot can get difficult to read when there are a large number of samples or many panels. Plotting the interquartile range (IQR) vs the median shows an alternative view on the data distributions (Figure \@ref(fig:plIQR)). Most samples cluster together, some samples have a slightly more extreme IQR. Even though two samples are marked with QC warnings, their data distributions (and PCA plot - data not shown) look ok. According to the Olink data analysis tutorial, this means the samples can be kept for downstream analysis so they were retained for further analysis.
+The distribution plot can get difficult to read when there are a large number
+of samples or many panels. Plotting the interquartile range (IQR) vs the median
+shows an alternative view on the data distributions (Figure \@ref(fig:plIQR)).
+Most samples cluster together, some samples have a slightly more extreme IQR.
+Even though two samples are marked with QC warnings, their data distributions
+(and PCA plot - data not shown) look ok. According to the Olink data analysis
+tutorial, this means the samples can be kept for downstream analysis so they
+were retained for further analysis.
 
 ```{r plIQR, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Interquartile range versus median per sample by panel ordered by median NPX value. Dashed lines indicate 3 standard deviations from the median or IQR mean."}
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_qc.png"))
 ```
 ## PCA
 
-Using [Principal Component Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), we examine the structure of the data by projecting the samples on a two-dimensional graph using the two first principal components (PC). These components are linear combinations of the proteins that explain the most variation between those samples. These plots can be used to examine the samples for outliers, sample swaps, batch effects and other relationships. When normalization successfully removed technical or batch artefacts, the relative distances should be biologically interpretable. A plot of PC1 vs PC2 using the 100 most variable proteins and colored by their biological/experimental group is shown in Figure \@ref(fig:plPCA). Each point corresponds to a sample plotted by PC1 and PC2. The different experimental groups do seem to differ, especially along PC1. Also, the healthy control samples seem to cluster more together than the active or other control samples.
+Using [Principal Component
+Analysis](http://setosa.io/ev/principal-component-analysis) (PCA), we examine
+the structure of the data by projecting the samples on a two-dimensional graph
+using the two first principal components (PC). These components are linear
+combinations of the proteins that explain the most variation between those
+samples. These plots can be used to examine the samples for outliers, sample
+swaps, batch effects and other relationships. When normalization successfully
+removed technical or batch artefacts, the relative distances should be
+biologically interpretable. A plot of PC1 vs PC2 using the 100 most variable
+proteins and colored by their biological/experimental group is shown in Figure
+\@ref(fig:plPCA). Each point corresponds to a sample plotted by PC1 and PC2.
+The different experimental groups do seem to differ, especially along PC1.
+Also, the healthy control samples seem to cluster more together than the active
+or other control samples.
 
 ```{r plPCA, fig.show='hold', out.width="100%", fig.align='center', fig.cap="PCA plot of all plasma samples coloured by biological group."}
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_pca_100.png"))
 ```
 
-In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a screeplot showing the explained variation per PC and a barplot showing the top and bottom genes contributing to the variation on PC1.
+In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a
+screeplot showing the explained variation per PC and a barplot showing the top
+and bottom genes contributing to the variation on PC1.
 
 # Differential Expression
 
-To compare the different sample groups against each other we applied two complementary statistical techniques: univariate ANOVA and multivariate pls-da. ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly straightforward to interpret and will return the most differential expressed proteins and how much they differ between the groups. The multivariate pls-da technique is harder to interpret but can take correlations among the proteins into account and might therefore result in a more robust set of proteins to serve as markers distinguishing the groups. It will however not return an estimate of the different expression among the groups, but rather a measure of how important a certain protein is in separating the subgroups.
+To compare the different sample groups against each other we applied two
+complementary statistical techniques: univariate ANOVA and multivariate pls-da.
+ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly
+straightforward to interpret and will return the most differential expressed
+proteins and how much they differ between the groups. The multivariate pls-da
+technique is harder to interpret but can take correlations among the proteins
+into account and might therefore result in a more robust set of proteins to
+serve as markers distinguishing the groups. It will however not return an
+estimate of the different expression among the groups, but rather a measure of
+how important a certain protein is in separating the subgroups.
 
-For the ANOVA analysis, a correction for the patient *age* and *ckd_epi* level was applied to the linear model.
+Several comparisons were looked at:
+
+* aav_remission vs active_disease
+* aav_remission vs healthy_controls
+* aav_remission vs RA
+* aav_remission vs SLE_nephritis
+* active_disease vs healthy_controls
+* active_disease vs RA
+* active_disease vs SLE_nephritis
+* healthy_controls vs RA
+* healthy_controls vs SLE_nephritis
+* MPA vs GPA
+* MPO_pos vs PR3_pos
+* RA vs SLE_nephritis
+
+**All results for each comparison are collected in either /Plasma/Comparisons
+or /Serum/Comparisons.**
+
+**To keep the report size manageable, the results shown here are limited to the
+active_disease vs healthy_control comparison in Plasma. All results for all
+other comparisons are found in the appropriate folder of the Results
+directory.**
 
 ## Univariate Analysis
 
-Anova will be used to assess whether the protein expression varies significantly across the different sample groups, one protein at a time. If this is the case, a post-hoc test will compare all pairwise group comparisons to determine which comparisons are in fact resulting in the differential expression. 
+An ANOVA F-test will be used to assess whether the protein expression varies
+significantly across the different sample groups, one protein at a time. If
+this is the case, a post-hoc test will look at all pairwise group comparisons
+to determine which comparisons are in fact resulting in the differential
+expression. An adjusted p-value (Tukey) will be calculated per assay.
 
-As a result 
-
-
-For the ANOVA analysis, a correction for the patient *age* and *ckd_epi* level was applied to the linear model.
+For the ANOVA analysis, a correction for the patient covariates *age* and
+*ckd_epi* level was applied to the linear model.
 
 ### Gene-level
+
+A full list of results for all proteins can be found in "/Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_anova_posthoc_results.xlsx".
 
 ### GSEA
 
@@ -129,11 +224,10 @@ For the ANOVA analysis, a correction for the patient *age* and *ckd_epi* level w
 
 # Correlation
 
-## crp 
+## crp
 
-## sr 
+## sr
 
-## bvas 
+## bvas
 
-# Cortisone 
-
+# Cortisone
