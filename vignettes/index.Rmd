@@ -1,7 +1,7 @@
 ---
-title: Identification of clinical biomarkers for ANCA-associated vasculitis
-subtitle: Project No. 5204
-date: "`r Sys.Date()`"
+title: Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)
+#subtitle: Project No. 5204
+#date: "`r Sys.Date()`"
 output: 
     bookdown::gitbook:
         config:
