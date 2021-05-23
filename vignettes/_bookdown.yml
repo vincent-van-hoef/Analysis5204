@@ -3,6 +3,9 @@ delete_merged_file: true
 rmd_files:
 - index.Rmd
 - quality.Rmd
+- de.Rmd 
+- correlation.Rmd
+- cortisone.Rmd
 - data_responsibility.Rmd
 - acknowledgements.Rmd
 - closing.Rmd
