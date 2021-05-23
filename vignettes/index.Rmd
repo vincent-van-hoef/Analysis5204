@@ -41,6 +41,8 @@ To accomplish this, following analyses have been agreed upon:
 * Effect of cortisone treatment on protein expression
 * Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate ML techniques)
 
-**This report describes the performed analyses and a selection of the resulting
+:::fyi
+This report describes the performed analyses and a selection of the resulting
 output of the plasma results only. The full results and all plots are found in
-the accompanying Results folder.**
+the accompanying Results folder.
+:::
