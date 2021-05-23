@@ -1,0 +1,7 @@
+  bookdown::gitbook:
+    highlight: tango
+    css: assets/style.css
+    config:
+      toc:
+        before: |
+          <li class="toc-logo"><a href="./"><img src="image/NBIS-logo.png"></a></li>

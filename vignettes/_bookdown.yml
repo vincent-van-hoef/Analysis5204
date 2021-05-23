@@ -1,0 +1,10 @@
+book_filename: report
+delete_merged_file: true
+rmd_files:
+- index.Rmd
+- quality.Rmd
+- data_responsibility.Rmd
+- acknowledgements.Rmd
+- closing.Rmd
+output_dir: report
+new_session: 'yes'
