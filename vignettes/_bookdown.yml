@@ -10,4 +10,4 @@ rmd_files:
 - acknowledgements.Rmd
 - closing.Rmd
 output_dir: report
-new_session: 'yes'
+new_session: 'no'
