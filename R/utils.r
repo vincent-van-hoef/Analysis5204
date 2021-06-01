@@ -126,7 +126,7 @@ gsea_olink_viz <- function(gsea_res, saveFolder, nterms = 10, contrastName = com
           axis.ticks.y = element_blank(),
           axis.line.x = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), ends = "both"))) +
     ylab(paste(paste0("Enriched in ",strsplit(compname, split = "_vs_")[[1]][2]), "NES", paste0("Enriched in ", strsplit(compname, split = "_vs_")[[1]][1]), 
-               sep = "                                                                        "))
+               sep = "                                                    "))
   ggsave(paste0(saveFolder, contrastName, "_barplot.pdf"))
   
   # Enrichment map - needs to be subsetted with asis=T to keep structure
