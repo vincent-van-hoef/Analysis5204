@@ -970,4 +970,4 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     }
 
 # Knit report
-knitr::knit("/home/rstudio/vignettes/Report.Rmd", output = "/home/rstudio/Results/Report.pdf")
+#knitr::knit("/home/rstudio/vignettes/Report.Rmd", output = "/home/rstudio/Results/Report.pdf")
