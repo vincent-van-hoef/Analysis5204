@@ -968,6 +968,3 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         geom_text(data = var.coord, aes(x=comp1*10, y=comp2*10, label=rownames(var.coord)),color="#006400")
       ggsave(paste0(serum_multi_dir, compname, "_Biplot.pdf"), plot=bip)
     }
-
-# Knit report
-#knitr::knit("/home/rstudio/vignettes/Report.Rmd", output = "/home/rstudio/Results/Report.pdf")
