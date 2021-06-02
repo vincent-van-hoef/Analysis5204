@@ -131,7 +131,7 @@ gsea_olink_viz <- function(gsea_res, saveFolder, nterms = 10, contrastName = com
   # Enrichment map - needs to be subsetted with asis=T to keep structure
   red_obj <- gsea_res[gsea_res$ID %in% viz_obj$ID, asis=T]
   emap <- enrichplot::pairwise_termsim(red_obj, method = "JC", semData = NULL, showCategory = nrow(red_obj))
-  enrichplot::emapplot(emap, showCategory=nrow(red_obj), layout = "kk", color = "pvalue")
+  enrichplot::emapplot(emap, showCategory=nrow(red_obj), layout = "kk", color = "NES")
   ggsave(paste0(saveFolder, contrastName, "_emap.pdf"))
   
   # GSEA plots
