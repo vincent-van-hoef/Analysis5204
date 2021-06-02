@@ -1,0 +1,35 @@
+# Cortisone
+
+## Protein-level
+
+Active disease samples were split in an experimental group that was treated with cortisone and a control group that was not treated with cortisone. Differential analysis between both groups was calculated as in Section 4.1; i.e. per-protein anova on *age* and *ckd_epi* corrected data followed by a post-hoc analysis.
+
+Results for the per-protein analysis is collected in **Results/Plasma/Cortisone** and **Results/Serum/Cortisone**.
+
+The volcano plot for cortisone vs no_cortisone is shown in Figure \@ref(fig:cortplots) (Left).
+
+```{r cortplots, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Volcano plot of cortisone versus no cortisone. Horizontal line indicates an adjusted p-value of 0.05"}
+knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/Cortisone_vs_No_Cortisone_volcano_anova_posthoc.pdf"))
+```
+
+The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of cortisone versus no_cortisone is shown in \@ref(fig:top15Cort). The "estimate" column can be considered as a log2 fold change (i.e. a difference of 1 indicates a doubled expression).
+
+```{r top15Cort, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Table of 15 most DE proteins"}
+knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/Cortisone_vs_No_Cortisone_Top15_table.png"))
+```
+
+## GSEA
+
+GSEA was performed for cortisone versus no_cortisone as in Section 4.1.2.
+
+As before, the GSEA results folder in the Cortisone folder contains a .xlsx file containing the full GSEA results and two different visualizations of the top terms (see Figure \@ref(fig:gseaPlotsCort)). These figures include a barplot of the gene sets with the 6 highest and 6 lowest NES values and an Enrichment map of the 20 gene sets with the highest absolute NES values. Enrichment maps organize gene sets into a network with edges connecting overlapping gene sets. In this way, mutually overlapping gene sets tend to cluster together, making it easier to identify functional modules. 
+
+```{r gseaPlotsCort, out.width="49%", fig.cap="Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left)  Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values.",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_barplot.pdf", "../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_emap.pdf"))
+```
+
+In addition, in the **Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS** and **Results/Serum/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS**folder you can find a visualization of the location of the gene set genes in the ranked gene list and an ES calculation visualization (see Figure \@ref(fig:gseaNesCort)).
+
+```{r gseaNesCort, out.width="49%", fig.cap="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis.",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_POSITIVE_REGULA.pdf", "../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_PROTEOLYSIS.pdf"))
+```

@@ -1,0 +1,33 @@
+# Correlation
+
+Pearson correlations of each protein versus crp, sr and bvas values were calculated.
+
+## crp
+
+The full list of protein-wise pearson correlation results with crp is collected in excel files in **Results/Plasma/Correlation/crp/crp_pearson_correlation.xlsx** and **Results/Serum/Correlation/crp/crp_pearson_correlation.xlsx**
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:crpCorr))
+
+```{r crpCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively crp correlated protein (Left) Most significant negatively crp correlated protein (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
+knitr::include_graphics(c("../Results/Plasma/Correlation/crp/regression_plots/IL6_regression.pdf", "../Results/Plasma/Correlation/crp/regression_plots/SCF_regression.pdf"))
+```
+
+## sr
+
+The full list of protein-wise pearson correlation results with sr is collected in excel files in **Results/Plasma/Correlation/sr/sr_pearson_correlation.xlsx** and **Results/Serum/Correlation/sr/sr_pearson_correlation.xlsx**
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:srCorr))
+
+```{r srCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively sr correlated protein (Left) Most significant negatively sr correlated protein (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
+knitr::include_graphics(c("../Results/Plasma/Correlation/sr/regression_plots/CCL23_regression.pdf", "../Results/Plasma/Correlation/sr/regression_plots/SCF_regression.pdf"))
+```
+
+## bvas
+
+The full list of protein-wise pearson correlation results with bvas is collected in excel files in **Results/Plasma/Correlation/bvas/bvas_pearson_correlation.xlsx** and **Results/Serum/Correlation/bvas/bvas_pearson_correlation.xlsx**
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:bvasCorr))
+
+```{r bvasCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively bvas correlated protein (Left) Most significant negatively bvas correlated protein (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
+knitr::include_graphics(c("../Results/Plasma/Correlation/bvas/regression_plots/GDF-15_bvas_correlation.pdf", "../Results/Plasma/Correlation/bvas/regression_plots/IL-1 alpha_bvas_correlation.pdf"))
+```
