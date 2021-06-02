@@ -57,7 +57,7 @@ A volcano plot of the post-hoc results is made for each comparison.  In these ty
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_volcano_anova_posthoc.pdf", "../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/Heatmap_Sig_Prots_Prots.pdf"))
 ```
 
-The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change (i.e. a difference of 1 indicates a doubled expression).
+The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression).
 
 ```{r top15, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Table of 15 most DE proteins"}
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_Top15_table.png"))
