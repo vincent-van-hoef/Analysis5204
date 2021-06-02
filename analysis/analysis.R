@@ -575,7 +575,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     
     
     # Save metadata
-    write.csv2(colData(serum), "Results/Plasma/serum_metadata.csv", row.names = TRUE)
+    write.csv2(colData(serum), "Results/Serum/serum_metadata.csv", row.names = TRUE)
     
     # PCA - centering, no scaling
     se_pca <- pcaplot(serum, 

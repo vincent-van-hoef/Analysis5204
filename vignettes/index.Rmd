@@ -2,13 +2,14 @@
 title: Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)
 output: 
     bookdown::gitbook:
+        self_contained: false
         config:
           sharing:
             facebook: false
             twitter: false
 documentclass: book
 link-citations: yes
-favicon: ./image/favicon.ico
+favicon: image/favicon.ico
 description: Report summarizing the results for project #5204
 ---
 
@@ -18,7 +19,7 @@ knitr::opts_chunk$set(
   echo=FALSE,
   comment = "#>"
 )
-library("plotly")
+library("knitr")
 ```
 
 # Introduction
