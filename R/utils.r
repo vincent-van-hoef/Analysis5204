@@ -126,20 +126,20 @@ gsea_olink_viz <- function(gsea_res, saveFolder, nterms = 10, contrastName = com
           axis.ticks.y = element_blank(),
           axis.line.x = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), ends = "both"))) +
     ylab(paste(paste0("Downregulated in ",strsplit(compname, split = "_vs_")[[1]][1]), "NES", paste0("Upregulated in ", strsplit(compname, split = "_vs_")[[1]][1]), sep = "              "))
-  ggsave(paste0(saveFolder, contrastName, "_barplot.pdf"))
+  ggsave(paste0(saveFolder, contrastName, "_barplot.png"))
   
   # Enrichment map - needs to be subsetted with asis=T to keep structure
   red_obj <- gsea_res[gsea_res$ID %in% viz_obj$ID, asis=T]
   emap <- enrichplot::pairwise_termsim(red_obj, method = "JC", semData = NULL, showCategory = nrow(red_obj))
   enrichplot::emapplot(emap, showCategory=nrow(red_obj), layout = "kk", color = "NES", cex_label_category = 0.6)
-  ggsave(paste0(saveFolder, contrastName, "_emap.pdf"))
+  ggsave(paste0(saveFolder, contrastName, "_emap.png"))
   
   # GSEA plots
   dir_gsea <- paste0(saveFolder, "GSEA_PLOTS/")
   dir.create(dir_gsea, showWarnings = FALSE, recursive = TRUE)
   for(i in 1:nrow(viz_obj)){
     enrichplot::gseaplot2(red_obj, geneSetID = i, title = red_obj$Description[i])
-    ggsave(paste0(dir_gsea, contrastName, "_gseaplot_", gsub(" |/", "_", substr(red_obj$Description[i], 0, 15)),  ".pdf"))
+    ggsave(paste0(dir_gsea, contrastName, "_gseaplot_", gsub(" |/", "_", substr(red_obj$Description[i], 0, 15)),  ".png"))
 }
 }
 
