@@ -2,6 +2,7 @@
 
 # Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
 rm(list=ls())
+setwd("/home/rstudio/")
 unlink("Results", recursive=TRUE)
 
 library("Analysis5204")
@@ -12,6 +13,7 @@ library("SummarizedExperiment")
 library("pcaExplorer")
 library("emmeans")
 library("ComplexHeatmap")
+library("mixOmics")
 
 ################################################################################
 # Raw data files are loaded automatically when loading the Analysis5204 package.
@@ -53,7 +55,7 @@ lum_clean <- lum_dat %>%
            Assay == "CCL18_PARC" ~ "OID50002",
            Assay == "CA15-3_MUC-1" ~ "OID50003",
            Assay == "C5a" ~ "OID50004")) %>%
-  rename(SampleID = Sample.ID) %>%
+  dplyr::rename(SampleID = Sample.ID) %>%
   left_join(plasma_npx %>% dplyr::select(SampleID, Index) %>% distinct()) %>%
   dplyr::select(SampleID, Index, OlinkID,UniProt, Assay,MissingFreq , Panel,Panel_Version, PlateID,QC_Warning, LOD,  NPX, Normalization)
 
@@ -235,7 +237,7 @@ tab <- df_sub %>%
   dplyr::slice_head(n=15) %>%
   gt::gt() %>%
   gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.pdf"))
+gt::gtsave(tab, paste0(plasma_uni_dir, compname, "_Top15_table.png"))
 
 openxlsx::write.xlsx(df_sub, paste0(plasma_uni_dir, compname, "_anova_posthoc_results.xlsx"))
 
@@ -298,9 +300,9 @@ conv <- readr::read_delim("https://stringdb-static.org/download/protein.info.v11
   dplyr::select(protein_external_id, preferred_name)
 net <- stringdb %>% 
   left_join(conv, by = c("protein1" = "protein_external_id")) %>% 
-  rename(protein_A = preferred_name)%>%
+  dplyr::rename(protein_A = preferred_name)%>%
   left_join(conv, by = c("protein2" = "protein_external_id")) %>% 
-  rename(protein_B = preferred_name) %>%
+  dplyr::rename(protein_B = preferred_name) %>%
   dplyr::select(protein_A, protein_B) %>%
   as.matrix()
 
@@ -407,7 +409,7 @@ cortisone_res <- obj %>%
     dplyr::slice_head(n=15) %>%
     gt::gt() %>%
     gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-  gt::gtsave(tab, paste0(plasma_cort_uni_dir, compname, "_Top15_table.pdf"))
+  gt::gtsave(tab, paste0(plasma_cort_uni_dir, compname, "_Top15_table.png"))
   
   openxlsx::write.xlsx(cortisone_res, paste0(plasma_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
   
@@ -706,7 +708,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         dplyr::slice_head(n=15) %>%
         gt::gt() %>%
         gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-      gt::gtsave(tab, paste0(serum_uni_dir, compname, "_Top15_table.pdf"))
+      gt::gtsave(tab, paste0(serum_uni_dir, compname, "_Top15_table.png"))
       
       openxlsx::write.xlsx(df_sub, paste0(serum_uni_dir, compname, "_anova_posthoc_results.xlsx"))
       
@@ -859,7 +861,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       dplyr::slice_head(n=15) %>%
       gt::gt() %>%
       gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-    gt::gtsave(tab, paste0(serum_cort_uni_dir, compname, "_Top15_table.pdf"))
+    gt::gtsave(tab, paste0(serum_cort_uni_dir, compname, "_Top15_table.png"))
     
     openxlsx::write.xlsx(cortisone_res, paste0(serum_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
     
@@ -968,4 +970,4 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     }
 
 # Knit report
-knitr::knit("/home/rstudio/vignettes/Report.Rmd", output = "/home/rstudio/Results/Report.pdf")
+#knitr::knit("/home/rstudio/vignettes/Report.Rmd", output = "/home/rstudio/Results/Report.pdf")

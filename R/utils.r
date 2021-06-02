@@ -125,7 +125,11 @@ gsea_olink_viz <- function(gsea_res, saveFolder, nterms = 10, contrastName = com
           axis.line.y = element_blank(),
           axis.ticks.y = element_blank(),
           axis.line.x = element_line(arrow = grid::arrow(length = unit(0.3, "cm"), ends = "both"))) +
+<<<<<<< HEAD
     ylab(paste(paste0("Downregulated in ",strsplit(compname, split = "_vs_")[[1]][1]), "NES", paste0("Upregulated in ", strsplit(compname, split = "_vs_")[[1]][1]), sep = "              "))
+=======
+    ylab(paste(paste0("Enriched in ",strsplit(compname, split = "_vs_")[[1]][2]), "NES", paste0("Enriched in ", strsplit(compname, split = "_vs_")[[1]][1]), sep = "                                            "))
+>>>>>>> vincent-van-hoef/issue5
   ggsave(paste0(saveFolder, contrastName, "_barplot.pdf"))
   
   # Enrichment map - needs to be subsetted with asis=T to keep structure
