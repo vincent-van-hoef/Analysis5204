@@ -1,0 +1,55 @@
+---
+title: Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)
+output: 
+    bookdown::gitbook:
+        config:
+          sharing:
+            facebook: false
+            twitter: false
+documentclass: book
+link-citations: yes
+favicon: ./image/favicon.ico
+description: Report summarizing the results for project #5204
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo=FALSE,
+  comment = "#>"
+)
+library("plotly")
+```
+
+# Introduction
+
+The ANCA-associated vasculitides are rare but severe autoimmune disorders.
+Tools for improved diagnostics and prognostics are needed. In this project, 184
+proteins (Olink; CARDIOVASCULAR III and INFLAMMATION panels) and four
+additional proteins (Luminex data) were measured in serum or plasma samples
+from patients with ANCA-associated vasculitis and several controls (healthy,
+remission, disease control), in order to identify biomarkers for active
+disease, organ involvement and accurate diagnosis.
+
+To accomplish this, following analyses have been agreed upon:
+
+* Quality Control of PEA data
+* Unsupervised analysis of data structure using PCA
+* Differential expression of first set of samples comparing selected subgroups:
+  - Active AAV vs Healthy
+  - Active AAV vs Remission AAV
+  - Active AAV vs Disease Control
+  - GPA vs MPA
+  - MPO-ANCA+ vs PR3-ANCA+
+  - (Comparison between affected organs)
+* Serum and plasma Samples will be analyzed separately
+* Pathway analysis of differential expressed proteins using KEGG, GO, MsigDB, ... gene set collections
+* Correlation of proteins with the inflammation markers and BVAS scores
+* Effect of cortisone treatment on protein expression
+* Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate ML techniques)
+
+:::note
+This report describes the performed analyses and a selection of the resulting
+output of the plasma results only. The full results and all plots are found in
+the accompanying Results folder.
+:::
