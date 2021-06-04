@@ -1,12 +1,5 @@
 ---
 title: Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)
-output: 
-    bookdown::gitbook:
-        self_contained: false
-        config:
-          sharing:
-            facebook: false
-            twitter: false
 documentclass: book
 link-citations: yes
 favicon: image/favicon.ico
@@ -51,6 +44,6 @@ To accomplish this, following analyses have been agreed upon:
 
 :::note
 This report describes the performed analyses and a selection of the resulting
-output of the plasma results only. The full results and all plots are found in
+output for one comparison of the plasma results only. The full results and all plots are found in
 the accompanying Results folder.
 :::
