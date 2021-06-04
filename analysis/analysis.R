@@ -148,6 +148,13 @@ png(paste0(plasma_qc_dir, "plasma_pca_pc1_loadings.png"))
 hi_loadings(pcaobj_plasma,topN = 10)
 dev.off()
 
+# PCA of luminex - olink
+df_pca <- t(scale(t(assay(plasma))))
+df_prcomp <- prcomp(df_pca, center = FALSE, scale. = FALSE)
+plot(df_prcomp$x, col = ifelse(rownames(df_prcomp$x) %in% c("CCL18_PARC", "TIMP-1", "C5a", "CA15-3_MUC-1"), "red", "grey"), pch=19)
+png(paste0(plasma_qc_dir, "plasma_olink_lum_pca.png"))
+
+
 ###########################
 ### Heatmap ###############
 ###########################
