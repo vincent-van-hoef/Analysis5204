@@ -98,7 +98,7 @@ knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healt
 
 ### NEA
 
-NEA or Network Enrichment Analysis is an alternative method to asses which biological functions are regulated following an experiment or when comparing different conditions. As opposed to GSEA, where you look at the overlap of genes in a ranked list and in a gene set directly, in NEA you take the **number of known associations** between genes found to be significant and a gene set into account. To do this we use the NEA algorithm as implemented in the NEAT R package (see [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1203-6) for a relatively easy explanation).
+NEA or Network Enrichment Analysis is an alternative method to asses which biological functions are regulated following an experiment or when comparing different conditions. As opposed to GSEA, where you look at the overlap of genes in a ranked list and in a gene set directly, in NEA you take the **number of known associations** between genes found to be significant and a gene set into account. To do this we use the NEA algorithm as implemented in the NEAT R package (see [paper](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1203-6) for a relatively easy explanation). This is very similar to the network enrichment analysis as described by Jeggari *et al.*. The Jeggari algorithm, however, takes a very long time to run on a dataset this size so I propose to use this NEAT algorithm as an alternative. 
 
 :::fyi
 Methods paper for NEAT (NEA Test):
