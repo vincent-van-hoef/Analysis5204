@@ -48,7 +48,7 @@ data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gse
 
 4 additional plasma proteins were measured on Luminex and their log2 normalized concentrations were added to the plasma Olink data. Merging different types of data can result in bias, but since the Luminex data is on a similar log2 scale as the Olink NPX data and the univariate analysis is performed per-protein, this should be okay. As a sanity check, a PCA visualization of the centered and scaled expression levels of all plasma proteins (see Figure \@ref(fig:sourcePca)) shows the proteins measured by Luminex group in general with the Olink data. 
 
-```{r sourcePca, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red"}
+```{r sourcePca, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red"}
 knitr::include_graphics(c("../Results/Plasma/QC/plasma_olink_lum_pca.png"))
 ```
 

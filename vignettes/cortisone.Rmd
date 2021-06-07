@@ -28,7 +28,7 @@ As before, the GSEA results folder in the Cortisone folder contains a .xlsx file
 knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_barplot.png", "../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_emap.png"))
 ```
 
-In addition, in the **Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS** and **Results/Serum/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS**folder you can find a visualization of the location of the gene set genes in the ranked gene list and an ES calculation visualization (see Figure \@ref(fig:gseaNesCort)).
+In addition, in the **Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS** and **Results/Serum/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS** folder you can find a visualization of the location of the gene set genes in the ranked gene list and ES calculation visualization (see Figure \@ref(fig:gseaNesCort)).
 
 ```{r gseaNesCort, out.width="49%", fig.cap="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis.",fig.show='hold',fig.align='center'}
 knitr::include_graphics(c("../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_POSITIVE_REGULA.png", "../Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_PROTEOLYSIS.png"))

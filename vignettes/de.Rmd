@@ -11,6 +11,8 @@ serve as markers distinguishing the groups. It will however not return an
 estimate of the different expression among the groups, but rather a measure of
 how important a certain protein is in separating the subgroups.
 
+A very useful and practical comparison of the complemetnarity of both methods can be found [here](https://link.springer.com/article/10.1007%2Fs11306-013-0598-6).
+
 Following comparisons were looked at:
 
 * aav_remission vs active_disease
@@ -40,14 +42,14 @@ directory.
 
 The ANOVA F-test will be used to assess whether the protein expression varies
 significantly across the different sample groups, one protein at a time. If
-this is the case, a post-hoc test will look at all pairwise group comparisons
-to determine which comparisons are in fact resulting in the differential
-expression. An adjusted p-value (Tukey) will be calculated per protein.
+this is the case, a post-hoc test looked at all pairwise group comparisons
+to determine which comparisons were in fact driving the differential
+expression. An adjusted p-value (Tukey) was calculated per protein.
 
-For the ANOVA analysis, a correction for the patient covariates *age* and
-*ckd_epi* level was applied to the linear model.
+For this ANOVA analysis, an adjustment for the patient covariates *age* and
+*ckd_epi* (kidney function) level was applied to the linear model.
 
-Results for the per-protein analysis is collected in **Results/Plasma/Comparisons/{comparison}}/Univariate/** and **Results/Serum/Comparisons/{comparison}}/Univariate/**.
+Results for the per-protein analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Univariate/** and **Results/Serum/Comparisons/{comparison}}/Univariate/**.
 
 ### Protein-level
 
@@ -120,6 +122,8 @@ To better understand how this "black box" model works, the samples are visualize
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_SamplePlot_2comp.png", "../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Loadings_Comp1_Top15.png"))
 ```
 
+Most of the univariate results can be retrieved in the multivariate data as well. As such, it can be a complementary method to validate the results of the univariate analysis.
+
 Results for the PLS-DA analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Multivariate/** and **Results/Serum/Comparisons/{comparison}}/Multivariate/**.
 
-The loading weights for all proteins on the first 5 components can be found in in an excel file (e.g. active_disease_vs_healthy_controls_Loadings_Scores.xlsx). In the same folder, visualization of the samples in the PLS subspace spanned by the first 2 components, the top 15 loading weights on Comp 1 and 2 and a biplot showing the samples nd most significant proteins on the same plot are collected.
+The loading values for all proteins on the first 5 components can be found in in an excel file (e.g. active_disease_vs_healthy_controls_Loadings_Scores.xlsx). In the same folder, visualization of the samples in the PLS subspace spanned by the first 2 components, the top 15 loading weights on Comp 1 and 2 and a biplot showing the samples nd most significant proteins on the same plot are collected.

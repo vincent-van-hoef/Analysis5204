@@ -501,27 +501,19 @@ png(paste0(plasma_multi_dir, compname, "_Loadings_Comp2_Top15.png"))
 plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 2)
 dev.off()
 
-# Colect 10 highest absolute loadings
-high_c1 <- plsda.res$loadings$X %>%
-  as.data.frame() %>%
-  arrange(-abs(comp1)) %>%
-  head(5) %>% purrr::pluck(rownames)
-high_c2 <- plsda.res$loadings$X %>%
-  as.data.frame() %>%
-  arrange(-abs(comp2)) %>%
-  head(5) %>% purrr::pluck(rownames)
-high_loads <- c(high_c1, high_c2)
+# Biplot showing vars above certain absolute correlation, weight in alternative axis
+var.coord = t(cor(plsda.res$variates$X[, 1:2], plsda.res$X))[,1:2]
+protno9 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.9)))
+protno8 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.8)))
 
+if (protno9 > 4) {
+  bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE)
+  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
+} else if (protno8 > 4) { 
+  bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE)
+  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
+} 
 
-ind.coord = plsda.res$variates$X[, 1:2]
-var.coord = t(cor(ind.coord, plsda.res$X))[high_loads,1:2]
-bip <- ggplot()+
-  geom_point(data = ind.coord, aes(x=comp1, y=comp2, col = plsda.res$Y))+
-  geom_segment(data = var.coord, aes(x=0,y=0,xend=comp1*10,yend=comp2*10),
-               arrow=arrow(length=unit(0.1,"cm")), color = "#DCDCDC") +
-  theme_bw() +
-  geom_text(data = var.coord, aes(x=comp1*10, y=comp2*10, label=rownames(var.coord)),color="#006400")
-ggsave(paste0(plasma_multi_dir, compname, "_Biplot.png"), plot=bip)
 }
     
     
@@ -953,25 +945,17 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 2)
       dev.off()
       
-      # Collect 10 highest absolute loadings
-      high_c1 <- plsda.res$loadings$X %>%
-        as.data.frame() %>%
-        arrange(-abs(comp1)) %>%
-        head(5) %>% purrr::pluck(rownames)
-      high_c2 <- plsda.res$loadings$X %>%
-        as.data.frame() %>%
-        arrange(-abs(comp2)) %>%
-        head(5) %>% purrr::pluck(rownames)
-      high_loads <- c(high_c1, high_c2)
       
+      # Biplot showing vars above certain absolute correlation, weight in alternative axis
+      var.coord = t(cor(plsda.res$variates$X[, 1:2], plsda.res$X))[,1:2]
+      protno9 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.9)))
+      protno8 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.8)))
       
-      ind.coord = plsda.res$variates$X[, 1:2]
-      var.coord = t(cor(ind.coord, plsda.res$X))[high_loads,1:2]
-      bip <- ggplot()+
-        geom_point(data = ind.coord, aes(x=comp1, y=comp2, col = plsda.res$Y))+
-        geom_segment(data = var.coord, aes(x=0,y=0,xend=comp1*10,yend=comp2*10),
-                     arrow=arrow(length=unit(0.1,"cm")), color = "#DCDCDC") +
-        theme_bw() +
-        geom_text(data = var.coord, aes(x=comp1*10, y=comp2*10, label=rownames(var.coord)),color="#006400")
-      ggsave(paste0(serum_multi_dir, compname, "_Biplot.png"), plot=bip)
+      if (protno9 > 4) {
+        bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE)
+        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
+      } else if (protno8 > 4) { 
+        bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE)
+        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
+      } 
     }
