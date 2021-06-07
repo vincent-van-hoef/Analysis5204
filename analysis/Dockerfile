@@ -7,12 +7,14 @@ RUN apt-get update \
     git \
     wget
 
-RUN installGithub.r Olink-Proteomics/OlinkRPackage/OlinkAnalyze && rm -rf /tmp/downloaded_packages/
+RUN installGithub.r Olink-Proteomics/OlinkRPackage/OlinkAnalyze \
+       vincent-van-hoef/mixOmics@patch-biplot-scale \
+       && rm -rf /tmp/downloaded_packages/
 
 RUN install2.r BiocManager && /usr/local/lib/R/site-library/littler/examples/installBioc.r pcaExplorer \
       SummarizedExperiment \
       clusterProfiler \
-      mixOmics \
+      #mixOmics \
       ComplexHeatmap \
       && rm -rf /tmp/downloaded_packages/
 

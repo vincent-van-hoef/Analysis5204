@@ -1,17 +1,17 @@
 # Differential Expression
 
 To compare the different sample groups against each other we applied two
-complementary statistical techniques: univariate ANOVA and multivariate pls-da.
+complementary statistical techniques: univariate ANOVA and multivariate PLS-DA.
 ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly
 straightforward to interpret the results and will return the most differential expressed
-proteins and how much they differ between the groups. The multivariate pls-da
+proteins and how much they differ between the groups. The multivariate PLS-DA
 technique is harder to interpret but can take correlations among the proteins
 into account and might therefore result in a more robust set of proteins to
 serve as markers distinguishing the groups. It will however not return an
 estimate of the different expression among the groups, but rather a measure of
 how important a certain protein is in separating the subgroups.
 
-A very useful and practical comparison of the complemetnarity of both methods can be found [here](https://link.springer.com/article/10.1007%2Fs11306-013-0598-6).
+A very useful and practical comparison of the complementarity of both methods can be found [here](https://link.springer.com/article/10.1007%2Fs11306-013-0598-6).
 
 Following comparisons were looked at:
 
@@ -114,7 +114,7 @@ Each univariate comparison folder (e.g. **Results/Plasma/Comparisons/active_dise
 
 ## Multivariate analysis
 
-In addition, a multivariate technique called PLS-DA was used. Information about this method can be found [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-253) and [here](http://mixomics.org/case-studies/splsda-srbct/). This method attempts to represent the data in a lower dimensional set of "components", similarly to PCA. Unlike PCA, which attempts to retain as much variation of one dataset in the components, PLS methods try to maximize the covariance between two datasets (here the expression data and the phenotype data). In this way, the phenotype separation will be maximized. PLS-DA attempts to find the most optimal way to represent multidimensional data taking sample classes into account using as little components as possible. 
+In addition to the univariate analysis, a multivariate technique called PLS-DA was used. Information about this method can be found [here](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-253) and [here](http://mixomics.org/case-studies/splsda-srbct/). This method attempts to represent the data in a lower dimensional set of "components", similarly to PCA. Unlike PCA, which attempts to retain as much variation of one dataset in the components, PLS methods try to maximize the covariance between two datasets (here the expression data and the phenotype data). In this way, the phenotype separation will be maximized. PLS-DA attempts to find the most optimal way to represent multidimensional data taking sample classes into account using as little components as possible. 
 
 To better understand how this "black box" model works, the samples are visualized in the reduced PLS space (see Figure \@ref(fig:plsPlot) (Left)). In this plot healthy controls separate quite well from the active disease samples on - mainly - Component 1. By looking at which proteins contribute the strongest to Component 1 (see Figure \@ref(fig:plsPlot) (Right)), one can get an idea of which proteins are most important in separating these two phenotypes. The proteins with the highest absolute loadings will drive the separation the most. For example, a protein with a high positive loading on component 1 will contribute significantly to the separation on component 1. Moreover, a **positive** loading value on component 1 indicates that the expression of that protein is also higher in samples that have a higher component 1 value. a **negative** loading value on component 1 indicates that the expression of that protein is lower in samples that have a higher component 1 value. Looking at and combining these plots, one can get an idea on how the samples are separated and which proteins are important to drive this separation.
 
@@ -122,8 +122,12 @@ To better understand how this "black box" model works, the samples are visualize
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_SamplePlot_2comp.png", "../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Loadings_Comp1_Top15.png"))
 ```
 
+Another useful way of illustrating the results of the multivariate analysis is through a *biplot*. This plot shows the samples in the PLS space as well as the proteins in the same figure. This way you can visually show how the proteins correlate with the components and with each other. An example can be seen in Figure \@ref(fig:biplot). This plot shows the samples in the same space as in Figure \@ref(fig:plsPlot) (Left), as well as the loading weights of the proteins with a correlation to one of the components larger than 0.9 (i.e. the proteins that are most important for those components). From this plot it becomes clear for example that TIMP-1 is negatively correlated with Comp 1: low Comp 1 values are associated with high TIMP-1 expression, and since the sample classes separate on Comp 1 this is also one of the main drivers of the difference in disesed and healthy patients.
+
+```{r biplot, fig.cap="Biplot of the active disease and healthy control samples. Only variables with a correlation to component 1 or 2 larger than 0.9 are included. Loading weights can be seen on the alternative axis on the top and right for Comp 1 and 2 respectively.",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Biplot_cor09.png"))
+```
+
 Most of the univariate results can be retrieved in the multivariate data as well. As such, it can be a complementary method to validate the results of the univariate analysis.
 
-Results for the PLS-DA analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Multivariate/** and **Results/Serum/Comparisons/{comparison}}/Multivariate/**.
-
-The loading values for all proteins on the first 5 components can be found in in an excel file (e.g. active_disease_vs_healthy_controls_Loadings_Scores.xlsx). In the same folder, visualization of the samples in the PLS subspace spanned by the first 2 components, the top 15 loading weights on Comp 1 and 2 and a biplot showing the samples nd most significant proteins on the same plot are collected.
+Results for the PLS-DA analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Multivariate/** and **Results/Serum/Comparisons/{comparison}}/Multivariate/**. The loading values for all proteins on the first 5 components can be found in in an excel file (e.g. active_disease_vs_healthy_controls_Loadings_Scores.xlsx). In the same folder, visualization of the samples in the PLS subspace spanned by the first 2 components, the top 15 loading weights on Comp 1 and 2 and a biplot showing the samples and most significant proteins on the same plot are collected.

@@ -151,8 +151,9 @@ dev.off()
 # PCA of luminex - olink
 df_pca <- t(scale(t(assay(plasma))))
 df_prcomp <- prcomp(df_pca, center = FALSE, scale. = FALSE)
-plot(df_prcomp$x, col = ifelse(rownames(df_prcomp$x) %in% c("CCL18_PARC", "TIMP-1", "C5a", "CA15-3_MUC-1"), "red", "grey"), pch=19)
 png(paste0(plasma_qc_dir, "plasma_olink_lum_pca.png"))
+plot(df_prcomp$x, col = ifelse(rownames(df_prcomp$x) %in% c("CCL18_PARC", "TIMP-1", "C5a", "CA15-3_MUC-1"), "red", "grey"), pch=19)
+dev.off()
 
 
 ###########################
@@ -480,12 +481,15 @@ dir.create(plasma_multi_dir, recursive = TRUE)
 
 pls_obj <- plasma[,sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)]
 
-plsda.res <-splsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
+plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
 plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
 
 png(paste0(plasma_multi_dir, compname, "_ClassificationError_5comp.png"))
 plot(plsda.perf)
 dev.off()
+
+# rerun with 2 components - necessary to get scaling right in biplot
+plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=2, scale=TRUE)
 
 plotIndiv(plsda.res, comp = c(1:2))
 ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp.png"))
@@ -924,12 +928,15 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       
       pls_obj <- serum[,sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)]
       
-      plsda.res <-splsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
+      plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
       plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
       
       png(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.png"))
       plot(plsda.perf)
       dev.off()
+      
+      # rerun with 2 components - necessary to get scaling right in biplot
+      plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=2, scale=TRUE)
       
       plotIndiv(plsda.res, comp = c(1:2))
       ggsave(paste0(serum_multi_dir, compname, "_SamplePlot_2comp.png"))
