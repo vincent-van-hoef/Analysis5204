@@ -1,6 +1,16 @@
 # Data Cleaning
 
-Prior to analysis, the raw clinical data and expression data has to be cleaned; i.e sample names have to be consistent, spaces removed, all samples need metadata, ...
+Prior to any analysis, clinical data and raw expression data has to be cleaned; i.e sample names have to be consistent, spaces removed, all samples need metadata, ... Below is a rough description of the different steps but a complete overview with code to go from excel to cleaned up data can be found via these links:
+
+View the code for the preprocessing of the metadata of the
+[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R)
+and the
+[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R).
+
+View the code for the preprocessing of the experimental data of the
+[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R)
+and the
+[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R).
 
 ## Clinical Data
 
@@ -12,27 +22,19 @@ The resulting metadata for serum and plasma separately is saved in the folder
 **Results/Plasma/plasma_metadata.csv** and **Results/Serum/serum_metadata.csv**
 respectively.
 
-View the code for the preprocessing of the metadata of the
-[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R)
-and the
-[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R)
-by clicking on the links.
-
 ## Expression Data
 
 The names of the samples were cleaned and modified to correspond to the metadata.
 Three samples that were present in the expression data but had no metadata were
 removed ("lun1059", "iga2156" and "umu78").
 
-Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and
-the Inflammation panel. The expression values correlate well between the panels
-so only the Inflammation data is kept for these proteins.
+4 additional plasma proteins were measured on Luminex and their log2 normalized concentrations were added to the plasma Olink data. Merging different types of data can result in bias, but since the Luminex data is on a similar log2 scale as the Olink NPX data and the univariate analysis is performed per-protein, this should be okay. As a sanity check, a PCA visualization of the centered and scaled expression levels of all plasma proteins (see Figure \@ref(fig:sourcePca)) shows the proteins measured by Luminex group in general with the Olink data. 
 
-View the code for the preprocessing of the experimental data of the
-[plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R)
-and the
-[serum](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R)
-by clicking on the links.
+```{r sourcePca, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red"}
+knitr::include_graphics(c("../Results/Plasma/QC/plasma_olink_lum_pca.png"))
+```
+
+## Acces raw data
 
 In addition, all data and metadata can also be accessed via R:
 
@@ -44,17 +46,13 @@ data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gse
       package = "Analysis5204")
 ```
 
-### Luminex Data
-
-4 additional plasma proteins were measured on Luminex and their log2 normalized concentrations were added to the plasma Olink data. Merging different types of data can result in bias, but since the Luminex data is on a similar log2 scale as the Olink NPX data and the univariate analysis is performed per-protein, this should be okay. As a sanity check, a PCA visualization of the centered and scaled expression levels of all plasma proteins (see Figure \@ref(fig:sourcePca)) shows the proteins measured by Luminex group in general with the Olink data. 
-
-```{r sourcePca, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red"}
-knitr::include_graphics(c("../Results/Plasma/QC/plasma_olink_lum_pca.png"))
-```
-
 # Quality Control
 
-One additional sample (vaska637) is filtered out beforehand due to technical concerns (failed sample according to Olink QC rapport).
+One additional sample (vaska637) is filtered out beforehand due to technical concerns (failed sample according to Olink QC rapport). 
+
+Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and
+the Inflammation panel. The expression values correlate well between the panels
+so only the Inflammation data is kept for these proteins.
 
 :::fyi
 Shown in this section are the results for the plasma samples. The QC of the serum samples is available in the folder /Serum/QC/

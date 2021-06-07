@@ -40,10 +40,9 @@ To accomplish this, following analyses have been agreed upon:
 * Pathway analysis of differential expressed proteins using KEGG, GO, MsigDB, ... gene set collections
 * Correlation of proteins with the inflammation markers and BVAS scores
 * Effect of cortisone treatment on protein expression
-* Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate ML techniques)
+* Biomarkers/Predictors of GPA vs MPA and MPO-ANCA+ vs PR3-ANCA+ (using appropriate multivariate techniques)
 
 :::note
 This report describes the performed analyses and a selection of the resulting
-output for one comparison of the plasma results only. The full results and all plots are found in
-the accompanying Results folder.
+output for one comparison of the plasma results only. The full results and all plots are found in the accompanying Results folder.
 :::

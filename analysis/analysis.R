@@ -511,10 +511,10 @@ protno9 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.9)))
 protno8 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.8)))
 
 if (protno9 > 4) {
-  bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE)
+  bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
   ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
 } else if (protno8 > 4) { 
-  bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE)
+  bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
   ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
 } 
 
@@ -959,10 +959,10 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       protno8 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.8)))
       
       if (protno9 > 4) {
-        bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE)
+        bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
         ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
       } else if (protno8 > 4) { 
-        bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE)
+        bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
         ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
       } 
     }
