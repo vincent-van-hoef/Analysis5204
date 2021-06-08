@@ -1,5 +1,3 @@
-# TODO #4 Update BVAS Scores
-
 # Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
 rm(list=ls())
 setwd("/home/rstudio/")

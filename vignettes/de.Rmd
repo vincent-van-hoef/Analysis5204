@@ -11,7 +11,7 @@ serve as markers distinguishing the groups. It will however not return an
 estimate of the different expression between the groups, but rather a measure of
 how important a certain protein is in separating the groups.
 
-A very useful and practical comparison of the complementarity of both methods can be found [here](https://link.springer.com/article/10.1007%2Fs11306-013-0598-6).
+These two analytical methods will not necessarily return exactly the same results. A very useful and practical comparison of the complementarity of both methods can be found [here](https://link.springer.com/article/10.1007%2Fs11306-013-0598-6).
 
 Following comparisons were looked at:
 
@@ -40,14 +40,14 @@ directory.
 
 An ANOVA F-test was be used to assess whether the protein expression varies
 significantly across the different sample groups, one protein at a time. If
-this was the case, a post-hoc test looked at all pairwise group comparisons
+this was found to be the case, a post-hoc test looked at all pairwise group comparisons
 to determine which comparisons were in fact driving the differential
 expression. An adjusted p-value (Tukey) was calculated per protein.
 
 For this ANOVA analysis, an adjustment for the patient covariates *age* and
 *ckd_epi* (kidney function) level was applied to the linear model.
 
-Results for the per-protein analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Univariate/** and **Results/Serum/Comparisons/{comparison}}/Univariate/**.
+All results for the per-protein analysis are collected in **Results/Plasma/Comparisons/{comparison}}/Univariate/** and **Results/Serum/Comparisons/{comparison}}/Univariate/**.
 
 ### Protein-level
 
@@ -57,7 +57,7 @@ Two visualization were produced from the differential expression results. First,
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_volcano_anova_posthoc.png", "../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/Heatmap_Sig_Prots_Prots.png"))
 ```
 
-The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression). For each comparison, a similar table can be found in the appropriate folder.
+The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression). For each comparison, such a table can be found in the appropriate folder.
 
 ```{r top15, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Table of 15 most DE proteins"}
 knitr::include_graphics(c("../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_Top15_table.png"))
