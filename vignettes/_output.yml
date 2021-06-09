@@ -1,8 +1,6 @@
 bookdown::gitbook:
     highlight: tango
     css: assets/style.css
-    includes:
-      in_header: assets/header.html
     config:
       sharing: no
       toc:
