@@ -53,22 +53,22 @@ output for one comparison of the plasma results only. The full results and all p
 :::
 
 
-::::: {.panelset}
-
-::: {.panel}
-[Plasma]{.panel-name}
-
-```{r gseaPlotsPlasma, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets."}
-plot(1:10)
-```
-:::
-
-::: {.panel}
-[Serum]{.panel-name}
-
-```{r gseaPlotsSerum, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("../Results/Serum/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png"))
-```
-:::
-
-:::::
+#::::: {.panelset}
+#
+#::: {.panel}
+#[Plasma]{.panel-name}
+#
+#```{r gseaPlotsPlasma, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets."}
+#plot(1:10)
+#```
+#:::
+#
+#::: {.panel}
+#[Serum]{.panel-name}
+#
+#```{r gseaPlotsSerum, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.",fig.show='hold',fig.align='center'}
+#knitr::include_graphics(c("../Results/Serum/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png"))
+#```
+#:::
+#
+#:::::
