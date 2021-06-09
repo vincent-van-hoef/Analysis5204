@@ -25,7 +25,6 @@ Imports:
     data.table,
     ggplot2,
     OlinkAnalyze,
-    SummarizedExperiment,
     emmeans,
     lme4,
     gt,
