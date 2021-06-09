@@ -20,7 +20,7 @@ xaringanExtra::use_panelset()
 xaringanExtra::style_panelset(font_family = "inherit")
 ```
 
-# Introduction {.panelset}
+# Introduction
 
 The ANCA-associated vasculitides are rare but severe autoimmune disorders.
 Tools for improved diagnostics and prognostics are needed. In this project, 184
@@ -53,14 +53,22 @@ output for one comparison of the plasma results only. The full results and all p
 :::
 
 
+::::: {.panelset}
 
-## Plasma {-}
+::: {.panel}
+[Plasma]{.panel-name}
+
 ```{r gseaPlotsPlasma, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets."}
 plot(1:10)
 ```
+:::
 
+::: {.panel}
+[Serum]{.panel-name}
 
-## Serum {-}
 ```{r gseaPlotsSerum, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.",fig.show='hold',fig.align='center'}
 knitr::include_graphics(c("../Results/Serum/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png"))
 ```
+:::
+
+:::::
