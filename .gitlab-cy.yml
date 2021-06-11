@@ -1,8 +1,8 @@
 pages:
   script:
     - mkdir public
-    - cp vignettes/Report/* public
-    - cp Results/* public
+    - cp -r vignettes/Report/ public
+    - cp -r vignettes/Results .
   artifacts:
     paths:
       - public
