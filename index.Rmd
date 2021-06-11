@@ -61,7 +61,7 @@ output for one comparison of the plasma results only. The full results and all p
 [Plasma]{.panel-name}
 
 ```{r gseaPlotsPlasma, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets."}
-i#readxl::read_excel("Results/Plasma/Correlation/bvas/bvas_pearson_correlation.xlsx") %>% 
+#readxl::read_excel("Results/Plasma/Correlation/bvas/bvas_pearson_correlation.xlsx") %>% 
 #mutate_if(is.numeric, round, 3) %>%
 #datatable(options = list(scrollX = TRUE,
 #                          columnDefs = list(list(targets = 6,
