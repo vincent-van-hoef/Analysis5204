@@ -4,8 +4,9 @@ pages:
   stage: deploy
   script:
     - mkdir public
+    - mkdir Results
     - cp -r vignettes/Report/* public
-    - cp -r vignettes/Results .
+    - cp -r vignettes/Results/* Results
   artifacts:
     paths:
      - public
