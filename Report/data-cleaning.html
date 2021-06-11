@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Data Cleaning | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)</title>
+  <meta name="description" content="Report summarizing the results for project" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Data Cleaning | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Report summarizing the results for project" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Data Cleaning | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)" />
+  
+  <meta name="twitter:description" content="Report summarizing the results for project" />
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="index.html"/>
+<link rel="next" href="quality-control.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+<script src="libs/panelset-0.2.6/panelset.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.17/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="./"><img src="image/NBIS-logo.png"></a></li>
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="data-cleaning.html"><a href="data-cleaning.html"><i class="fa fa-check"></i><b>2</b> Data Cleaning</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-cleaning.html"><a href="data-cleaning.html#clinical-data"><i class="fa fa-check"></i><b>2.1</b> Clinical Data</a></li>
+<li class="chapter" data-level="2.2" data-path="data-cleaning.html"><a href="data-cleaning.html#expression-data"><i class="fa fa-check"></i><b>2.2</b> Expression Data</a></li>
+<li class="chapter" data-level="2.3" data-path="data-cleaning.html"><a href="data-cleaning.html#access-raw-data"><i class="fa fa-check"></i><b>2.3</b> Access raw data</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="quality-control.html"><a href="quality-control.html#data-distribution"><i class="fa fa-check"></i><b>3.1</b> Data Distribution</a></li>
+<li class="chapter" data-level="3.2" data-path="quality-control.html"><a href="quality-control.html#pca"><i class="fa fa-check"></i><b>3.2</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="differential-expression.html"><a href="differential-expression.html"><i class="fa fa-check"></i><b>4</b> Differential Expression</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="differential-expression.html"><a href="differential-expression.html#univariate-analysis"><i class="fa fa-check"></i><b>4.1</b> Univariate Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="differential-expression.html"><a href="differential-expression.html#protein-level"><i class="fa fa-check"></i><b>4.1.1</b> Protein-level</a></li>
+<li class="chapter" data-level="4.1.2" data-path="differential-expression.html"><a href="differential-expression.html#gsea"><i class="fa fa-check"></i><b>4.1.2</b> GSEA</a></li>
+<li class="chapter" data-level="4.1.3" data-path="differential-expression.html"><a href="differential-expression.html#nea"><i class="fa fa-check"></i><b>4.1.3</b> NEA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="differential-expression.html"><a href="differential-expression.html#multivariate-analysis"><i class="fa fa-check"></i><b>4.2</b> Multivariate analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="correlation.html"><a href="correlation.html"><i class="fa fa-check"></i><b>5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="correlation.html"><a href="correlation.html#crp"><i class="fa fa-check"></i><b>5.1</b> crp</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation.html"><a href="correlation.html#sr"><i class="fa fa-check"></i><b>5.2</b> sr</a></li>
+<li class="chapter" data-level="5.3" data-path="correlation.html"><a href="correlation.html#bvas"><i class="fa fa-check"></i><b>5.3</b> bvas</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="cortisone.html"><a href="cortisone.html"><i class="fa fa-check"></i><b>6</b> Cortisone</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="cortisone.html"><a href="cortisone.html#protein-level-1"><i class="fa fa-check"></i><b>6.1</b> Protein-level</a></li>
+<li class="chapter" data-level="6.2" data-path="cortisone.html"><a href="cortisone.html#gsea-1"><i class="fa fa-check"></i><b>6.2</b> GSEA</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="material-and-methods.html"><a href="material-and-methods.html"><i class="fa fa-check"></i><b>7</b> Material and Methods</a></li>
+<li class="chapter" data-level="8" data-path="data-responsibility.html"><a href="data-responsibility.html"><i class="fa fa-check"></i><b>8</b> Data Responsibility</a></li>
+<li class="chapter" data-level="9" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i><b>9</b> Acknowledgements</a></li>
+<li class="chapter" data-level="10" data-path="closing-procedures.html"><a href="closing-procedures.html"><i class="fa fa-check"></i><b>10</b> Closing Procedures</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-cleaning" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Data Cleaning</h1>
+<p>Prior to any analysis, clinical data and raw expression data has to be cleaned; i.e sample names have to be consistent, spaces removed, all samples need metadata, … Below is a rough description of the different steps but a complete overview with code to go from excel to cleaned up data can be found via these links:</p>
+<p>View the code for the preprocessing of the metadata of the
+<a href="https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R">plasma</a>
+and the
+<a href="https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_metadata.R">serum</a>.</p>
+<p>View the code for the preprocessing of the experimental data of the
+<a href="https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_npx.R">plasma</a>
+and the
+<a href="https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/serum_npx.R">serum</a>.</p>
+<div id="clinical-data" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Clinical Data</h2>
+<p>The metadata for the separate subgroups/diseases was combined into a single metadata dataframe per tissue. Column names were cleaned and made consistent between the different subgroups to allow for easier handling in R. Further cleaning of the dates was performed in R using the <em>lubridate</em> package and annotations such as age, time in freezer, BVAS score and site of sample origin were added as well.</p>
+<p>Samples without Olink expression data were removed from the metadata of plasma (“lun1065”) and serum ((“lin113”, “sle_121/a” and “sle_156/a”).</p>
+<p>The resulting metadata for serum and plasma separately is saved in the folder
+<strong>Results/Plasma/plasma_metadata.csv</strong> and <strong>Results/Serum/serum_metadata.csv</strong>
+respectively.</p>
+</div>
+<div id="expression-data" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Expression Data</h2>
+<p>The names of the samples were cleaned and modified to correspond to the metadata.
+Three samples that were present in the expression data but had no metadata were
+removed (“lun1059”, “iga2156” and “umu78”).</p>
+<p>4 additional plasma proteins were measured on Luminex and their log2 normalized concentrations were added to the plasma Olink data. Merging different types of data can result in bias, but since the Luminex data is on a similar log2 scale as the Olink NPX data and the univariate analysis is performed per-protein, this should be okay. As a sanity check, a PCA visualization of the centered and scaled expression levels of all plasma proteins (see Figure <a href="data-cleaning.html#fig:sourcePca">2.1</a>) shows the proteins measured by Luminex group in general with the Olink data.</p>
+<div class="figure" style="text-align: center"><span id="fig:sourcePca"></span>
+<img src="Results/Plasma/QC/plasma_olink_lum_pca.png" alt="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red" width="75%" />
+<p class="caption">
+Figure 2.1: Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red
+</p>
+</div>
+</div>
+<div id="access-raw-data" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Access raw data</h2>
+<p>In addition, all data and metadata can also be accessed via R:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="data-cleaning.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-2"><a href="data-cleaning.html#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;vincent-van-hoef/Analysis5204&quot;</span>)</span>
+<span id="cb1-3"><a href="data-cleaning.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;Analysis5204&quot;</span>)</span>
+<span id="cb1-4"><a href="data-cleaning.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="at">list=</span><span class="fu">c</span>(<span class="st">&quot;plasma_metadata&quot;</span>, <span class="st">&quot;plasma_npx&quot;</span>, <span class="st">&quot;serum_metadata&quot;</span>, <span class="st">&quot;serum_npx&quot;</span>, <span class="st">&quot;gsea_sets&quot;</span>, <span class="st">&quot;lum_dat&quot;</span>),</span>
+<span id="cb1-5"><a href="data-cleaning.html#cb1-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">package =</span> <span class="st">&quot;Analysis5204&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="quality-control.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
