@@ -1,11 +1,14 @@
+image: alpine:latest
+
 pages:
+  stage: deploy
   script:
     - mkdir public
     - cp -r vignettes/Report/ public
     - cp -r vignettes/Results .
   artifacts:
     paths:
-      - public
+     - public
   only:
     - master
 
