@@ -2,7 +2,10 @@ image: rocker/verse:4.0.4
 
 pages:
   script:
-    - - Rscript -e "bookdown::render_book('index.Rmd', 'all', output_dir = 'public')"
+    - R -e "install.packages('knitr',repos='http://cran.rstudio.com')"
+    - R -e "install.packages('dplyr',repos='http://cran.rstudio.com')"
+    - R -e "install.packages('DT',repos='http://cran.rstudio.com')"
+    - Rscript -e "bookdown::render_book('index.Rmd', output_dir = 'public')"
   artifacts:
     paths:
      - public
