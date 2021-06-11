@@ -2,7 +2,7 @@ image: vvanhoef/analysis5204:latest
 
 pages:
   script:
-    - cp Report/Results ..
+    - cp -r Report/Results ..
     - Rscript -e "bookdown::render_book('index.Rmd', output_dir = 'public')"
   artifacts:
     paths:
