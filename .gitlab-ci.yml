@@ -3,6 +3,7 @@ image: vvanhoef/analysis5204:latest
 pages:
   script:
     - cp -r Report/Results .
+    - mkdir public
     - Rscript -e "bookdown::render_book('index.Rmd', output_dir = 'public')"
   artifacts:
     paths:

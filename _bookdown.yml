@@ -1,0 +1,13 @@
+output_dir: Report
+delete_merged_file: true
+rmd_files:
+- index.Rmd
+- quality.Rmd
+- de.Rmd 
+- correlation.Rmd
+- cortisone.Rmd
+- methods.Rmd
+- data_responsibility.Rmd
+- acknowledgements.Rmd
+- closing.Rmd
+new_session: no
