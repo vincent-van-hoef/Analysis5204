@@ -2,9 +2,10 @@ image: rocker/verse:4.0.4
 
 pages:
   script:
-    - R -e "install.packages('knitr',repos='http://cran.rstudio.com')"
-    - R -e "install.packages('dplyr',repos='http://cran.rstudio.com')"
-    - R -e "install.packages('DT',repos='http://cran.rstudio.com')"
+    - installGithub.r gadenbuie/xaringanExtra
+    - R -e "install.packages('knitr')"
+    - R -e "install.packages('dplyr')"
+    - R -e "install.packages('DT')"
     - Rscript -e "bookdown::render_book('index.Rmd', output_dir = 'public')"
   artifacts:
     paths:
