@@ -1,0 +1,11 @@
+pages:
+  script:
+    - mkdir public
+    - cp -r vignettes/Report/ public
+    - cp -r vignettes/Results .
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
+

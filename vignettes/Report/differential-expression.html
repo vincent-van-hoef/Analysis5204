@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Differential Expression | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)</title>
+  <meta name="description" content="Report summarizing the results for project" />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Differential Expression | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Report summarizing the results for project" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Differential Expression | Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)" />
+  
+  <meta name="twitter:description" content="Report summarizing the results for project" />
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon" />
+<link rel="prev" href="quality-control.html"/>
+<link rel="next" href="correlation.html"/>
+<script src="libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+<script src="libs/panelset-0.2.6/panelset.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.17/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="toc-logo"><a href="./"><img src="image/NBIS-logo.png"></a></li>
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="data-cleaning.html"><a href="data-cleaning.html"><i class="fa fa-check"></i><b>2</b> Data Cleaning</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="data-cleaning.html"><a href="data-cleaning.html#clinical-data"><i class="fa fa-check"></i><b>2.1</b> Clinical Data</a></li>
+<li class="chapter" data-level="2.2" data-path="data-cleaning.html"><a href="data-cleaning.html#expression-data"><i class="fa fa-check"></i><b>2.2</b> Expression Data</a></li>
+<li class="chapter" data-level="2.3" data-path="data-cleaning.html"><a href="data-cleaning.html#access-raw-data"><i class="fa fa-check"></i><b>2.3</b> Access raw data</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="quality-control.html"><a href="quality-control.html"><i class="fa fa-check"></i><b>3</b> Quality Control</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="quality-control.html"><a href="quality-control.html#data-distribution"><i class="fa fa-check"></i><b>3.1</b> Data Distribution</a></li>
+<li class="chapter" data-level="3.2" data-path="quality-control.html"><a href="quality-control.html#pca"><i class="fa fa-check"></i><b>3.2</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="differential-expression.html"><a href="differential-expression.html"><i class="fa fa-check"></i><b>4</b> Differential Expression</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="differential-expression.html"><a href="differential-expression.html#univariate-analysis"><i class="fa fa-check"></i><b>4.1</b> Univariate Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="differential-expression.html"><a href="differential-expression.html#protein-level"><i class="fa fa-check"></i><b>4.1.1</b> Protein-level</a></li>
+<li class="chapter" data-level="4.1.2" data-path="differential-expression.html"><a href="differential-expression.html#gsea"><i class="fa fa-check"></i><b>4.1.2</b> GSEA</a></li>
+<li class="chapter" data-level="4.1.3" data-path="differential-expression.html"><a href="differential-expression.html#nea"><i class="fa fa-check"></i><b>4.1.3</b> NEA</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="differential-expression.html"><a href="differential-expression.html#multivariate-analysis"><i class="fa fa-check"></i><b>4.2</b> Multivariate analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="correlation.html"><a href="correlation.html"><i class="fa fa-check"></i><b>5</b> Correlation</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="correlation.html"><a href="correlation.html#crp"><i class="fa fa-check"></i><b>5.1</b> crp</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation.html"><a href="correlation.html#sr"><i class="fa fa-check"></i><b>5.2</b> sr</a></li>
+<li class="chapter" data-level="5.3" data-path="correlation.html"><a href="correlation.html#bvas"><i class="fa fa-check"></i><b>5.3</b> bvas</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="cortisone.html"><a href="cortisone.html"><i class="fa fa-check"></i><b>6</b> Cortisone</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="cortisone.html"><a href="cortisone.html#protein-level-1"><i class="fa fa-check"></i><b>6.1</b> Protein-level</a></li>
+<li class="chapter" data-level="6.2" data-path="cortisone.html"><a href="cortisone.html#gsea-1"><i class="fa fa-check"></i><b>6.2</b> GSEA</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="material-and-methods.html"><a href="material-and-methods.html"><i class="fa fa-check"></i><b>7</b> Material and Methods</a></li>
+<li class="chapter" data-level="8" data-path="data-responsibility.html"><a href="data-responsibility.html"><i class="fa fa-check"></i><b>8</b> Data Responsibility</a></li>
+<li class="chapter" data-level="9" data-path="acknowledgements.html"><a href="acknowledgements.html"><i class="fa fa-check"></i><b>9</b> Acknowledgements</a></li>
+<li class="chapter" data-level="10" data-path="closing-procedures.html"><a href="closing-procedures.html"><i class="fa fa-check"></i><b>10</b> Closing Procedures</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Identification of clinical biomarkers for ANCA-associated vasculitis (#5204)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="differential-expression" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Differential Expression</h1>
+<p>To compare the different sample groups against each other we applied two
+complementary statistical techniques: univariate ANOVA and multivariate PLS-DA.
+ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly
+straightforward to interpret the results and will return the most differential expressed
+proteins and how much they differ between the groups. The multivariate PLS-DA
+technique is harder to interpret but can take correlations among the proteins
+into account and might therefore result in a more robust set of proteins to
+serve as markers distinguishing the groups. It will however not return an
+estimate of the different expression between the groups, but rather a measure of
+how important a certain protein is in separating the groups.</p>
+<p>These two analytical methods will not necessarily return exactly the same results. A very useful and practical comparison of the complementarity of both methods can be found <a href="https://link.springer.com/article/10.1007%2Fs11306-013-0598-6">here</a>.</p>
+<p>Following comparisons were looked at:</p>
+<ul>
+<li>aav_remission vs active_disease</li>
+<li>aav_remission vs healthy_controls</li>
+<li>aav_remission vs RA</li>
+<li>aav_remission vs SLE_nephritis</li>
+<li>active_disease vs healthy_controls</li>
+<li>active_disease vs RA</li>
+<li>active_disease vs SLE_nephritis</li>
+<li>healthy_controls vs RA</li>
+<li>healthy_controls vs SLE_nephritis</li>
+<li>MPA vs GPA</li>
+<li>MPO_pos vs PR3_pos</li>
+<li>RA vs SLE_nephritis</li>
+</ul>
+<div class="note">
+<p>All results for each comparison are collected in either <strong>/Plasma/Comparisons</strong>
+or <strong>/Serum/Comparisons</strong>.</p>
+<p>To keep the size of this report manageable, the results shown here are limited to the active_disease vs healthy_control comparison in Plasma. The results for all other comparisons are found in the appropriate folder of the Results
+directory.</p>
+</div>
+<div id="univariate-analysis" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Univariate Analysis</h2>
+<p>An ANOVA F-test was be used to assess whether the protein expression varies
+significantly across the different sample groups, one protein at a time. If
+this was found to be the case, a post-hoc test looked at all pairwise group comparisons
+to determine which comparisons were in fact driving the differential
+expression. An adjusted p-value (Tukey) was calculated per protein.</p>
+<p>For this ANOVA analysis, an adjustment for the patient covariates <em>age</em> and
+<em>ckd_epi</em> (kidney function) level was applied to the linear model.</p>
+<p>All results for the per-protein analysis are collected in <strong>Results/Plasma/Comparisons/{comparison}}/Univariate/</strong> and <strong>Results/Serum/Comparisons/{comparison}}/Univariate/</strong>.</p>
+<div id="protein-level" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Protein-level</h3>
+<p>Two visualization were produced from the differential expression results. First, a volcano plot of the post-hoc results is made for each comparison. In these type of plots, proteins in the left or right upper quadrant are the most significantly differentially expressed. The volcano plot for active_disease vs healthy_control is shown in Figure <a href="differential-expression.html#fig:glplots">4.1</a> (Left). In addition, a heatmap of proteins with a adjusted p-value &lt; 0.05 is produced. In this visualization, samples are clustered according to the expression of these significant proteins (see Figure <a href="differential-expression.html#fig:glplots">4.1</a> (Right)).</p>
+<div class="figure" style="text-align: center"><span id="fig:glplots"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_volcano_anova_posthoc.png" alt="Two visualizations of the gene-level differential expression. Volcano plot (Left) Heatmap of the significant proteins (Right)." width="49%" /><img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/Heatmap_Sig_Prots_Prots.png" alt="Two visualizations of the gene-level differential expression. Volcano plot (Left) Heatmap of the significant proteins (Right)." width="49%" />
+<p class="caption">
+Figure 4.1: Two visualizations of the gene-level differential expression. Volcano plot (Left) Heatmap of the significant proteins (Right).
+</p>
+</div>
+<p>The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in <a href="differential-expression.html#fig:top15">4.2</a>. The “estimate” column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression). For each comparison, such a table can be found in the appropriate folder.</p>
+<div class="figure" style="text-align: center"><span id="fig:top15"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_Top15_table.png" alt="Table of 15 most DE proteins" width="75%" />
+<p class="caption">
+Figure 4.2: Table of 15 most DE proteins
+</p>
+</div>
+<p>A full list of results for all proteins can be found in <strong>/Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_anova_posthoc_results.xlsx</strong>.</p>
+</div>
+<div id="gsea" class="section level3" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> GSEA</h3>
+<p>Each univariate comparison folder (e.g. <strong>Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/</strong>) contains a <strong>GSEA/</strong> folder that contains the output of a gene set enrichment analysis. GSEA uses a statistical metric comparing two conditions to rank all genes (for example according to Log2FoldChange) and applies a weighted Kolmogorov–Smirnov (KS) statistic to calculate an Enrichment Score (ES).</p>
+<div class="fyi">
+<p>Calculation of the Enrichment Score:</p>
+<ul>
+<li>Rank genes by a statistic (e.g. log2FoldChange)</li>
+<li>Compute cumulative sum over ranked genes:
+<ul>
+<li>Increase sum when gene in set, decrease it otherwise.</li>
+<li>Magnitude of increment depends on correlation of gene
+with phenotype.</li>
+</ul></li>
+<li>Record the maximum deviation from zero as the enrichment score (ES)</li>
+</ul>
+</div>
+<p>The ES and NES (ES normalized for set size) of a set are calculated by looking at where the statistics of genes belonging to a certain set can be found in the ranked gene list. A high (N)ES indicates these genes are found high up in the list. In other words, a high (N)ES value means that for the genes in this set there is - on average - a shift towards a higher expression. The significance of each (N)ES is calculated permuting the sets and recomputing ES, getting a null distribution for the ES. A multiple comparison correction is also performed on the p values. More info on the GSEA algorithm can be found <a href="https://bioinformatics.mdanderson.org/MicroarrayCourse/Lectures09/gsea1_bw.png">here</a>.</p>
+<p>In this project we used the “estimate” as the statistic to rank the genes (equivalent to log2FoldChange). When it comes to the gene sets to be tested, a compendium of gene sets developed and maintained by the Bader Lab was used (called Human_GOBP_AllPathways_no_GO_iea_March_01_2021_symbol.gmt; download <a href="http://download.baderlab.org/EM_Genesets/March_01_2021/Human/symbol/Human_GOBP_AllPathways_no_GO_iea_March_01_2021_symbol.gmt">here</a>). This gene set collection combines data from Gene Ontology (GO) with pathway data from MsigdB, Reactome, WikiPathways, … for a total of around 18500 gene sets.</p>
+<p>Each GSEA results folder contains a .xlsx file containing the full results and two different visualizations of the top terms (see Figure <a href="differential-expression.html#fig:gseaPlots">4.3</a>). These figures include a barplot of the gene sets with the 6 highest and 6 lowest NES values and an Enrichment map of the 20 gene sets with the highest absolute NES values. Enrichment maps organize gene sets into a network with edges connecting overlapping gene sets. In this way, mutually overlapping gene sets tend to cluster together, making it easier to identify functional modules.</p>
+<div class="figure" style="text-align: center"><span id="fig:gseaPlots"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png" alt="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets." width="49%" /><img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_emap.png" alt="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets." width="49%" />
+<p class="caption">
+Figure 4.3: Example of the different GSEA visualizations. (Left) Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.
+</p>
+</div>
+<p>In addition, in the <strong>GSEA_PLOTS/</strong> folder you can find a visualization of the location of the gene set genes in the ranked gene list and an ES calculation visualization (see Figure <a href="differential-expression.html#fig:gseaNes">4.4</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:gseaNes"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_vs_healthy_controls_gseaplot_SIGNALING_BY_NO.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of Notch signaling. (Right) Upregulation of protein modification." width="49%" /><img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_vs_healthy_controls_gseaplot_POST-TRANSLATIO.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of Notch signaling. (Right) Upregulation of protein modification." width="49%" />
+<p class="caption">
+Figure 4.4: Example of two ES visualizations and calculation. (Left) Downregulation of Notch signaling. (Right) Upregulation of protein modification.
+</p>
+</div>
+</div>
+<div id="nea" class="section level3" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> NEA</h3>
+<p>NEA or Network Enrichment Analysis is an alternative method to asses which biological functions are regulated following an experiment or when comparing different conditions. As opposed to GSEA, where you look at the overlap of genes in a ranked list and in a gene set directly, in NEA you take the <strong>number of known associations</strong> between genes found to be significant and a gene set into account. To do this we use the NEA algorithm as implemented in the NEAT R package (see <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-016-1203-6">paper</a> for a relatively easy explanation). This is very similar to the network enrichment analysis as described by Jeggari <em>et al.</em>. The Jeggari algorithm, however, takes a very long time to run on a dataset this size so I propose to use this NEAT algorithm as an alternative.</p>
+<div class="fyi">
+<p>Methods paper for NEAT (NEA Test):</p>
+<p>The starting point of enrichment analyses is the identification of one or more gene sets of interest. These target gene sets are typically groups of genes that are differentially expressed between experimental conditions, but they can also be different types of gene sets: e.g., clusters of genes that are functionally similar in a given time course, or genes that are bound by a particular protein in a ChIP-chip or ChIP-seq experiment. Enrichment analysis provides a characterization of each target gene set by testing whether some known functional gene sets can be related to it. Methods for gene enrichment analysis assess the relationship between a target gene set and each functional gene set simply by considering the overlap of these two groups. In contrast to this, network enrichment analysis incorporates an evaluation of the level of association between genes in the target set and genes in the functional gene set into the test.</p>
+</div>
+<p>The significant genes were defined here as to have an adjusted p-value smaller than 0.05 and an estimate of either larger than 0 (“upregulated genes”) or smaller than 0 (“downregulated genes”). The genes set collection consisted of a slimmed down version of the gene set collection used for GSEA (only MSigDB terms for computational resons). The known associations were collected from <a href="https://string-db.org">stringDB</a>.</p>
+<p>Each univariate comparison folder (e.g. <strong>Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/</strong>) contains a <strong>NEA/</strong> folder that contains the output of the network enrichment analysis. This output consists of 2 excel files: one containing the results for the upregulated genes (e.g. active_disease_vs_healthy_controls_neat_up_results.xlsx) and one containing the results for the downregulated genes (e.g. active_disease_vs_healthy_controls_neat_down_results.xlsx).</p>
+</div>
+</div>
+<div id="multivariate-analysis" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Multivariate analysis</h2>
+<p>In addition to the univariate analysis, a multivariate technique called PLS-DA was used. Information about this method can be found <a href="https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-12-253">here</a> and <a href="http://mixomics.org/case-studies/splsda-srbct/">here</a>. This method attempts to represent the data in a lower dimensional set of “components”, similarly to PCA. Unlike PCA, which attempts to retain as much variation of one dataset in the components, PLS methods try to maximize the covariance between two datasets (here the expression data and the phenotype data). In this way, the phenotype separation will be maximized. PLS-DA attempts to find the most optimal way to represent multidimensional data taking sample classes into account using as little components as possible.</p>
+<p>To better understand how this “black box” model works, the samples are visualized in the reduced PLS space (see Figure <a href="differential-expression.html#fig:plsPlot">4.5</a> (Left)). In this plot healthy controls separate quite well from the active disease samples on - mainly - Component 1. By looking at which proteins contribute the strongest to Component 1 (see Figure <a href="differential-expression.html#fig:plsPlot">4.5</a> (Right)), one can get an idea of which proteins are most important in separating these two phenotypes. The proteins with the highest absolute loadings will drive the separation the most. For example, a protein with a high positive loading on component 1 will contribute significantly to the separation on component 1. Moreover, a <strong>positive</strong> loading value on component 1 indicates that the expression of that protein is also higher in samples that have a higher component 1 value. a <strong>negative</strong> loading value on component 1 indicates that the expression of that protein is lower in samples that have a higher component 1 value. Looking at and combining these plots, one can get an idea on how the samples are separated and which proteins are important to drive this separation.</p>
+<div class="figure" style="text-align: center"><span id="fig:plsPlot"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_SamplePlot_2comp.png" alt="PLS-DA visualization. (Left) Samples projected into the subspace spanned by the first two PLS components. (Right) top 15 of loading weights on Component 1, color indicates the class for which the selected variable has a maximal mean value." width="49%" /><img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Loadings_Comp1_Top15.png" alt="PLS-DA visualization. (Left) Samples projected into the subspace spanned by the first two PLS components. (Right) top 15 of loading weights on Component 1, color indicates the class for which the selected variable has a maximal mean value." width="49%" />
+<p class="caption">
+Figure 4.5: PLS-DA visualization. (Left) Samples projected into the subspace spanned by the first two PLS components. (Right) top 15 of loading weights on Component 1, color indicates the class for which the selected variable has a maximal mean value.
+</p>
+</div>
+<p>Another useful way of illustrating the results of the multivariate analysis is through a <em>biplot</em>. This plot shows the samples in the PLS space as well as the proteins in the same figure. This way you can visually show how the proteins correlate with the components and with each other. An example can be seen in Figure <a href="differential-expression.html#fig:biplot">4.6</a>. This plot shows the samples in the same space as in Figure <a href="differential-expression.html#fig:plsPlot">4.5</a> (Left), as well as the loading weights of the proteins with a correlation to one of the components larger than 0.9 (i.e. the proteins that are most important for those components). From this plot it becomes clear for example that TIMP-1 is negatively correlated with Comp 1: low Comp 1 values are associated with high TIMP-1 expression, and since the sample classes separate on Comp 1 this is also one of the main drivers of the difference in diseased and healthy patients.</p>
+<div class="figure" style="text-align: center"><span id="fig:biplot"></span>
+<img src="../Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Biplot_cor09.png" alt="Biplot of the active disease and healthy control samples. Only variables with a correlation to component 1 or 2 larger than 0.9 are included. Loading weights can be seen on the alternative axis on the top and right for Comp 1 and 2 respectively." width="1003" />
+<p class="caption">
+Figure 4.6: Biplot of the active disease and healthy control samples. Only variables with a correlation to component 1 or 2 larger than 0.9 are included. Loading weights can be seen on the alternative axis on the top and right for Comp 1 and 2 respectively.
+</p>
+</div>
+<p>Most of the univariate results can be retrieved in the multivariate data as well. As such, it can be a complementary method to validate the results of the univariate analysis.</p>
+<p>Results for the PLS-DA analysis are collected in <strong>Results/Plasma/Comparisons/{comparison}}/Multivariate/</strong> and <strong>Results/Serum/Comparisons/{comparison}}/Multivariate/</strong>. The loading values for all proteins on the first 5 components can be found in in an excel file (e.g. active_disease_vs_healthy_controls_Loadings_Scores.xlsx). In the same folder, visualization of the samples in the PLS subspace spanned by the first 2 components, the top 15 loading weights on Comp 1 and 2 and a biplot showing the samples and most significant proteins on the same plot are collected.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="quality-control.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="correlation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
