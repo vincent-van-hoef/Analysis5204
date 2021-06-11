@@ -1,11 +1,8 @@
-image: alpine:latest
+image: rocker/verse:4.0.
 
 pages:
-  stage: deploy
   script:
-    - mkdir public
-    - cp -r Report/* public
-    - cp -r Report/Results public
+    - - Rscript -e "bookdown::render_book('index.Rmd', 'all', output_dir = 'public')"
   artifacts:
     paths:
      - public
