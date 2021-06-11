@@ -1,11 +1,11 @@
-image: alpine:latest
-
 pages:
-  stage: deploy
   script:
-  - echo 'Nothing to do...'
+    - mkdir public
+    - cp vignettes/Report/* public
+    - cp Results/* public
   artifacts:
     paths:
-    - public
+      - public
   only:
-  - master
+    - master
+
