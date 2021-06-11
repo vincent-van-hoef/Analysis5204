@@ -1,7 +1,5 @@
 # Differential Expression
 
-gitlab test CI
-
 To compare the different sample groups against each other we applied two
 complementary statistical techniques: univariate ANOVA and multivariate PLS-DA.
 ANOVA (followed by a post-hoc analysis) has as a benefit that it is fairly
