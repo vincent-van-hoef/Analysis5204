@@ -9,7 +9,7 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:crpCorr)).
 
 ```{r crpCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively crp correlated protein in GPA (Left) Most significant negatively crp correlated protein in GPA (Right). Indicated is the pearson correlation coefficient per phenotype and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/crp/regression_plots/IL6_regression.png", "Results/Plasma/Correlation/crp/regression_plots/SCF_regression.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/crp/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/crp/regression_plots/PON3_GPA_MPA_regression.png"))
 ```
 
 ## sr
@@ -19,7 +19,7 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:srCorr)).
 
 ```{r srCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively sr correlated protein in GPA (Left) Most significant negatively sr correlated protein in GPA (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/sr/regression_plots/CCL23_regression.png", "Results/Plasma/Correlation/sr/regression_plots/SCF_regression.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/sr/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/sr/regression_plots/CD6_GPA_MPA_regression.png"))
 ```
 
 ## bvas
@@ -29,5 +29,5 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:bvasCorr))
 
 ```{r bvasCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively bvas correlated protein  in GPA (Left) Most significant negatively bvas correlated protein in GPA (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/bvas/regression_plots/GDF-15_bvas_correlation.png", "Results/Plasma/Correlation/bvas/regression_plots/DNER_bvas_correlation.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/bvas/regression_plots/ST2_GPA_MPA_regression.png", "Results/Plasma/Correlation/bvas/regression_plots/Flt3L_GPA_MPA_regression.png"))
 ```

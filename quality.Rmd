@@ -106,7 +106,7 @@ Also, the healthy control samples seem to cluster more together than the active
 or other control samples, suggesting they are more homogeneous. From this PCA plot one can infer differences exist between the groups and there do not appear to be major outliers among the samples.
 
 ```{r plPCA, fig.show='hold', out.width="100%", fig.align='center', fig.cap="PCA plot of all plasma samples coloured by biological group."}
-knitr::include_graphics(c("Results/Plasma/QC/plasma_pca_100.png"))
+knitr::include_graphics(c("Results/Plasma/QC/disease_pca_100.png"))
 ```
 
 In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a

@@ -52,33 +52,3 @@ To accomplish this, following analyses have been agreed upon:
 This report describes the performed analyses and a selection of the resulting
 output for one comparison of the plasma results only. The full results and all plots are found in the accompanying Results folder.
 :::
-
-
-#::::: {.panelset}
-#
-#::: {.panel}
-#[Plasma]{.panel-name}
-#
-#```{r gseaPlotsPlasma, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets."}
-#readxl::read_excel("Results/Plasma/Correlation/bvas/bvas_pearson_correlation.xlsx") %>% 
-#mutate_if(is.numeric, round, 3) %>%
-#datatable(options = list(scrollX = TRUE,
-#                          columnDefs = list(list(targets = 6,
-#                                                 render = JS(
-#                                        "function(data, type, row, meta) {",
-#                                        "return type === 'display' && data.length > 6 ?",
-#                                         "'<span title=\"' + data + '\">' + data.substr(0, 6) + '...</span>' : data;","}")))), 
-#                                                  callback = JS('table.page(3).draw(false);'))
-#plot(1:10)
-#```
-#:::
-#
-#::: {.panel}
-#[Serum]{.panel-name}
-#
-#```{r gseaPlotsSerum, out.width="75%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.",fig.show='hold',fig.align='center'}
-#knitr::include_graphics(c("Results/Serum/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png"))
-#```
-#:::
-#
-#:::::

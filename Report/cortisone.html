@@ -32,7 +32,7 @@
 <link rel="prev" href="correlation.html"/>
 <link rel="next" href="material-and-methods.html"/>
 <script src="libs/header-attrs-2.7/header-attrs.js"></script>
-<script src="libs/jquery-3.5.1/jquery.min.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -51,14 +51,6 @@
 
 <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
 <script src="libs/panelset-0.2.6/panelset.js"></script>
-<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
-<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.17/datatables.js"></script>
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
-<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
-<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
@@ -199,17 +191,17 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <div id="protein-level-1" class="section level2" number="6.1">
 <h2><span class="header-section-number">6.1</span> Protein-level</h2>
 <p>Active disease patients were either treated with cortisone or not treated with cortisone. Differential analysis between these both groups was calculated as in Section <a href="differential-expression.html#univariate-analysis">4.1</a>; i.e. per-protein anova on <em>age</em> and <em>ckd_epi</em> corrected data followed by a post-hoc analysis to determine the significant comparisons.</p>
-<p>Results for the per-protein analysis is collected in <strong>Results/Plasma/Cortisone</strong> and <strong>Results/Serum/Cortisone</strong>.</p>
-<p>The volcano plot for cortisone vs no_cortisone is shown in Figure <a href="cortisone.html#fig:cortplots">6.1</a> (Left).</p>
+<p>Results for the per-protein analysis is collected per phenotype in <strong>Results/Plasma/Cortisone</strong> and <strong>Results/Serum/Cortisone</strong>.</p>
+<p>The volcano plot for cortisone vs no_cortisone in GPA AAV is shown in Figure <a href="cortisone.html#fig:cortplots">6.1</a> (Left).</p>
 <div class="figure" style="text-align: center"><span id="fig:cortplots"></span>
-<img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/Cortisone_vs_No_Cortisone_volcano_anova_posthoc.png" alt="Volcano plot of cortisone versus no cortisone. Horizontal line indicates an adjusted p-value of 0.05" width="100%" />
+<img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_volcano_anova_posthoc.png" alt="Volcano plot of cortisone versus no cortisone in GPA AAV. Horizontal line indicates an adjusted p-value of 0.05" width="100%" />
 <p class="caption">
-Figure 6.1: Volcano plot of cortisone versus no cortisone. Horizontal line indicates an adjusted p-value of 0.05
+Figure 6.1: Volcano plot of cortisone versus no cortisone in GPA AAV. Horizontal line indicates an adjusted p-value of 0.05
 </p>
 </div>
-<p>The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of cortisone versus no_cortisone is shown in <a href="cortisone.html#fig:top15Cort">6.2</a>. The “estimate” column can be considered as a log2 fold change (i.e. a difference of 1 indicates a doubled expression in cortisone versus no cortisone).</p>
+<p>The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of cortisone versus no_cortisone in GPA AAV is shown in <a href="cortisone.html#fig:top15Cort">6.2</a>. The “estimate” column can be considered as a log2 fold change (i.e. a difference of 1 indicates a doubled expression in cortisone versus no cortisone).</p>
 <div class="figure" style="text-align: center"><span id="fig:top15Cort"></span>
-<img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/Cortisone_vs_No_Cortisone_Top15_table.png" alt="Table of 15 most DE proteins" width="75%" />
+<img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_Top15_table.png" alt="Table of 15 most DE proteins" width="75%" />
 <p class="caption">
 Figure 6.2: Table of 15 most DE proteins
 </p>
@@ -217,17 +209,17 @@ Figure 6.2: Table of 15 most DE proteins
 </div>
 <div id="gsea-1" class="section level2" number="6.2">
 <h2><span class="header-section-number">6.2</span> GSEA</h2>
-<p>GSEA was performed for cortisone versus no_cortisone as in Section <a href="differential-expression.html#gsea">4.1.2</a>.</p>
+<p>GSEA was performed for cortisone versus no_cortisone for the different phenotypes as in Section <a href="differential-expression.html#gsea">4.1.2</a>.</p>
 <p>As before, the GSEA results folder in the Cortisone folder contains a .xlsx file containing the full GSEA results and two different visualizations of the top terms (see Figure <a href="cortisone.html#fig:gseaPlotsCort">6.3</a>). These figures include a barplot of the gene sets with the 6 highest and 6 lowest NES values and an Enrichment map of the 20 gene sets with the highest absolute NES values. Enrichment maps organize gene sets into a network with edges connecting overlapping gene sets. In this way, mutually overlapping gene sets tend to cluster together, making it easier to identify functional modules.</p>
 <div class="figure" style="text-align: center"><span id="fig:gseaPlotsCort"></span>
-<img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_barplot.png" alt="Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left)  Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values." width="49%" /><img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/Cortisone_vs_No_Cortisone_emap.png" alt="Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left)  Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values." width="49%" />
+<img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_barplot.png" alt="Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left)  Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values." width="49%" /><img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_emap.png" alt="Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left)  Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values." width="49%" />
 <p class="caption">
 Figure 6.3: Example of the different GSEA visualizations for cortisone versus no cortisone in Plasma. (Left) Barplot of the gene sets with the 6 highest and 6 lowest NES values. (Right) Enrichment map of the 20 gene sets with the highest absolute NES values.
 </p>
 </div>
-<p>In addition, in the <strong>Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS</strong> and <strong>Results/Serum/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS</strong> folder you can find a visualization of the location of the gene set genes in the ranked gene list and ES calculation visualization (see Figure <a href="cortisone.html#fig:gseaNesCort">6.4</a>).</p>
+<p>In addition, in the <strong>Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/GSEA_PLOTS</strong> and <strong>Results/Serum/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/GSEA_PLOTS</strong> folder you can find a visualization of the location of the gene set genes in the ranked gene list and ES calculation visualization (see Figure <a href="cortisone.html#fig:gseaNesCort">6.4</a>).</p>
 <div class="figure" style="text-align: center"><span id="fig:gseaNesCort"></span>
-<img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_POSITIVE_REGULA.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis." width="49%" /><img src="Results/Plasma/Cortisone/Cortisone_vs_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/Cortisone_vs_No_Cortisone_gseaplot_PROTEOLYSIS.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis." width="49%" />
+<img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_gseaplot_POSITIVE_REGULA.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis." width="49%" /><img src="Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/GSEA/GSEA_PLOTS/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_gseaplot_PROTEOLYSIS.png" alt="Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis." width="49%" />
 <p class="caption">
 Figure 6.4: Example of two ES visualizations and calculation. (Left) Downregulation of cell proliferation. (Right) Upregulation of proteolysis.
 </p>
