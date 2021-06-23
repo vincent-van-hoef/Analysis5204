@@ -63,6 +63,8 @@ plasma_npx <- rbind(plasma_npx, lum_clean)
 npx <- plasma_npx %>% 
   dplyr::select(SampleID, Assay, NPX) %>% 
   tidyr::pivot_wider(names_from = Assay, values_from = NPX) %>%
+  tidyr::unchop(everything()) %>%
+  distinct() %>%
   tibble::column_to_rownames("SampleID") %>%
   t()
 metadata <- plasma_metadata %>% 
@@ -101,8 +103,8 @@ olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_d
 plasma_qc <- OlinkAnalyze::olink_qc_plot(plasma_npx)
 ggsave(paste0(plasma_qc_dir, "plasma_qc.png"), plot = plasma_qc)
 
-#One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622).
-plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622")]
+#One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622). Umu63 has a s for GPA indication?
+plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622", "umu63")]
 
 # Save metadata
 write.csv2(colData(plasma), "Results/Plasma/plasma_metadata.csv", row.names = TRUE)
@@ -112,13 +114,13 @@ assay(plasma) <- t(apply(assay(plasma), 1, function(x) ifelse(is.na(x), median(x
 
 # PCA - centering, no scaling
 pl_pca <- pcaplot(plasma, 
-        intgroup = "group", 
+        intgroup = c("group"), 
         ellipse = FALSE, 
         text_labels = FALSE, 
         ntop = 100, 
         pcX = 1, 
         pcY = 2)
-ggsave(paste0(plasma_qc_dir, "plasma_pca_100.png"), plot = pl_pca)
+ggsave(paste0(plasma_qc_dir, "disease_pca_100.png"), plot = pl_pca)
 
 pl_pca_13 <- pcaplot(plasma, 
                   intgroup = "group", 
@@ -128,6 +130,28 @@ pl_pca_13 <- pcaplot(plasma,
                   pcX = 1, 
                   pcY = 3)
 ggsave(paste0(plasma_qc_dir, "plasma_pca_100_pc13.png"), plot = pl_pca_13)
+
+
+# PCA only actives - centering, no scaling
+plasma_aav_rem <- plasma[,colData(plasma)$group %in% c("aav_remission", "active_disease")]
+pl_pca <- pcaplot(plasma_aav_rem, 
+                  intgroup = c("group", "diagnosis"), 
+                  ellipse = FALSE, 
+                  text_labels = FALSE, 
+                  ntop = 100, 
+                  pcX = 1, 
+                  pcY = 2)
+ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100.png"), plot = pl_pca)
+
+pl_pca_13 <- pcaplot(plasma_aav_rem, 
+                     intgroup = c("group", "diagnosis"), 
+                     ellipse = FALSE, 
+                     text_labels = FALSE, 
+                     ntop = 100, 
+                     pcX = 1, 
+                     pcY = 3)
+ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100_pc13.png"), plot = pl_pca_13)
+
 
 pcaobj_plasma <- prcomp(t(assay(plasma)))
 
@@ -190,7 +214,6 @@ obj <- plasma_npx %>%
   filter(SampleID %in% colnames(plasma)) %>% 
   left_join(tibble::rownames_to_column(as.data.frame(colData(plasma))), by = c("SampleID" = "rowname")) %>%
   mutate(phenoGroups = paste(group, diagnosis, sep = "_")) %>%
-  filter(!SampleID %in% "umu63") %>%
   mutate(phenoGroups = gsub("_NA", "", phenoGroups))
 
 # Add pro and mpo to phenogroups
@@ -222,6 +245,11 @@ comps <- c(
   "active_disease_PR3 - healthy_controls",
   "active_disease_MPA - healthy_controls",
   "active_disease_MPO - healthy_controls",
+  
+  "active_disease_GPA - active_disease_MPA",
+  "aav_remission_GPA - aav_remission_MPA",
+  "active_disease_MPO - active_disease_PR3",
+  "aav_remission_MPO - aav_remission_PR3",
   
   "active_disease_GPA - SLE_nephritis",
   "active_disease_PR3 - SLE_nephritis",
@@ -275,25 +303,26 @@ gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_gsea_dir, nterms = 10, c
 
 # Heatmap
 # collect samples
-hm_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+hm_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% distinct(SampleID) %>% pull(SampleID)
 # Collect prots
 keep_sig <- df_sub %>% dplyr::filter(Adjusted_pval < 0.05) %>% dplyr::pull(Assay)
 # Extract data
-hm_data <- t(scale(t(assay(plasma)[keep_sig,hm_samps ])))
+hm_data <- t(scale(t(assay(plasma)[keep_sig,hm_samps, drop=FALSE ])))
 
 anots <- sampSel %>% 
   dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% 
+  distinct(SampleID, .keep_all = TRUE) %>%
   left_join(data.frame(name=hm_samps), by = c("SampleID" = "name")) %>% 
   pull(value) 
 ha <- HeatmapAnnotation(group = anots, col = list(group = c("healthy_controls" = "green",
                                                             "active_disease_GPA" = "red",
-                                                            "active_disease_MPA" = "red",
+                                                            "active_disease_MPA" = "orange",
                                                             "active_disease_MPO" = "red",
-                                                            "active_disease_PR3" = "red",
+                                                            "active_disease_PR3" = "orange",
                                                             "aav_remission_GPA" = "yellow",
-                                                            "aav_remission_MPA" = "yellow",
+                                                            "aav_remission_MPA" = "green",
                                                             "aav_remission_MPO" = "yellow",
-                                                            "aav_remission_PR3" = "yellow",
+                                                            "aav_remission_PR3" = "green",
                                                             "RA" = "blue",
                                                             "SLE_nephritis" = "blue"
                                                             )))
@@ -426,27 +455,43 @@ corrPlotFun(c("active_disease_MPO", "active_disease_PR3"), "MP_PR3")
 #########################
 
 # Create a Results directory in the top directory 
-compname <- gsub(" - ", "_vs_", unique(cortisone_res$contrast))
-plasma_cort_uni_dir <- paste0("Results/Plasma/Cortisone/",compname, "/Univariate/")
-dir.create(plasma_cort_uni_dir, recursive = TRUE)
 cortisone_res <- obj %>% 
-  filter(group == "active_disease") %>% 
+  filter(phenoGroups %in% c("active_disease_GPA", "active_disease_MPA", "active_disease_MPO", "active_disease_PR3")) %>% 
   filter(cortisone %in% c("0", "1")) %>% 
   droplevels() %>%
   mutate(cortisone = recode_factor(cortisone, `1` = "Cortisone", `0` = "No_Cortisone")) %>%
-  OlinkAnalyze::olink_anova_posthoc(variable = "cortisone", 
+  mutate(pheno_cortisone = paste(phenoGroups, cortisone, sep = "_")) %>%
+  OlinkAnalyze::olink_anova_posthoc(variable = "pheno_cortisone", 
                                               covariates = c("age", "ckd_epi"),
-                                              effect = "cortisone",
+                                              effect = "pheno_cortisone",
                                               verbose = FALSE)
 
-  p1 <- ggplot(cortisone_res, aes(x=estimate, y = -log10(Adjusted_pval))) +
+# Collect all desired results
+comps <- c(
+  "active_disease_GPA_Cortisone - active_disease_GPA_No_Cortisone",
+  "active_disease_MPA_Cortisone - active_disease_MPA_No_Cortisone",
+  "active_disease_MPO_Cortisone - active_disease_MPO_No_Cortisone",
+  "active_disease_PR3_Cortisone - active_disease_PR3_No_Cortisone"
+)
+
+cortisone_results <- cortisone_res %>% filter(contrast %in% comps)
+
+for(comp in unique(cortisone_results$contrast)){
+  
+  # Create a Results directory in the top directory 
+  compname <- gsub(" - ", "_vs_", comp)
+  plasma_cort_uni_dir <- paste0("Results/Plasma/Cortisone/",compname, "/Univariate/")
+  dir.create(plasma_cort_uni_dir, recursive = TRUE)
+  
+  df_sub <- cortisone_results %>% filter(contrast == comp) %>% mutate(Adjusted_pval = ifelse(Adjusted_pval == 0, 1e-12, Adjusted_pval)) 
+  p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
     geom_point() +
     geom_hline(yintercept = -log10(0.05)) + 
     geom_vline(xintercept = 0) +
     theme_bw()
   ggsave(paste0(plasma_cort_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
   
-  tab <- cortisone_res %>%
+  tab <- df_sub %>%
     as.data.frame() %>%
     dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
     dplyr::slice_head(n=15) %>%
@@ -454,14 +499,14 @@ cortisone_res <- obj %>%
     gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
   gt::gtsave(tab, paste0(plasma_cort_uni_dir, compname, "_Top15_table.png"))
   
-  openxlsx::write.xlsx(cortisone_res, paste0(plasma_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
+  openxlsx::write.xlsx(cortisone_results, paste0(plasma_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
   
   # GSEA
   plasma_cort_gsea_dir <- paste0("Results/Plasma/Cortisone/", compname, "/Univariate/GSEA/")
   dir.create(plasma_cort_gsea_dir, recursive = TRUE)
-  gsea_out <- gsea_olink_run(x=cortisone_res, gs=gsea_sets, save=TRUE, saveFolder = plasma_cort_gsea_dir, contrastName = compname)
+  gsea_out <- gsea_olink_run(x=df_sub, gs=gsea_sets, save=TRUE, saveFolder = plasma_cort_gsea_dir, contrastName = compname)
   gsea_olink_viz(gsea_res = gsea_out, saveFolder = plasma_cort_gsea_dir, nterms = 10, contrastName = compname)
-
+}
 
 ########################
 #### Multivariate ######
@@ -473,9 +518,19 @@ compname <- gsub(" - ", "_vs_", comp)
 plasma_multi_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Multivariate/")
 dir.create(plasma_multi_dir, recursive = TRUE)
 
-pls_obj <- plasma[,sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)]
+# extract samples and data
+use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+pls_obj <- plasma[,use_samps]
 
-plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
+# Create outcome list
+outs <- obj %>% 
+  dplyr::filter(phenoGroups %in% strsplit(comp, " - ")[[1]]) %>% 
+  filter(SampleID %in% use_samps) %>% distinct(SampleID, .keep_all = TRUE) %>% 
+  dplyr::select(SampleID, phenoGroups) %>%
+  tibble::column_to_rownames("SampleID")
+
+
+plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
 plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
 
 png(paste0(plasma_multi_dir, compname, "_ClassificationError_5comp.png"))
@@ -483,7 +538,7 @@ plot(plsda.perf)
 dev.off()
 
 # rerun with 2 components - necessary to get scaling right in biplot
-plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=2, scale=TRUE)
+plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=2, scale=TRUE)
 
 plotIndiv(plsda.res, comp = c(1:2))
 ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp.png"))
@@ -650,37 +705,60 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     #Create olink-function compatible dataset; reduced to the summarizedExperiment samples for the statistical tests
     obj <- serum_npx %>% 
       filter(SampleID %in% colnames(serum)) %>% 
-      left_join(tibble::rownames_to_column(as.data.frame(colData(serum))), by = c("SampleID" = "rowname"))
+      left_join(tibble::rownames_to_column(as.data.frame(colData(serum))), by = c("SampleID" = "rowname")) %>%
+      mutate(phenoGroups = paste(group, diagnosis, sep = "_")) %>%
+      mutate(phenoGroups = gsub("_NA", "", phenoGroups))
+    
+    
+    # Add pro and mpo to phenogroups
+    pro <- subset(obj, pr3.anca == 1)
+    pro$phenoGroups <- paste(pro$group, "PR3", sep = "_")
+    mpo <- subset(obj, mpo.anca == 1)
+    mpo$phenoGroups <- paste(mpo$group, "MPO", sep = "_")
+    
+    obj <- rbind(obj, mpo, pro)
     
     # Collect samplenames for later comparison selecting of names in heatmap and multivar
     sampSel <- obj %>% 
-      dplyr::select(SampleID,group, abs, diagnosis) %>% 
+      dplyr::select(SampleID, phenoGroups) %>% 
       distinct() %>% 
       tidyr::pivot_longer(cols = -SampleID)
     
     
     # Group comparisons
     grps <- OlinkAnalyze::olink_anova_posthoc(df = obj, 
-                                              variable = "group", 
+                                              variable = "phenoGroups", 
                                               covariates = c("age", "ckd_epi"),
-                                              effect = "group",
+                                              effect = "phenoGroups",
                                               verbose = FALSE)
-    # GPA - MPA
-    gpa_mpa <- obj %>% 
-      filter(diagnosis %in% c("MPA", "GPA")) %>%
-      OlinkAnalyze::olink_anova_posthoc(variable = "diagnosis", 
-                                        covariates = c("age", "ckd_epi"),
-                                        effect = "diagnosis",
-                                        verbose = FALSE)
+
+
     
-    # pr3 - mpo
-    pr3_mpo <- obj %>%
-      filter(abs %in% c("PR3_pos", "MPO_pos")) %>%
-      OlinkAnalyze::olink_anova_posthoc(variable = "abs", 
-                                        covariates = c("age", "ckd_epi"),
-                                        effect = "abs",
-                                        verbose = FALSE)
+    # Collect all results
+    comps <- c(
+      "active_disease_GPA - healthy_controls",
+      "active_disease_PR3 - healthy_controls",
+      "active_disease_MPA - healthy_controls",
+      "active_disease_MPO - healthy_controls",
+      
+      "active_disease_GPA - active_disease_MPA",
+      "aav_remission_GPA - aav_remission_MPA",
+      "active_disease_MPO - active_disease_PR3",
+      "aav_remission_MPO - aav_remission_PR3",
+      
+      "active_disease_GPA - SLE_nephritis",
+      "active_disease_PR3 - SLE_nephritis",
+      "active_disease_MPA - SLE_nephritis",
+      "active_disease_MPO - SLE_nephritis",
+      
+      "aav_remission_GPA - active_disease_GPA",
+      "aav_remission_PR3 - active_disease_PR3",
+      "aav_remission_MPA - active_disease_MPA",
+      "aav_remission_MPO - active_disease_MPO"
+    )
     
+    univariate_results <- grps %>% filter(contrast %in% comps)
+        
     # Collect all results
     univariate_results <- rbind(grps, gpa_mpa, pr3_mpo)
     
@@ -718,25 +796,28 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       
       # Heatmap
       # collect samples
-      hm_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+      hm_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% distinct(SampleID) %>% pull(SampleID)
       # Collect prots
       keep_sig <- df_sub %>% dplyr::filter(Adjusted_pval < 0.05) %>% dplyr::pull(Assay)
       # Extract data
-      hm_data <- t(scale(t(assay(serum)[keep_sig,hm_samps ])))
+      hm_data <- t(scale(t(assay(serum)[keep_sig,hm_samps , drop=FALSE])))
       
       anots <- sampSel %>% 
         dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% 
+        distinct(SampleID, .keep_all = TRUE) %>%
         left_join(data.frame(name=hm_samps), by = c("SampleID" = "name")) %>% 
-        pull(value) %>%
-        droplevels()
+        pull(value)
+        
       ha <- HeatmapAnnotation(group = anots, col = list(group = c("healthy_controls" = "green",
-                                                                  "active_disease" = "red",
-                                                                  "aav_remission" = "yellow",
-                                                                  "SLE_nephritis" = "pink",
-                                                                  "MPO_pos" = "green",
-                                                                  "PR3_pos" = "red",
-                                                                  "GPA" = "green",
-                                                                  "MPA" = "red")))
+                                                                  "active_disease_GPA" = "red",
+                                                                  "active_disease_MPA" = "orange",
+                                                                  "active_disease_MPO" = "red",
+                                                                  "active_disease_PR3" = "orange",
+                                                                  "aav_remission_GPA" = "yellow",
+                                                                  "aav_remission_MPA" = "green",
+                                                                  "aav_remission_MPO" = "yellow",
+                                                                  "aav_remission_PR3" = "green",
+                                                                  "SLE_nephritis" = "blue")))
       
       png(paste0(serum_uni_dir, "Heatmap_Sig_Prots_Prots.png"))
       hm <- Heatmap(hm_data, 
@@ -762,9 +843,9 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     # 
     
     sigList_up <- lapply(split(univariate_results, univariate_results$contrast), function(x) x %>% dplyr::filter(Adjusted_pval < 0.05 & estimate > 0) %>% mutate(Assay = gsub("-", "", Assay)) %>% pull(Assay)) 
-    sigList_up <- sigList_up[lengths(sigList_up) > 0]
+    sigList_up <- sigList_up[lengths(sigList_up) > 1]
     sigList_down <- lapply(split(univariate_results, univariate_results$contrast), function(x) x %>% dplyr::filter(Adjusted_pval < 0.05 & estimate < 0) %>% mutate(Assay = gsub("-", "", Assay)) %>% pull(Assay)) 
-    sigList_down <- sigList_down[lengths(sigList_down) > 0]
+    sigList_down <- sigList_down[lengths(sigList_down) > 1]
     
     labels <- unique(c(net[,1], net[,2]))
     labels_ordered <- sort(labels)
@@ -791,138 +872,138 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     #############################
     
     # Create a Correlation directory in the top directory 
-    for(marker in c("crp", "sr")){
+    for(marker in c("crp", "sr", "bvas")){
       serum_marker_corr_dir <- paste0("Results/Serum/Correlation/", marker, "/")
       dir.create(serum_marker_corr_dir, recursive = TRUE)
       
       # Calculate the pearson correlation
-      pearson <- obj %>% 
-        filter(group == "active_disease") %>% 
-        group_by(Assay) %>%
-        do(broom::tidy(cor.test(.$NPX, .[[marker]]))) %>%
-        dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
-        ungroup()  %>%
-        mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
-        arrange(pval.adj)
-      openxlsx::write.xlsx(pearson, paste0(serum_marker_corr_dir, marker, "_pearson_correlation.xlsx"))
-      # PLot the linear regression and R squared value per protein
-      plots <- obj %>% 
-        filter(group == "active_disease") %>% 
-        group_by(Assay) %>%
-        group_modify(~tibble(plots=list(
-          ggplot(.) +
-            aes_string(x = "NPX", y = marker) +
-            geom_point() +
-            geom_smooth(method = "lm") +
-            theme_bw() +
-            ggtitle(.y[[1]]) +
-            ggpubr::stat_cor(aes(label = ..r.label..), color = "red", geom = "label")
-        )))
-      serum_marker_corr_plot_dir <- paste0(serum_marker_corr_dir, "regression_plots/")
-      dir.create(serum_marker_corr_plot_dir, recursive = TRUE)
-      for(fig in 1:nrow(plots)){
-        ggsave(plot=plots$plots[[fig]], paste0(serum_marker_corr_plot_dir, plots$Assay[[fig]], "_regression.png"))
+      corrFun <- function(pheno = "active_disease", desc = "all_active_disease") {
+        
+        pearson <- obj %>% 
+          filter(phenoGroups %in% pheno) %>% 
+          group_by(Assay) %>%
+          do(broom::tidy(cor.test(.$NPX, .[[marker]]))) %>%
+          dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+          ungroup()  %>%
+          mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+          arrange(pval.adj)
+        openxlsx::write.xlsx(pearson, paste0(serum_marker_corr_dir, marker, "_", desc, "_pearson_correlation.xlsx"))
+        
       }
+      corrFun("active_disease_GPA", "GPA")
+      corrFun("active_disease_MPA", "MPA")
+      corrFun("active_disease_MPO", "MPO")
+      corrFun("active_disease_PR3", "PR3")
+      # PLot the linear regression and R squared value per protein
+      corrPlotFun <- function(pheno = "active_disease", desc = "all_active_disease") {
+        
+        plots <- obj %>% 
+          filter(phenoGroups %in% pheno) %>% 
+          group_by(Assay) %>%
+          group_modify(~tibble(plots=list(
+            ggplot(., aes(color = phenoGroups)) +
+              aes_string(x = "NPX", y = marker) +
+              geom_point() +
+              geom_smooth(method = "lm", fullrange = TRUE) +
+              theme_bw() +
+              ggtitle(.y[[1]]) +
+              ggpubr::stat_cor(aes(color = phenoGroups, label = ..r.label..), geom = "label")
+          )))
+        serum_marker_corr_plot_dir <- paste0(serum_marker_corr_dir, "regression_plots/")
+        dir.create(serum_marker_corr_plot_dir, recursive = TRUE)
+        for(fig in 1:nrow(plots)){
+          ggsave(plot=plots$plots[[fig]], paste0(serum_marker_corr_plot_dir, plots$Assay[[fig]], "_", desc, "_regression.png"))
+        }
+      }
+      
+      corrPlotFun(c("active_disease_GPA", "active_disease_MPA"), "GPA_MPA")
+      corrPlotFun(c("active_disease_MPO", "active_disease_PR3"), "MP_PR3")
+      
     }
     
     #########################
     #### Cortisone ##########
     #########################
     
+    
     # Create a Results directory in the top directory 
     cortisone_res <- obj %>% 
-      filter(group == "active_disease") %>% 
+      filter(phenoGroups %in% c("active_disease_GPA", "active_disease_MPA", "active_disease_MPO", "active_disease_PR3")) %>% 
       filter(cortisone %in% c("0", "1")) %>% 
       droplevels() %>%
       mutate(cortisone = recode_factor(cortisone, `1` = "Cortisone", `0` = "No_Cortisone")) %>%
-      OlinkAnalyze::olink_anova_posthoc(variable = "cortisone", 
+      mutate(pheno_cortisone = paste(phenoGroups, cortisone, sep = "_")) %>%
+      OlinkAnalyze::olink_anova_posthoc(variable = "pheno_cortisone", 
                                         covariates = c("age", "ckd_epi"),
-                                        effect = "cortisone",
+                                        effect = "pheno_cortisone",
                                         verbose = FALSE)
     
-    # Create a Results directory in the top directory 
-    compname <- gsub(" - ", "_vs_", unique(cortisone_res$contrast))
-    serum_cort_uni_dir <- paste0("Results/Serum/Cortisone/",compname, "/Univariate/")
-    dir.create(serum_cort_uni_dir, recursive = TRUE)
+    # Collect all desired results
+    comps <- c(
+      "active_disease_GPA_Cortisone - active_disease_GPA_No_Cortisone",
+      "active_disease_MPA_Cortisone - active_disease_MPA_No_Cortisone",
+      "active_disease_MPO_Cortisone - active_disease_MPO_No_Cortisone",
+      "active_disease_PR3_Cortisone - active_disease_PR3_No_Cortisone"
+    )
     
-    p1 <- ggplot(cortisone_res, aes(x=estimate, y = -log10(Adjusted_pval))) +
-      geom_point() +
-      geom_hline(yintercept = -log10(0.05)) + 
-      geom_vline(xintercept = 0) +
-      theme_bw()
-    ggsave(paste0(serum_cort_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+    cortisone_results <- cortisone_res %>% filter(contrast %in% comps)
+
     
-    tab <- cortisone_res %>%
-      as.data.frame() %>%
-      dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
-      dplyr::slice_head(n=15) %>%
-      gt::gt() %>%
-      gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
-    gt::gtsave(tab, paste0(serum_cort_uni_dir, compname, "_Top15_table.png"))
-    
-    openxlsx::write.xlsx(cortisone_res, paste0(serum_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
-    
-    # GSEA
-    serum_cort_gsea_dir <- paste0("Results/Serum/Cortisone/", compname, "/Univariate/GSEA/")
-    dir.create(serum_cort_gsea_dir, recursive = TRUE)
-    gsea_out <- gsea_olink_run(x=cortisone_res, gs=gsea_sets, save=TRUE, saveFolder = serum_cort_gsea_dir, contrastName = compname)
-    gsea_olink_viz(gsea_res = gsea_out, saveFolder = serum_cort_gsea_dir, nterms = 10, contrastName = compname)
-    
-    
-    ###########################
-    ###### BVAS Correlation ###
-    ###########################
-    
-    # Create a Correlation directory in the top directory 
-    
-    serum_bvas_corr_dir <- paste0("Results/Serum/Correlation/bvas/")
-    dir.create(serum_bvas_corr_dir, recursive = TRUE)
-    
-    # Calculate the pearson correlation
-    bvas_list <- obj %>% 
-      filter(group == "active_disease") %>% 
-      group_by(Assay) %>%
-      dplyr::filter(bvas > 0) %>%
-      do(broom::tidy(cor.test(.$NPX, .$bvas))) %>%
-      dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
-      ungroup()  %>%
-      mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
-      arrange(pval.adj)
-    openxlsx::write.xlsx(bvas_list, paste0(serum_bvas_corr_dir, "bvas_pearson_correlation.xlsx"))
-    # PLot the linear regression and R squared value per protein
-    plots <- obj %>% 
-      filter(group == "active_disease") %>% 
-      group_by(Assay) %>%
-      dplyr::filter(bvas > 0) %>%
-      group_modify(~tibble(plots=list(
-        ggplot(.) +
-          aes_string(x = "NPX", y = "bvas") +
-          geom_point() +
-          geom_smooth(method = "lm") +
-          theme_bw() +
-          ggtitle(.y[[1]]) +
-          ggpubr::stat_cor(aes(label = ..r.label..), color = "red", geom = "label")
-      )))
-    serum_marker_corr_plot_dir <- paste0(serum_bvas_corr_dir, "regression_plots/")
-    dir.create(serum_marker_corr_plot_dir, recursive = TRUE)
-    for(fig in 1:nrow(plots)){
-      ggsave(plot=plots$plots[[fig]], paste0(serum_marker_corr_plot_dir, plots$Assay[[fig]], "_bvas_correlation.png"))
+    for(comp in unique(cortisone_results$contrast)){
+      
+      # Create a Results directory in the top directory 
+      compname <- gsub(" - ", "_vs_", comp)
+      serum_cort_uni_dir <- paste0("Results/Serum/Cortisone/",compname, "/Univariate/")
+      dir.create(plasma_cort_uni_dir, recursive = TRUE)
+      
+      df_sub <- cortisone_results %>% filter(contrast == comp) %>% mutate(Adjusted_pval = ifelse(Adjusted_pval == 0, 1e-12, Adjusted_pval)) 
+      p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
+        geom_point() +
+        geom_hline(yintercept = -log10(0.05)) + 
+        geom_vline(xintercept = 0) +
+        theme_bw()
+      ggsave(paste0(serum_cort_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+      
+      tab <- df_sub %>%
+        as.data.frame() %>%
+        dplyr::select(-(c(OlinkID, UniProt, Panel, term, contrast))) %>%
+        dplyr::slice_head(n=15) %>%
+        gt::gt() %>%
+        gt::tab_header(paste0("Top 15 Differentially Expressed Proteins in ", compname))
+      gt::gtsave(tab, paste0(serum_cort_uni_dir, compname, "_Top15_table.png"))
+      
+      openxlsx::write.xlsx(cortisone_results, paste0(serum_cort_uni_dir, compname, "_anova_posthoc_results.xlsx"))
+      
+      # GSEA
+      serum_cort_gsea_dir <- paste0("Results/Serum/Cortisone/", compname, "/Univariate/GSEA/")
+      dir.create(serum_cort_gsea_dir, recursive = TRUE)
+      gsea_out <- gsea_olink_run(x=df_sub, gs=gsea_sets, save=TRUE, saveFolder = serum_cort_gsea_dir, contrastName = compname)
+      gsea_olink_viz(gsea_res = gsea_out, saveFolder = serum_cort_gsea_dir, nterms = 10, contrastName = compname)
     }
-    
     
     ########################
     #### Multivariate ######
     ########################
     
     for(comp in unique(univariate_results$contrast)){
-      # Create a Results directory in the top directory 
+     
+       # Create a Results directory in the top directory 
       compname <- gsub(" - ", "_vs_", comp)
       serum_multi_dir <- paste0("Results/Serum/Comparisons/", compname, "/Multivariate/")
       dir.create(serum_multi_dir, recursive = TRUE)
       
-      pls_obj <- serum[,sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)]
+      # extract samples and data
+      use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+      pls_obj <- serum[,use_samps]
       
-      plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=5, scale=TRUE)
+      # Create outcome list
+      outs <- obj %>% 
+        dplyr::filter(phenoGroups %in% strsplit(comp, " - ")[[1]]) %>% 
+        filter(SampleID %in% use_samps) %>% distinct(SampleID, .keep_all = TRUE) %>% 
+        dplyr::select(SampleID, phenoGroups) %>%
+        tibble::column_to_rownames("SampleID")
+      
+      plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
       plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
       
       png(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.png"))
@@ -930,7 +1011,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       dev.off()
       
       # rerun with 2 components - necessary to get scaling right in biplot
-      plsda.res <-plsda(t(assay(pls_obj)),factor(colData(pls_obj)[,which.max(sum(colData(pls_obj) %in% strsplit(comp, " - ")[[1]]))]), ncomp=2, scale=TRUE)
+      plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=2, scale=TRUE)
       
       plotIndiv(plsda.res, comp = c(1:2))
       ggsave(paste0(serum_multi_dir, compname, "_SamplePlot_2comp.png"))
@@ -960,3 +1041,4 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
       } 
     }
+    

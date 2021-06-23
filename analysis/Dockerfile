@@ -7,6 +7,8 @@ RUN apt-get update \
     git \
     wget
 
+ARG build=1
+
 RUN installGithub.r Olink-Proteomics/OlinkRPackage/OlinkAnalyze \
        vincent-van-hoef/mixOmics@patch-biplot-scale \
        gadenbuie/xaringanExtra \
