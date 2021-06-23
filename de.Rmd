@@ -15,24 +15,32 @@ These two analytical methods will not necessarily return exactly the same result
 
 Following comparisons were looked at:
 
-* aav_remission vs active_disease
-* aav_remission vs healthy_controls
-* aav_remission vs RA
-* aav_remission vs SLE_nephritis
-* active_disease vs healthy_controls
-* active_disease vs RA
-* active_disease vs SLE_nephritis
-* healthy_controls vs RA
-* healthy_controls vs SLE_nephritis
-* MPA vs GPA
-* MPO_pos vs PR3_pos
-* RA vs SLE_nephritis
+* aav_remission_GPA vs aav_remission_MPA
+* aav_remission_GPA vs active_disease_GPA
+* aav_remission_MPA vs active_disease_MPA
+* aav_remission_MPO vs aav_remission_PR3
+* aav_remission_MPO vs active_disease_MPO
+* aav_remission_PR3 vs active_disease_PR3
+* active_disease_GPA vs active_disease_MPA
+* active_disease_GPA vs healthy_controls
+* active_disease_GPA vs RA
+* active_disease_GPA vs SLE_nephritis
+* active_disease_MPA vs healthy_controls
+* active_disease_MPA vs RA
+* active_disease_MPA vs SLE_nephritis
+* active_disease_MPO vs active_disease_PR3
+* active_disease_MPO vs healthy_controls
+* active_disease_MPO vs RA
+* active_disease_MPO vs SLE_nephritis
+* active_disease_PR3 vs healthy_controls
+* active_disease_PR3 vs RAs
+* active_disease_PR3 vs SLE_nephritis
 
 :::note
 All results for each comparison are collected in either **/Plasma/Comparisons**
 or **/Serum/Comparisons**.
 
-To keep the size of this report manageable, the results shown here are limited to the active_disease vs healthy_control comparison in Plasma. The results for all other comparisons are found in the appropriate folder of the Results
+To keep the size of this report manageable, the results shown here are limited to the active_disease_GPA vs healthy_controls comparison in Plasma. The results for all other comparisons are found in the appropriate folder of the Results
 directory.
 :::
 
@@ -51,23 +59,23 @@ All results for the per-protein analysis are collected in **Results/Plasma/Compa
 
 ### Protein-level
 
-Two visualization were produced from the differential expression results. First, a volcano plot of the post-hoc results is made for each comparison. In these type of plots, proteins in the left or right upper quadrant are the most significantly differentially expressed. The volcano plot for active_disease vs healthy_control is shown in Figure \@ref(fig:glplots) (Left). In addition, a heatmap of proteins with a adjusted p-value < 0.05 is produced. In this visualization, samples are clustered according to the expression of these significant proteins (see Figure \@ref(fig:glplots) (Right)).
+Two visualization were produced from the differential expression results. First, a volcano plot of the post-hoc results is made for each comparison. In these type of plots, proteins in the left or right upper quadrant are the most significantly differentially expressed. The volcano plot for active_disease_GPA vs healthy_controls is shown in Figure \@ref(fig:glplots) (Left). In addition, a heatmap of proteins with a adjusted p-value < 0.05 is produced. In this visualization, samples are clustered according to the expression of these significant proteins (see Figure \@ref(fig:glplots) (Right)).
 
 ```{r glplots, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Two visualizations of the gene-level differential expression. Volcano plot (Left) Heatmap of the significant proteins (Right)."}
-knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_volcano_anova_posthoc.png", "Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/Heatmap_Sig_Prots_Prots.png"))
+knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/active_disease_GPA_vs_healthy_controls_volcano_anova_posthoc.png", "Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/Heatmap_Sig_Prots_Prots.png"))
 ```
 
-The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease versus healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression). For each comparison, such a table can be found in the appropriate folder.
+The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of active_disease_GPA vs healthy_controls is shown in \@ref(fig:top15). The "estimate" column can be considered as a log2 fold change, where a higher estimate means a higher expression in active_disease samples (i.e. a difference of 1 indicates a doubled expression). For each comparison, such a table can be found in the appropriate folder.
 
 ```{r top15, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Table of 15 most DE proteins"}
-knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_Top15_table.png"))
+knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/active_disease_GPA_vs_healthy_controls_Top15_table.png"))
 ```
 
-A full list of results for all proteins can be found in **/Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/active_disease_vs_healthy_controls_anova_posthoc_results.xlsx**.
+A full list of results for all proteins can be found in **/Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/active_disease_GPA_vs_healthy_controls_anova_posthoc_results.xlsx**.
 
 ### GSEA
 
-Each univariate comparison folder (e.g. **Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/**) contains a **GSEA/** folder that contains the output of a gene set enrichment analysis. GSEA uses a  statistical metric comparing two conditions to rank all genes (for example according to Log2FoldChange) and applies a weighted Kolmogorov–Smirnov (KS) statistic to calculate an Enrichment Score (ES).
+Each univariate comparison folder (e.g. **Results/Plasma/Comparisons/active_disease_GPA vs healthy_controls/Univariate/**) contains a **GSEA/** folder that contains the output of a gene set enrichment analysis. GSEA uses a  statistical metric comparing two conditions to rank all genes (for example according to Log2FoldChange) and applies a weighted Kolmogorov–Smirnov (KS) statistic to calculate an Enrichment Score (ES).
 
 :::fyi
 Calculation of the Enrichment Score:
@@ -87,13 +95,13 @@ In this project we used the "estimate" as the statistic to rank the genes (equiv
 Each GSEA results folder contains a .xlsx file containing the full results and two different visualizations of the top terms (see Figure \@ref(fig:gseaPlots)). These figures include a barplot of the gene sets with the 6 highest and 6 lowest NES values and an Enrichment map of the 20 gene sets with the highest absolute NES values. Enrichment maps organize gene sets into a network with edges connecting overlapping gene sets. In this way, mutually overlapping gene sets tend to cluster together, making it easier to identify functional modules. 
 
 ```{r gseaPlots, out.width="49%", fig.cap="Example of the different GSEA visualizations. (Left)  Barplot of the gene sets with the 10 highest and 10 lowest NES values. (Right) Enrichment map of the same gene sets.",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_barplot.png", "Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/active_disease_vs_healthy_controls_emap.png"))
+knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/GSEA/active_disease_GPA_vs_healthy_controls_barplot.png", "Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/GSEA/active_disease_GPA_vs_healthy_controls_emap.png"))
 ```
 
 In addition, in the **GSEA_PLOTS/** folder you can find a visualization of the location of the gene set genes in the ranked gene list and an ES calculation visualization (see Figure \@ref(fig:gseaNes)).
 
 ```{r gseaNes, out.width="49%", fig.cap="Example of two ES visualizations and calculation. (Left) Downregulation of Notch signaling. (Right) Upregulation of protein modification.",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_vs_healthy_controls_gseaplot_SIGNALING_BY_NO.png", "Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_vs_healthy_controls_gseaplot_POST-TRANSLATIO.png"))
+knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_GPA_vs_healthy_controls_gseaplot_SIGNALING_BY_NO.png", "Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/GSEA/GSEA_PLOTS/active_disease_GPA_vs_healthy_controls_gseaplot_POST-TRANSLATIO.png"))
 ```
 
 ### NEA
@@ -108,7 +116,7 @@ The starting point of enrichment analyses is the identification of one or more g
 
 The significant genes were defined here as to have an adjusted p-value smaller than 0.05 and an estimate of either larger than 0 ("upregulated genes") or smaller than 0 ("downregulated genes"). The genes set collection consisted of a slimmed down version of the gene set collection used for GSEA (only MSigDB terms for computational resons). The known associations were collected from [stringDB](https://string-db.org).
 
-Each univariate comparison folder (e.g. **Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Univariate/**) contains a **NEA/** folder that contains the output of the network enrichment analysis. This output consists of 2 excel files: one containing the results for the upregulated genes (e.g. active_disease_vs_healthy_controls_neat_up_results.xlsx) and one containing the results for the downregulated genes (e.g. active_disease_vs_healthy_controls_neat_down_results.xlsx).
+Each univariate comparison folder (e.g. **Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/Univariate/**) contains a **NEA/** folder that contains the output of the network enrichment analysis. This output consists of 2 excel files: one containing the results for the upregulated genes (e.g. active_disease_GPA_vs_healthy_controls_neat_up_results.xlsx) and one containing the results for the downregulated genes (e.g. active_disease_GPA_vs_healthy_controls_neat_down_results.xlsx).
 
 ## Multivariate analysis
 
@@ -117,7 +125,7 @@ In addition to the univariate analysis, a multivariate technique called PLS-DA w
 To better understand how this "black box" model works, the samples are visualized in the reduced PLS space (see Figure \@ref(fig:plsPlot) (Left)). In this plot healthy controls separate quite well from the active disease samples on - mainly - Component 1. By looking at which proteins contribute the strongest to Component 1 (see Figure \@ref(fig:plsPlot) (Right)), one can get an idea of which proteins are most important in separating these two phenotypes. The proteins with the highest absolute loadings will drive the separation the most. For example, a protein with a high positive loading on component 1 will contribute significantly to the separation on component 1. Moreover, a **positive** loading value on component 1 indicates that the expression of that protein is also higher in samples that have a higher component 1 value. a **negative** loading value on component 1 indicates that the expression of that protein is lower in samples that have a higher component 1 value. Looking at and combining these plots, one can get an idea on how the samples are separated and which proteins are important to drive this separation.
 
 ```{r plsPlot, out.width="49%", fig.cap="PLS-DA visualization. (Left) Samples projected into the subspace spanned by the first two PLS components. (Right) top 15 of loading weights on Component 1, color indicates the class for which the selected variable has a maximal mean value.",fig.show='hold',fig.align='center'}
-knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_SamplePlot_2comp.png", "Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Loadings_Comp1_Top15.png"))
+knitr::include_graphics(c("Results/Plasma/Comparisons/active_disease_GPA_vs_healthy_controls/", "Results/Plasma/Comparisons/active_disease_vs_healthy_controls/Multivariate/active_disease_vs_healthy_controls_Loadings_Comp1_Top15.png"))
 ```
 
 Another useful way of illustrating the results of the multivariate analysis is through a *biplot*. This plot shows the samples in the PLS space as well as the proteins in the same figure. This way you can visually show how the proteins correlate with the components and with each other. An example can be seen in Figure \@ref(fig:biplot). This plot shows the samples in the same space as in Figure \@ref(fig:plsPlot) (Left), as well as the loading weights of the proteins with a correlation to one of the components larger than 0.9 (i.e. the proteins that are most important for those components). From this plot it becomes clear for example that TIMP-1 is negatively correlated with Comp 1: low Comp 1 values are associated with high TIMP-1 expression, and since the sample classes separate on Comp 1 this is also one of the main drivers of the difference in diseased and healthy patients.

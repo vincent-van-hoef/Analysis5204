@@ -519,7 +519,7 @@ plasma_multi_dir <- paste0("Results/Plasma/Comparisons/", compname, "/Multivaria
 dir.create(plasma_multi_dir, recursive = TRUE)
 
 # extract samples and data
-use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% distinct(SampleID)  %>% pull(SampleID)
 pls_obj <- plasma[,use_samps]
 
 # Create outcome list
@@ -758,9 +758,6 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     )
     
     univariate_results <- grps %>% filter(contrast %in% comps)
-        
-    # Collect all results
-    univariate_results <- rbind(grps, gpa_mpa, pr3_mpo)
     
     for(comp in unique(univariate_results$contrast)){
       
@@ -954,7 +951,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       # Create a Results directory in the top directory 
       compname <- gsub(" - ", "_vs_", comp)
       serum_cort_uni_dir <- paste0("Results/Serum/Cortisone/",compname, "/Univariate/")
-      dir.create(plasma_cort_uni_dir, recursive = TRUE)
+      dir.create(serum_cort_uni_dir, recursive = TRUE)
       
       df_sub <- cortisone_results %>% filter(contrast == comp) %>% mutate(Adjusted_pval = ifelse(Adjusted_pval == 0, 1e-12, Adjusted_pval)) 
       p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
@@ -993,7 +990,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       dir.create(serum_multi_dir, recursive = TRUE)
       
       # extract samples and data
-      use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% pull(SampleID)
+      use_samps <- sampSel %>% dplyr::filter(value %in% strsplit(comp, " - ")[[1]]) %>% distinct(SampleID) %>% pull(SampleID)
       pls_obj <- serum[,use_samps]
       
       # Create outcome list
@@ -1003,12 +1000,12 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         dplyr::select(SampleID, phenoGroups) %>%
         tibble::column_to_rownames("SampleID")
       
-      plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
-      plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
+      #plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
+      #plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
       
-      png(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.png"))
-      plot(plsda.perf)
-      dev.off()
+      #png(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.png"))
+      #plot(plsda.perf)
+      #dev.off()
       
       # rerun with 2 components - necessary to get scaling right in biplot
       plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=2, scale=TRUE)
