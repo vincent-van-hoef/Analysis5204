@@ -17,11 +17,6 @@ library("dplyr")
 library("DT")
 ```
 
-```{r panel-setup, include = FALSE}
-xaringanExtra::use_panelset()
-xaringanExtra::style_panelset(font_family = "inherit")
-```
-
 # Introduction
 
 The ANCA-associated vasculitides are rare but severe autoimmune disorders.
@@ -36,12 +31,12 @@ To accomplish this, following analyses have been agreed upon:
 
 * Quality Control of PEA data
 * Unsupervised analysis of data structure using PCA
-* Differential expression of samples comparing selected subgroups:
-  - Active AAV vs Healthy (for GPA, MPA, MPO and PR3)
-  - Active AAV vs Remission AAV (for GPA, MPA, MPO and PR3)
-  - Active AAV vs RA or SLE Nephritis (for GPA, MPA, MPO and PR3)
-  - Active disease (GPA vs MPA and MPO vs PR3)
-  - Remission (GPA vs MPA and MPO vs PR3)
+* Differential expression between selected subgroups:
+  - Active AAV vs Healthy (for GPA, MPA, MPO and PR3 each)
+  - Active AAV vs Remission AAV (for GPA, MPA, MPO and PR3 each)
+  - Active AAV vs RA or SLE Nephritis (for GPA, MPA, MPO and PR3 each)
+  - Active disease (GPA vs MPA and MPO vs PR3 both)
+  - Remission (GPA vs MPA and MPO vs PR3 both)
 * Serum and plasma Samples will be analyzed separately
 * Pathway analysis of differential expressed proteins using KEGG, GO, MsigDB, ... gene set collections
 * Correlation of proteins with the inflammation markers and BVAS scores

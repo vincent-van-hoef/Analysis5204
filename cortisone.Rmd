@@ -2,9 +2,9 @@
 
 ## Protein-level
 
-Active disease patients were either treated with cortisone or not treated with cortisone. Differential analysis between these both groups was calculated as in Section \@ref(univariate-analysis); i.e. per-protein anova on *age* and *ckd_epi* corrected data followed by a post-hoc analysis to determine the significant comparisons.
+Active disease patients were either treated with cortisone or not treated with cortisone. Differential analysis between these both groups and for each phenotype was calculated as in Section \@ref(univariate-analysis); i.e. per-protein anova on *age* and *ckd_epi* corrected data followed by a post-hoc analysis to determine the significant comparisons.
 
-Results for the per-protein analysis is collected per phenotype in **Results/Plasma/Cortisone** and **Results/Serum/Cortisone**.
+Results for the per-protein analysis is collected per phenotype in **Results/Plasma/Cortisone/phenotype** and **Results/Serum/Cortisone/phenotype**.
 
 The volcano plot for cortisone vs no_cortisone in GPA AAV is shown in Figure \@ref(fig:cortplots) (Left).
 

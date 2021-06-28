@@ -1,6 +1,6 @@
 # Data Cleaning
 
-Prior to any analysis, clinical data and raw expression data has to be cleaned; i.e sample names have to be consistent, spaces removed, all samples need metadata, ... Below is a rough description of the different steps but a complete overview with code to go from excel to cleaned up data can be found via these links:
+Prior to any analysis, clinical data and raw expression data has to be cleaned; i.e sample names have to be consistent, spaces removed, all samples need correct metadata, ... Below is a rough description of the different steps but a complete overview with code to go from the excel source to cleaned up data can be found via these links:
 
 View the code for the preprocessing of the metadata of the
 [plasma](https://raw.githubusercontent.com/vincent-van-hoef/Analysis5204/master/data-raw/plasma_metadata.R)
@@ -49,6 +49,8 @@ data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gse
 # Quality Control
 
 One additional sample ("vaska637") is filtered out beforehand due to technical concerns (failed sample according to Olink QC rapport). 
+
+Sample "umu63" is filtered out because of a GPA label of "2".
 
 Three proteins (MCP-1, OPG and uPA) are measured in both the Cardiovascular and
 the Inflammation panel. The expression values correlate well between the panels
