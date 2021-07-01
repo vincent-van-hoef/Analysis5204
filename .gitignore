@@ -14,4 +14,4 @@ analysis/.config
 bin/
 .cache/
 .wget-hsts
-!Report/Results
+Report
