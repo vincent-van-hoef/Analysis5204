@@ -32,6 +32,8 @@ Imports:
     clusterProfiler,
     sinew,
     mixOmics,
+    targets,
+    tarchetypes,
     ComplexHeatmap,
     neat
 Depends: 
