@@ -1,7 +1,7 @@
 # Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
-rm(list=ls())
-setwd("/home/rstudio/")
-unlink("Results", recursive=TRUE)
+#rm(list=ls())
+#setwd("/home/rstudio/")
+#unlink("Results", recursive=TRUE)
 
 library("Analysis5204")
 data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"), package = "Analysis5204")
