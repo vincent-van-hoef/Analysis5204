@@ -97,6 +97,21 @@ plasma_metadata <- plasma_metadata %>% left_join(plasma_bvas, by = c("id" = "ID"
 # Add time in freezer
 plasma_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(plasma_metadata$sampling_date)), "months")
 
+# Add organ info
+organ_info <- "inst/extdata/211109_BVAS_all_active_AAV_patients.xlsx"
+plasma_orgs <- readxl::read_excel(organ_info,
+                                  sheet = "Plasma",
+                                  range = "A4:K65",
+                                  col_names = TRUE) %>%
+  mutate(ID = tolower(gsub(" ", "", ID))) %>%
+  mutate(ID = gsub("vaska089_!", "vaska089_1", ID),
+        ID = gsub("daniel56", "danie56", ID)) %>%
+  rename(`MUC MEMB /EYES` = "muc_memb_eyes",
+         `NERV SYSTEM` = "nerv_system",
+         `FINAL SCORE` = "final_score") %>%
+  rename_with(tolower)
+plasma_metadata <- plasma_metadata %>% left_join(plasma_orgs, by = c("id" = "id"))
+  
 # Remove no counterpart in data
 plasma_metadata <- plasma_metadata[!plasma_metadata$id == "lun1065",]
 

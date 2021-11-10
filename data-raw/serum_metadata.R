@@ -89,6 +89,19 @@ serum_metadata <- serum_metadata %>% left_join(serum_bvas, by = c("id" = "ID"))
 # Add time in freezer
 serum_metadata$time_in_freezer <- lubridate::time_length(lubridate::as.duration(lubridate::ymd("2020-04-01") - lubridate::ymd(serum_metadata$sampling_date)), "months")
 
+# Add organ info
+organ_info <- "inst/extdata/211109_BVAS_all_active_AAV_patients.xlsx"
+serum_orgs <- readxl::read_excel(organ_info,
+                                  sheet = "Serum",
+                                  range = "A4:K31",
+                                  col_names = TRUE) %>%
+  mutate(ID = tolower(gsub(" ", "", ID))) %>%
+  rename(`MUC MEMB /EYES` = "muc_memb_eyes",
+         `NERV SYSTEM` = "nerv_system",
+         `FINAL SCORE` = "final_score") %>%
+  rename_with(tolower)
+serum_metadata <- serum_metadata %>% left_join(serum_orgs, by = c("id" = "id"))
+
 # Remove no counterpart in data
 serum_metadata <- serum_metadata[!serum_metadata$id %in% c("lin113", "sle_121/a", "sle_156/a"),]
 
