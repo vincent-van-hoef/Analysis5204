@@ -454,7 +454,6 @@ corrPlotFun(c("active_disease_MPO", "active_disease_PR3"), "MP_PR3")
 #### Cortisone ##########
 #########################
 
-# Create a Results directory in the top directory 
 cortisone_res <- obj %>% 
   filter(phenoGroups %in% c("active_disease_GPA", "active_disease_MPA", "active_disease_MPO", "active_disease_PR3")) %>% 
   filter(cortisone %in% c("0", "1")) %>% 
@@ -525,7 +524,8 @@ pls_obj <- plasma[,use_samps]
 # Create outcome list
 outs <- obj %>% 
   dplyr::filter(phenoGroups %in% strsplit(comp, " - ")[[1]]) %>% 
-  filter(SampleID %in% use_samps) %>% distinct(SampleID, .keep_all = TRUE) %>% 
+  filter(SampleID %in% use_samps) %>% 
+  distinct(SampleID, .keep_all = TRUE) %>% 
   dplyr::select(SampleID, phenoGroups) %>%
   tibble::column_to_rownames("SampleID")
 
@@ -569,8 +569,50 @@ if (protno9 > 4) {
 
 }
     
+############################
+#### Organ Involvment ######
+############################
+
+organ_scores_pats <- plasma_metadata$id[!is.na(plasma_metadata$final_score)]
+
+plasma_npx_organ_subset <- plasma_npx %>%
+  dplyr::filter(SampleID %in% organ_scores_pats) %>%
+  left_join(plasma_metadata, by = c("SampleID" = "id")) 
+
+# Create a Correlation directory in the top directory 
+for(organ in c("general", "cutaneous", "muc_memb_eyes", "ent", "chest", "cardiovascular", "abdominal", "renal", "nerv_system", "final_score")){
+  plasma_organ_corr_dir <- paste0("Results/Plasma/Organ/", organ, "/")
+  dir.create(plasma_organ_corr_dir, recursive = TRUE)
+
+  pearsonOrg <- plasma_npx_organ_subset %>% 
+    group_by(Assay) %>%
+    do(broom::tidy(cor.test(.$NPX, .[[organ]]))) %>%
+    dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+    ungroup()  %>%
+    mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+    arrange(pval.adj)
+  openxlsx::write.xlsx(pearsonOrg, paste0(plasma_organ_corr_dir, organ, "_pearson_correlation.xlsx"))
+
+  plots <- plasma_npx_organ_subset %>% 
+      group_by(Assay) %>%
+      group_modify(~tibble(plots=list(
+        ggplot(.) +
+          aes_string(x = organ, y = "NPX") +
+          geom_point() +
+          geom_smooth(method = "lm", fullrange = TRUE) +
+          theme_bw() +
+          ggtitle(.y[[1]]) +
+          ggpubr::stat_cor(aes(label = ..r.label..), geom = "label")
+      )))
+    plasma_organ_corr_plot_dir <- paste0(plasma_organ_corr_dir, "regression_plots/")
+    dir.create(plasma_organ_corr_plot_dir, recursive = TRUE)
+    for(fig in 1:nrow(plots)){
+      ggsave(plot=plots$plots[[fig]], paste0(plasma_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.png"))
+    }
     
-    
+}
+
+  
 ####################################################################################################################    
 ############################## Serum ###############################################################################    
 ####################################################################################################################    
@@ -1038,4 +1080,49 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
       } 
     }
+    
+    
+    ############################
+    #### Organ Involvment ######
+    ############################
+    
+    organ_scores_pats <- serum_metadata$id[!is.na(serum_metadata$final_score)]
+    
+    serum_npx_organ_subset <- serum_npx %>%
+      dplyr::filter(SampleID %in% organ_scores_pats) %>%
+      left_join(serum_metadata, by = c("SampleID" = "id")) 
+    
+    # Create a Correlation directory in the top directory 
+    for(organ in c("general", "cutaneous", "muc_memb_eyes", "ent", "chest", "cardiovascular", "abdominal", "renal", "nerv_system", "final_score")){
+      serum_organ_corr_dir <- paste0("Results/Serum/Organ/", organ, "/")
+      dir.create(serum_organ_corr_dir, recursive = TRUE)
+      
+      pearsonOrg <- serum_npx_organ_subset %>% 
+        group_by(Assay) %>%
+        do(broom::tidy(cor.test(.$NPX, .[[organ]]))) %>%
+        dplyr::select(Assay, pearson.cor = estimate, conf.low, conf.high, p.value, method, alternative) %>%
+        ungroup()  %>%
+        mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+        arrange(pval.adj)
+      openxlsx::write.xlsx(pearsonOrg, paste0(serum_organ_corr_dir, organ, "_pearson_correlation.xlsx"))
+      
+      plots <- serum_npx_organ_subset %>% 
+        group_by(Assay) %>%
+        group_modify(~tibble(plots=list(
+          ggplot(.) +
+            aes_string(x = organ, y = "NPX") +
+            geom_point() +
+            geom_smooth(method = "lm", fullrange = TRUE) +
+            theme_bw() +
+            ggtitle(.y[[1]]) +
+            ggpubr::stat_cor(aes(label = ..r.label..), geom = "label")
+        )))
+      serum_organ_corr_plot_dir <- paste0(serum_organ_corr_dir, "regression_plots/")
+      dir.create(serum_organ_corr_plot_dir, recursive = TRUE)
+      for(fig in 1:nrow(plots)){
+        ggsave(plot=plots$plots[[fig]], paste0(serum_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.png"))
+      }
+      
+    }
+    
     

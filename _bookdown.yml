@@ -6,6 +6,7 @@ rmd_files:
 - de.Rmd 
 - correlation.Rmd
 - cortisone.Rmd
+- organs.Rmd
 - methods.Rmd
 - data_responsibility.Rmd
 - acknowledgements.Rmd

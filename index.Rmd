@@ -15,6 +15,9 @@ knitr::opts_chunk$set(
 library("knitr")
 library("dplyr")
 library("DT")
+
+xaringanExtra::use_panelset()
+xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ```
 
 # Introduction
