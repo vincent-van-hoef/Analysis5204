@@ -1,0 +1,201 @@
+# Organ Association
+
+To assess how each protein's expression associates with the severity of the disease in different organs, correlation coefficients were calculated between each protein's NPX value and the organ scores. The resulting p-values were corrected for multiple testing using the Benjamini-Hochberg procedure.
+
+## Plasma
+
+The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlation.xlsx**. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+
+The results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
+
+```{r}
+create_organ_table <- function(source = "Plasma", organ = "general") {
+  
+  readxl::read_excel(paste0("~/Results/", source, "/Organ/", organ, "/", organ, "_pearson_correlation.xlsx")) %>%
+  dplyr::select(-c(method, alternative)) %>%
+  mutate_if(is.numeric, round, 4) %>%
+  mutate("plot" = paste0('<a href ="./../Results/', source, '/Organ/', organ, '/regression_plots/', Assay, '_regression.png"  target="_blank">', Assay, '</a>')) %>%
+  datatable(class = 'cell-border stripe compact', 
+            extensions = 'Buttons', 
+            options = list(
+              dom = 'Bfrtip',
+              buttons = c('copy', 'csv', 'excel', 'pdf')),
+            escape = FALSE)
+  
+}
+```
+
+::::: {.panelset}
+
+::: {.panel}
+[General]{.panel-name}
+
+```{r pl_gen}
+create_organ_table("Plasma", "general")
+```
+:::
+
+::: {.panel}
+[Cutaneous]{.panel-name}
+
+```{r pl_cut}
+create_organ_table("Plasma", "cutaneous")
+```
+:::
+
+::: {.panel}
+[Muc_memb_eyes]{.panel-name}
+
+```{r pl_muc}
+create_organ_table("Plasma", "muc_memb_eyes")
+```
+:::
+
+::: {.panel}
+[Ent]{.panel-name}
+
+```{r pl_ent}
+create_organ_table("Plasma", "ent")
+```
+:::
+
+::: {.panel}
+[Chest]{.panel-name}
+
+```{r pl_chest}
+create_organ_table("Plasma", "chest")
+```
+:::
+
+::: {.panel}
+[Cardiovascular]{.panel-name}
+
+```{r pl_card}
+create_organ_table("Plasma", "cardiovascular")
+```
+:::
+
+::: {.panel}
+[Abdominal]{.panel-name}
+
+```{r pl_ab}
+create_organ_table("Plasma", "abdominal")
+```
+:::
+
+::: {.panel}
+[Renal]{.panel-name}
+
+```{r pl_ren}
+create_organ_table("Plasma", "renal")
+```
+:::
+
+::: {.panel}
+[Nervous_System]{.panel-name}
+
+```{r pl_nerve}
+create_organ_table("Plasma", "nerv_system")
+```
+:::
+
+::: {.panel}
+[Final_Score]{.panel-name}
+
+```{r pl_fin}
+create_organ_table("Plasma", "final_score")
+```
+:::
+
+:::::
+
+
+## Serum
+
+The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Serum/Organ/[organ]/[organ]_pearson_correlation.xlsx**. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+
+The results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
+
+::::: {.panelset}
+
+::: {.panel}
+[General]{.panel-name}
+
+```{r ser_gen}
+create_organ_table("Serum", "general")
+```
+:::
+
+::: {.panel}
+[Cutaneous]{.panel-name}
+
+```{r ser_cut}
+create_organ_table("Serum", "cutaneous")
+```
+:::
+
+::: {.panel}
+[Muc_memb_eyes]{.panel-name}
+
+```{r ser_muc}
+create_organ_table("Serum", "muc_memb_eyes")
+```
+:::
+
+::: {.panel}
+[Ent]{.panel-name}
+
+```{r ser_ent}
+create_organ_table("Serum", "ent")
+```
+:::
+
+::: {.panel}
+[Chest]{.panel-name}
+
+```{r ser_chest}
+create_organ_table("Serum", "chest")
+```
+:::
+
+::: {.panel}
+[Cardiovascular]{.panel-name}
+
+```{r ser_card}
+create_organ_table("Serum", "cardiovascular")
+```
+:::
+
+::: {.panel}
+[Abdominal]{.panel-name}
+
+```{r ser_ab}
+create_organ_table("Serum", "abdominal")
+```
+:::
+
+::: {.panel}
+[Renal]{.panel-name}
+
+```{r ser_ren}
+create_organ_table("Serum", "renal")
+```
+:::
+
+::: {.panel}
+[Nervous_System]{.panel-name}
+
+```{r ser_nerve}
+create_organ_table("Serum", "nerv_system")
+```
+:::
+
+::: {.panel}
+[Final_Score]{.panel-name}
+
+```{r ser_fin}
+create_organ_table("Serum", "final_score")
+```
+:::
+
+:::::
