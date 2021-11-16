@@ -51,3 +51,6 @@ div.note {
 .book .book-body .page-wrapper .page-inner {
   max-width: 60%;
 }
+.panelset .panel-active {
+  display: block !important;
+}
