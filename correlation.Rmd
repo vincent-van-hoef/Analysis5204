@@ -2,9 +2,11 @@
 
 To assess how each protein's expression follows with two inflammation markers and the Birmingham Vasculitis Activity Score, correlation coefficients were calculated. In particular, Pearson correlations of each protein versus crp, sr and bvas values were calculated.
 
-## crp
+## Plasma
 
-The full list of protein-wise Pearson correlation results for the different phenotypes with crp is collected in excel files in **Results/Plasma/Correlation/crp/crp_phenotype_pearson_correlation.xlsx** and **Results/Serum/Correlation/crp/crp_phenotype_pearson_correlation.xlsx**
+### crp
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with crp is collected in excel files in **Results/Plasma/Correlation/crp/crp_phenotype_pearson_correlation.xlsx** and shown in the table below.
 
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:crpCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
@@ -12,9 +14,64 @@ All individuals regressions are plotted and collected in the subfolder **regress
 knitr::include_graphics(c("Results/Plasma/Correlation/crp/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/crp/regression_plots/PON3_GPA_MPA_regression.png"))
 ```
 
-## sr
 
-The full list of protein-wise Pearson correlation results for the different phenotypes with sr is collected in excel files in **Results/Plasma/Correlation/sr/sr_phenotype_pearson_correlation.xlsx** and **Results/Serum/Correlation/sr/sr_phenotype_pearson_correlation.xlsx**
+```{r}
+create_crp_table <- function(source = "Plasma", marker = "crp", type = "GPA") {
+  
+  readxl::read_excel(paste0("~/Results/", source, "/Correlation/", marker, "/", marker, "_", type, "_pearson_correlation.xlsx")) %>%
+  dplyr::select(-c(method, alternative)) %>%
+  mutate_if(is.numeric, round, 4) %>%
+  mutate("plot" = if(type == "GPA" | type == "MPA") { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_GPA_MPA_regression.png"  target="_blank">', Assay, '</a>') } else { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_MP_PR3_regression.png"  target="_blank">', Assay, '</a>')}) %>%
+  datatable(class = 'cell-border stripe compact', 
+            extensions = 'Buttons', 
+            options = list(
+              dom = 'Bfrtip',
+              buttons = c('copy', 'csv', 'excel', 'pdf')),
+            escape = FALSE)
+  
+}
+```
+
+::::: {.panelset}
+
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r pl_crp_gpa}
+create_crp_table("Plasma", "crp", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r pl_crp_mpa}
+create_crp_table("Plasma", "crp", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r pl_crp_mpo}
+create_crp_table("Plasma", "crp", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r pl_crp_pr3}
+create_crp_table("Plasma", "crp", "PR3")
+```
+:::
+
+:::::
+
+
+### sr
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with sr is collected in excel files in **Results/Plasma/Correlation/sr/sr_phenotype_pearson_correlation.xlsx** and shown in the table below.
 
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:srCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
@@ -22,12 +79,215 @@ All individuals regressions are plotted and collected in the subfolder **regress
 knitr::include_graphics(c("Results/Plasma/Correlation/sr/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/sr/regression_plots/CD6_GPA_MPA_regression.png"))
 ```
 
-## bvas
 
-The full list of protein-wise Pearson correlation results for the different phenotypes with bvas is collected in excel files in **Results/Plasma/Correlation/bvas/bvas_phenotype_pearson_correlation.xlsx** and **Results/Serum/Correlation/bvas/bvas_phenotype_pearson_correlation.xlsx**
+::::: {.panelset}
 
-All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:bvasCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r pl_sr_gpa}
+create_crp_table("Plasma", "sr", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r pl_sr_mpa}
+create_crp_table("Plasma", "sr", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r pl_sr_mpo}
+create_crp_table("Plasma", "sr", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r pl_sr_pr3}
+create_crp_table("Plasma", "sr", "PR3")
+```
+:::
+
+:::::
+
+### bvas
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with bvas is collected in excel files in **Results/Plasma/Correlation/bvas/bvas_phenotype_pearson_correlation.xlsx** and shown in the table below.
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see example Figure \@ref(fig:bvasCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
 ```{r bvasCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively bvas correlated protein  in GPA (Left) Most significant negatively bvas correlated protein in GPA (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
 knitr::include_graphics(c("Results/Plasma/Correlation/bvas/regression_plots/ST2_GPA_MPA_regression.png", "Results/Plasma/Correlation/bvas/regression_plots/Flt3L_GPA_MPA_regression.png"))
 ```
+
+::::: {.panelset}
+
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r pl_bvas_gpa}
+create_crp_table("Plasma", "bvas", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r pl_bvas_mpa}
+create_crp_table("Plasma", "bvas", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r pl_bvas_mpo}
+create_crp_table("Plasma", "bvas", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r pl_bvas_pr3}
+create_crp_table("Plasma", "bvas", "PR3")
+```
+:::
+
+:::::
+
+
+## Serum
+
+### crp
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with crp is collected in excel files in **Results/Serum/Correlation/crp/crp_phenotype_pearson_correlation.xlsx** and shown in the table below.
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+
+::::: {.panelset}
+
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r ser_crp_gpa}
+create_crp_table("Serum", "crp", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r ser_crp_mpa}
+create_crp_table("Serum", "crp", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r ser_crp_mpo}
+create_crp_table("Serum", "crp", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r ser_crp_pr3}
+create_crp_table("Serum", "crp", "PR3")
+```
+:::
+
+:::::
+
+
+### sr
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with sr is collected in excel files in **Results/Serum/Correlation/sr/sr_phenotype_pearson_correlation.xlsx** and shown in the table below.
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+
+::::: {.panelset}
+
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r ser_sr_gpa}
+create_crp_table("Serum", "sr", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r ser_sr_mpa}
+create_crp_table("Serum", "sr", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r ser_sr_mpo}
+create_crp_table("Serum", "sr", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r ser_sr_pr3}
+create_crp_table("Serum", "sr", "PR3")
+```
+:::
+
+:::::
+
+### bvas
+
+The full list of protein-wise Pearson correlation results for the different phenotypes with bvas is collected in excel files in **Results/Serum/Correlation/bvas/bvas_phenotype_pearson_correlation.xlsx** and shown in the table below.
+
+All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+
+::::: {.panelset}
+
+::: {.panel}
+[GPA]{.panel-name}
+
+```{r ser_bvas_gpa}
+create_crp_table("Serum", "bvas", "GPA")
+```
+:::
+
+::: {.panel}
+[MPA]{.panel-name}
+
+```{r ser_bvas_mpa}
+create_crp_table("Serum", "bvas", "MPA")
+```
+:::
+
+::: {.panel}
+[MPO]{.panel-name}
+
+```{r ser_bvas_mpo}
+create_crp_table("Serum", "bvas", "MPO")
+```
+:::
+
+::: {.panel}
+[PR3]{.panel-name}
+
+```{r ser_bvas_pr3}
+create_crp_table("Serum", "bvas", "PR3")
+```
+:::
+
+:::::

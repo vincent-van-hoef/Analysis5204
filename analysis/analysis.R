@@ -1,7 +1,7 @@
 # Clear global env from earlier session and remove result folder for a clean run when sourcing script - comment out if not necessary
-#rm(list=ls())
-#setwd("/home/rstudio/")
-#unlink("Results", recursive=TRUE)
+rm(list=ls())
+setwd("/home/rstudio/")
+unlink("Results", recursive=TRUE)
 
 library("Analysis5204")
 data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"), package = "Analysis5204")
@@ -593,6 +593,16 @@ for(organ in c("general", "cutaneous", "muc_memb_eyes", "ent", "chest", "cardiov
     arrange(pval.adj)
   openxlsx::write.xlsx(pearsonOrg, paste0(plasma_organ_corr_dir, organ, "_pearson_correlation.xlsx"))
 
+  pearsonOrg_adj <- plasma_npx_organ_subset %>%
+    dplyr::filter(!is.na(ckd_epi)) %>%
+    group_by(Assay) %>%
+    do(ppcor::spcor.test(.[[organ]], .$NPX, cbind(.$age, .$ckd_epi))) %>%
+    dplyr::select(Assay, pearson.cor = estimate, p.value, statistic, n, gp, Method) %>%
+    ungroup()  %>%
+    mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+    arrange(pval.adj)
+  openxlsx::write.xlsx(pearsonOrg_adj, paste0(plasma_organ_corr_dir, organ, "_pearson_correlation_adjusted_age_ckd_epi.xlsx"))
+  
   plots <- plasma_npx_organ_subset %>% 
       group_by(Assay) %>%
       group_modify(~tibble(plots=list(
@@ -601,7 +611,7 @@ for(organ in c("general", "cutaneous", "muc_memb_eyes", "ent", "chest", "cardiov
           geom_point() +
           geom_smooth(method = "lm", fullrange = TRUE) +
           theme_bw() +
-          ggtitle(.y[[1]]) +
+          ggtitle(paste0(.y[[1]], " [", organ, "]")) +
           ggpubr::stat_cor(aes(label = ..r.label..), geom = "label")
       )))
     plasma_organ_corr_plot_dir <- paste0(plasma_organ_corr_dir, "regression_plots/")
@@ -1106,6 +1116,16 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         arrange(pval.adj)
       openxlsx::write.xlsx(pearsonOrg, paste0(serum_organ_corr_dir, organ, "_pearson_correlation.xlsx"))
       
+      pearsonOrg_adj <- serum_npx_organ_subset %>%
+        dplyr::filter(!is.na(`ckd-epi`)) %>%
+        group_by(Assay) %>%
+        do(ppcor::spcor.test(.[[organ]], .$NPX, cbind(.$age, .$`ckd-epi`))) %>%
+        dplyr::select(Assay, pearson.cor = estimate, p.value, statistic, n, gp, Method) %>%
+        ungroup()  %>%
+        mutate(pval.adj = p.adjust (p.value, method='BH')) %>%
+        arrange(pval.adj)
+      openxlsx::write.xlsx(pearsonOrg_adj, paste0(serum_organ_corr_dir, organ, "_pearson_correlation_adjusted_age_ckd_epi.xlsx"))
+      
       plots <- serum_npx_organ_subset %>% 
         group_by(Assay) %>%
         group_modify(~tibble(plots=list(
@@ -1114,7 +1134,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
             geom_point() +
             geom_smooth(method = "lm", fullrange = TRUE) +
             theme_bw() +
-            ggtitle(.y[[1]]) +
+            ggtitle(paste0(.y[[1]], " [", organ, "]")) +
             ggpubr::stat_cor(aes(label = ..r.label..), geom = "label")
         )))
       serum_organ_corr_plot_dir <- paste0(serum_organ_corr_dir, "regression_plots/")

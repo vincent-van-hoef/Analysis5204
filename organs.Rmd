@@ -4,9 +4,9 @@ To assess how each protein's expression associates with the severity of the dise
 
 ## Plasma
 
-The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlation.xlsx**. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlation.xlsx**. In addition, the partial correlation coefficients (i.e. correlation when NPX values are adjusted for age and ckd_epi) can be found in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlationn_adjusted_age_ckd_epi.xlsx**. These results are quite similar to the unadjusted correlation coefficients but are added here if they would be needed later. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
 
-The results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
+The unadjusted results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
 
 ```{r}
 create_organ_table <- function(source = "Plasma", organ = "general") {
@@ -112,9 +112,9 @@ create_organ_table("Plasma", "final_score")
 
 ## Serum
 
-The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Serum/Organ/[organ]/[organ]_pearson_correlation.xlsx**. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
+The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Serum/Organ/[organ]/[organ]_pearson_correlation.xlsx**. In addition, the partial correlation coefficients (i.e. correlation when NPX values are adjusted for age and ckd_epi) can be found in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlationn_adjusted_age_ckd_epi.xlsx**. These results are quite similar to the unadjusted correlation coefficients but are added here if they would be needed later. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 
 
-The results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
+The unadjusted results are also shown here in an interactive table. Results are ranked by adjusted p-value and a link to the corresponding plot is added. 
 
 ::::: {.panelset}
 
