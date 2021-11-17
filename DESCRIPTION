@@ -35,6 +35,7 @@ Imports:
     targets,
     tarchetypes,
     fuzzyjoin,
+    ppcor,
     ComplexHeatmap,
     neat
 Depends: 
