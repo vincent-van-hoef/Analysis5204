@@ -97,11 +97,11 @@ colData(plasma)$abs <- as.factor(colData(plasma)$abs)
 plasma_qc_dir <- "Results/Plasma/QC/"
 dir.create(plasma_qc_dir, recursive = TRUE)
 
-olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", paste0(plasma_qc_dir, "plasma_CVIII_dist.png"), width = 12)
-olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_dist.png"), width = 12)
+olink_dist(plasma_npx, "Olink CARDIOVASCULAR III", paste0(plasma_qc_dir, "plasma_CVIII_dist.pdf"), width = 12)
+olink_dist(plasma_npx, "Olink INFLAMMATION", paste0(plasma_qc_dir, "plasma_INF_dist.pdf"), width = 12)
 
 plasma_qc <- OlinkAnalyze::olink_qc_plot(plasma_npx)
-ggsave(paste0(plasma_qc_dir, "plasma_qc.png"), plot = plasma_qc)
+ggsave(paste0(plasma_qc_dir, "plasma_qc.pdf"), plot = plasma_qc)
 
 #One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622). Umu63 has a s for GPA indication?
 plasma <- plasma[,!colnames(plasma) %in% c("vaska637", "ra1622", "umu63")]
@@ -120,7 +120,7 @@ pl_pca <- pcaplot(plasma,
         ntop = 100, 
         pcX = 1, 
         pcY = 2)
-ggsave(paste0(plasma_qc_dir, "disease_pca_100.png"), plot = pl_pca)
+ggsave(paste0(plasma_qc_dir, "disease_pca_100.pdf"), plot = pl_pca)
 
 pl_pca_13 <- pcaplot(plasma, 
                   intgroup = "group", 
@@ -129,7 +129,7 @@ pl_pca_13 <- pcaplot(plasma,
                   ntop = 100, 
                   pcX = 1, 
                   pcY = 3)
-ggsave(paste0(plasma_qc_dir, "plasma_pca_100_pc13.png"), plot = pl_pca_13)
+ggsave(paste0(plasma_qc_dir, "plasma_pca_100_pc13.pdf"), plot = pl_pca_13)
 
 
 # PCA only actives - centering, no scaling
@@ -141,7 +141,7 @@ pl_pca <- pcaplot(plasma_aav_rem,
                   ntop = 100, 
                   pcX = 1, 
                   pcY = 2)
-ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100.png"), plot = pl_pca)
+ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100.pdf"), plot = pl_pca)
 
 pl_pca_13 <- pcaplot(plasma_aav_rem, 
                      intgroup = c("group", "diagnosis"), 
@@ -150,7 +150,7 @@ pl_pca_13 <- pcaplot(plasma_aav_rem,
                      ntop = 100, 
                      pcX = 1, 
                      pcY = 3)
-ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100_pc13.png"), plot = pl_pca_13)
+ggsave(paste0(plasma_qc_dir, "plasma_aav_pca_100_pc13.pdf"), plot = pl_pca_13)
 
 
 pcaobj_plasma <- prcomp(t(assay(plasma)))
@@ -159,21 +159,21 @@ pcaobj_plasma <- prcomp(t(assay(plasma)))
 pl_pca_scree <- pcascree(pcaobj_plasma,type="pev",
          title="Proportion of explained proportion of variance - plasma",
          pc_nr = 20)
-ggsave(paste0(plasma_qc_dir, "plasma_pca_scree.png"), plot = pl_pca_scree)
+ggsave(paste0(plasma_qc_dir, "plasma_pca_scree.pdf"), plot = pl_pca_scree)
 
 # Correlate PCs
 res_pca_plasma <- correlatePCs(pcaobj_plasma,colData(plasma)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
 plotPCcorrs(res_pca_plasma)
 
 # hi loadings
-png(paste0(plasma_qc_dir, "plasma_pca_pc1_loadings.png"))
+pdf(paste0(plasma_qc_dir, "plasma_pca_pc1_loadings.pdf"))
 hi_loadings(pcaobj_plasma,topN = 10)
 dev.off()
 
 # PCA of luminex - olink
 df_pca <- t(scale(t(assay(plasma))))
 df_prcomp <- prcomp(df_pca, center = FALSE, scale. = FALSE)
-png(paste0(plasma_qc_dir, "plasma_olink_lum_pca.png"))
+pdf(paste0(plasma_qc_dir, "plasma_olink_lum_pca.pdf"))
 plot(df_prcomp$x, col = ifelse(rownames(df_prcomp$x) %in% c("CCL18_PARC", "TIMP-1", "C5a", "CA15-3_MUC-1"), "red", "grey"), pch=19)
 dev.off()
 
@@ -191,7 +191,7 @@ ha <- HeatmapAnnotation(group = colData(plasma)$group, col = list(group = c("hea
                                                                          "RA" = "blue",
                                                                          "SLE_nephritis" = "pink")))
 
-png(paste0(plasma_qc_dir, "Heatmap_AllGroups_100_Variable_Prots.png"))
+pdf(paste0(plasma_qc_dir, "Heatmap_AllGroups_100_Variable_Prots.pdf"))
 hm <- Heatmap(hm_data, 
         top_annotation = ha,
         name = "Z-score",
@@ -282,7 +282,7 @@ p1 <- ggplot(df_sub, aes(x=estimate, y = -log10(Adjusted_pval))) +
   geom_hline(yintercept = -log10(0.05)) + 
   geom_vline(xintercept = 0) +
   theme_bw()
-ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+ggsave(paste0(plasma_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
 
 tab <- df_sub %>%
   as.data.frame() %>%
@@ -327,7 +327,7 @@ ha <- HeatmapAnnotation(group = anots, col = list(group = c("healthy_controls" =
                                                             "SLE_nephritis" = "blue"
                                                             )))
 
-png(paste0(plasma_uni_dir, "Heatmap_Sig_Prots_Prots.png"))
+pdf(paste0(plasma_uni_dir, "Heatmap_Sig_Prots_Prots.pdf"))
 hm <- Heatmap(hm_data, 
         top_annotation = ha,
         name = "Z-score",
@@ -440,7 +440,7 @@ plots <- obj %>%
 plasma_marker_corr_plot_dir <- paste0(plasma_marker_corr_dir, "regression_plots/")
 dir.create(plasma_marker_corr_plot_dir, recursive = TRUE)
  for(fig in 1:nrow(plots)){
-   ggsave(plot=plots$plots[[fig]], paste0(plasma_marker_corr_plot_dir, plots$Assay[[fig]], "_", desc, "_regression.png"))
+   ggsave(plot=plots$plots[[fig]], paste0(plasma_marker_corr_plot_dir, plots$Assay[[fig]], "_", desc, "_regression.pdf"))
  }
 }
 
@@ -488,7 +488,7 @@ for(comp in unique(cortisone_results$contrast)){
     geom_hline(yintercept = -log10(0.05)) + 
     geom_vline(xintercept = 0) +
     theme_bw()
-  ggsave(paste0(plasma_cort_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+  ggsave(paste0(plasma_cort_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
   
   tab <- df_sub %>%
     as.data.frame() %>%
@@ -533,7 +533,7 @@ outs <- obj %>%
 plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
 plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
 
-png(paste0(plasma_multi_dir, compname, "_ClassificationError_5comp.png"))
+pdf(paste0(plasma_multi_dir, compname, "_ClassificationError_5comp.pdf"))
 plot(plsda.perf)
 dev.off()
 
@@ -541,16 +541,19 @@ dev.off()
 plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=2, scale=TRUE)
 
 plotIndiv(plsda.res, comp = c(1:2))
-ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp.png"))
+ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp.pdf"))
+
+plotIndiv(plsda.res, comp = c(1:2), ind.names = FALSE, legend = TRUE, pch = c(1,3), col = c("black", "gray0"))
+ggsave(paste0(plasma_multi_dir, compname, "_SamplePlot_2comp_bw.pdf"))
 
 openxlsx::write.xlsx(list(loadings=plsda.res$loadings$X, scores=plsda.res$variates$X),
                      paste0(plasma_multi_dir, compname, "_Loadings_Scores.xlsx"),
                      row.names=TRUE)
 
-png(paste0(plasma_multi_dir, compname, "_Loadings_Comp1_Top15.png"))
+pdf(paste0(plasma_multi_dir, compname, "_Loadings_Comp1_Top15.pdf"))
 plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 1)
 dev.off()
-png(paste0(plasma_multi_dir, compname, "_Loadings_Comp2_Top15.png"))
+pdf(paste0(plasma_multi_dir, compname, "_Loadings_Comp2_Top15.pdf"))
 plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 2)
 dev.off()
 
@@ -561,10 +564,10 @@ protno8 <- sum(apply(var.coord, 1, function(x) any(abs(x) > 0.8)))
 
 if (protno9 > 4) {
   bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
-  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
+  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor09.pdf"), plot=bip09)
 } else if (protno8 > 4) { 
   bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
-  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
+  ggsave(paste0(plasma_multi_dir, compname, "_Biplot_cor08.pdf"), plot=bip08)
 } 
 
 }
@@ -617,7 +620,7 @@ for(organ in c("general", "cutaneous", "muc_memb_eyes", "ent", "chest", "cardiov
     plasma_organ_corr_plot_dir <- paste0(plasma_organ_corr_dir, "regression_plots/")
     dir.create(plasma_organ_corr_plot_dir, recursive = TRUE)
     for(fig in 1:nrow(plots)){
-      ggsave(plot=plots$plots[[fig]], paste0(plasma_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.png"))
+      ggsave(plot=plots$plots[[fig]], paste0(plasma_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.pdf"))
     }
     
 }
@@ -668,11 +671,11 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     serum_qc_dir <- "Results/Serum/QC/"
     dir.create(serum_qc_dir, recursive = TRUE)
     
-    olink_dist(serum_npx, "Olink CARDIOVASCULAR III", paste0(serum_qc_dir, "serum_CVIII_dist.png"), width = 12)
-    olink_dist(serum_npx, "Olink INFLAMMATION", paste0(serum_qc_dir, "serum_INF_dist.png"), width = 12)
+    olink_dist(serum_npx, "Olink CARDIOVASCULAR III", paste0(serum_qc_dir, "serum_CVIII_dist.pdf"), width = 12)
+    olink_dist(serum_npx, "Olink INFLAMMATION", paste0(serum_qc_dir, "serum_INF_dist.pdf"), width = 12)
     
     serum_qc <- OlinkAnalyze::olink_qc_plot(serum_npx)
-    ggsave(paste0(serum_qc_dir, "serum_qc.png"), plot = serum_qc)
+    ggsave(paste0(serum_qc_dir, "serum_qc.pdf"), plot = serum_qc)
     
     #One sample sample (VASKA637) is filtered out due to technical concerns (failed sample according to Olink QC rapport) and another one due to relatively high level of NA values (ra1622).
     serum <- serum[,!colnames(serum) %in% c("vaska637", "ra1622")]
@@ -689,7 +692,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
             ntop = 100, 
             pcX = 1, 
             pcY = 2)
-    ggsave(paste0(serum_qc_dir, "serum_pca_100.png"), plot = se_pca)
+    ggsave(paste0(serum_qc_dir, "serum_pca_100.pdf"), plot = se_pca)
     
     se_pca_13 <- pcaplot(serum, 
                       intgroup = "group", 
@@ -698,7 +701,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
                       ntop = 100, 
                       pcX = 1, 
                       pcY = 3)
-    ggsave(paste0(serum_qc_dir, "serum_pca_100_pc13.png"), plot = se_pca_13)
+    ggsave(paste0(serum_qc_dir, "serum_pca_100_pc13.pdf"), plot = se_pca_13)
     
     pcaobj_serum <- prcomp(t(assay(serum)))
     
@@ -706,14 +709,14 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
     se_pca_scree <- pcascree(pcaobj_serum,type="pev",
              title="Proportion of explained proportion of variance - serum",
              pc_nr = 20)
-    ggsave(paste0(serum_qc_dir, "serum_pca_scree.png"), plot = se_pca_scree)
+    ggsave(paste0(serum_qc_dir, "serum_pca_scree.pdf"), plot = se_pca_scree)
     
     # Correlate PCs
     res_pca_serum <- correlatePCs(pcaobj_serum,colData(serum)[,c("age", "sex", "group", "creatinine", "ckd_epi", "time_in_freezer")])
     plotPCcorrs(res_pca_serum)
     
     # hi loadings
-    png(paste0(serum_qc_dir, "serum_pca_pc1_loadings.png"))
+    pdf(paste0(serum_qc_dir, "serum_pca_pc1_loadings.pdf"))
     hi_loadings(pcaobj_serum,topN = 10)
     dev.off()
     
@@ -731,7 +734,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
                                                                                 "RA" = "blue",
                                                                                 "SLE_nephritis" = "pink")))
     
-    png(paste0(serum_qc_dir, "Heatmap_AllGroups_100_Variable_Prots.png"))
+    pdf(paste0(serum_qc_dir, "Heatmap_AllGroups_100_Variable_Prots.pdf"))
     hm <- Heatmap(hm_data, 
                   top_annotation = ha,
                   name = "Z-score",
@@ -824,7 +827,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         geom_hline(yintercept = -log10(0.05)) + 
         geom_vline(xintercept = 0) +
         theme_bw()
-      ggsave(paste0(serum_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+      ggsave(paste0(serum_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
       
       tab <- df_sub %>%
         as.data.frame() %>%
@@ -868,7 +871,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
                                                                   "aav_remission_PR3" = "green",
                                                                   "SLE_nephritis" = "blue")))
       
-      png(paste0(serum_uni_dir, "Heatmap_Sig_Prots_Prots.png"))
+      pdf(paste0(serum_uni_dir, "Heatmap_Sig_Prots_Prots.pdf"))
       hm <- Heatmap(hm_data, 
                     top_annotation = ha,
                     name = "Z-score",
@@ -961,7 +964,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         serum_marker_corr_plot_dir <- paste0(serum_marker_corr_dir, "regression_plots/")
         dir.create(serum_marker_corr_plot_dir, recursive = TRUE)
         for(fig in 1:nrow(plots)){
-          ggsave(plot=plots$plots[[fig]], paste0(serum_marker_corr_plot_dir, plots$Assay[[fig]], "_", desc, "_regression.png"))
+          ggsave(plot=plots$plots[[fig]], paste0(serum_marker_corr_plot_dir, plots$Assay[[fig]], "_", desc, "_regression.pdf"))
         }
       }
       
@@ -1011,7 +1014,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
         geom_hline(yintercept = -log10(0.05)) + 
         geom_vline(xintercept = 0) +
         theme_bw()
-      ggsave(paste0(serum_cort_uni_dir, compname, "_volcano_anova_posthoc.png"), plot = p1)
+      ggsave(paste0(serum_cort_uni_dir, compname, "_volcano_anova_posthoc.pdf"), plot = p1)
       
       tab <- df_sub %>%
         as.data.frame() %>%
@@ -1055,7 +1058,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       #plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=5, scale=TRUE)
       #plsda.perf <- perf(plsda.res, validation = "Mfold", folds = 5, progressBar = FALSE, nrepeat = 10)
       
-      #png(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.png"))
+      #pdf(paste0(serum_multi_dir, compname, "_ClassificationError_5comp.pdf"))
       #plot(plsda.perf)
       #dev.off()
       
@@ -1063,16 +1066,19 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       plsda.res <-plsda(t(assay(pls_obj)),factor(outs[use_samps,]), ncomp=2, scale=TRUE)
       
       plotIndiv(plsda.res, comp = c(1:2))
-      ggsave(paste0(serum_multi_dir, compname, "_SamplePlot_2comp.png"))
+      ggsave(paste0(serum_multi_dir, compname, "_SamplePlot_2comp.pdf"))
+      
+      plotIndiv(plsda.res, comp = c(1:2), ind.names = FALSE, legend = TRUE, pch = c(1,3), col = c("black", "gray0"))
+      ggsave(paste0(serum_multi_dir, compname, "_SamplePlot_2comp_bw.pdf"))
       
       openxlsx::write.xlsx(list(loadings=plsda.res$loadings$X, scores=plsda.res$variates$X),
                            paste0(serum_multi_dir, compname, "_Loadings_Scores.xlsx"),
                            row.names=TRUE)
       
-      png(paste0(serum_multi_dir, compname, "_Loadings_Comp1_Top15.png"))
+      pdf(paste0(serum_multi_dir, compname, "_Loadings_Comp1_Top15.pdf"))
       plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 1)
       dev.off()
-      png(paste0(serum_multi_dir, compname, "_Loadings_Comp2_Top15.png"))
+      pdf(paste0(serum_multi_dir, compname, "_Loadings_Comp2_Top15.pdf"))
       plotLoadings(plsda.res, contrib = "max", ndisplay = 15, comp = 2)
       dev.off()
       
@@ -1084,10 +1090,10 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       
       if (protno9 > 4) {
         bip09 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.9, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
-        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor09.png"), plot=bip09)
+        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor09.pdf"), plot=bip09)
       } else if (protno8 > 4) { 
         bip08 <- biplot(plsda.res, ind.names = FALSE, cutoff = 0.8, hline = TRUE, vline = TRUE, pch.size = 1, var.names.size = 3)
-        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.png"), plot=bip08)
+        ggsave(paste0(serum_multi_dir, compname, "_Biplot_cor08.pdf"), plot=bip08)
       } 
     }
     
@@ -1140,7 +1146,7 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       serum_organ_corr_plot_dir <- paste0(serum_organ_corr_dir, "regression_plots/")
       dir.create(serum_organ_corr_plot_dir, recursive = TRUE)
       for(fig in 1:nrow(plots)){
-        ggsave(plot=plots$plots[[fig]], paste0(serum_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.png"))
+        ggsave(plot=plots$plots[[fig]], paste0(serum_organ_corr_plot_dir, plots$Assay[[fig]], "_regression.pdf"))
       }
       
     }

@@ -9,7 +9,7 @@ Results for the per-protein analysis is collected per phenotype in **Results/Pla
 The volcano plot for cortisone vs no_cortisone in GPA AAV is shown in Figure \@ref(fig:cortplots) (Left).
 
 ```{r cortplots, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Volcano plot of cortisone versus no cortisone in GPA AAV. Horizontal line indicates an adjusted p-value of 0.05"}
-knitr::include_graphics(c("Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_volcano_anova_posthoc.png"))
+knitr::include_graphics(c("Results/Plasma/Cortisone/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone/Univariate/active_disease_GPA_Cortisone_vs_active_disease_GPA_No_Cortisone_volcano_anova_posthoc.pdf"))
 ```
 
 The top 15 of most significantly regulated proteins (ranked by adjusted p-value) of cortisone versus no_cortisone in GPA AAV is shown in \@ref(fig:top15Cort). The "estimate" column can be considered as a log2 fold change (i.e. a difference of 1 indicates a doubled expression in cortisone versus no cortisone).

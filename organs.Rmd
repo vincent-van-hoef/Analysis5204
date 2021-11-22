@@ -14,7 +14,7 @@ create_organ_table <- function(source = "Plasma", organ = "general") {
   readxl::read_excel(paste0("~/Results/", source, "/Organ/", organ, "/", organ, "_pearson_correlation.xlsx")) %>%
   dplyr::select(-c(method, alternative)) %>%
   mutate_if(is.numeric, round, 4) %>%
-  mutate("plot" = paste0('<a href ="./../Results/', source, '/Organ/', organ, '/regression_plots/', Assay, '_regression.png"  target="_blank">', Assay, '</a>')) %>%
+  mutate("plot" = paste0('<a href ="./../Results/', source, '/Organ/', organ, '/regression_plots/', Assay, '_regression.pdf"  target="_blank">', Assay, '</a>')) %>%
   datatable(class = 'cell-border stripe compact', 
             extensions = 'Buttons', 
             options = list(

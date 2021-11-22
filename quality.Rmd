@@ -31,7 +31,7 @@ removed ("lun1059", "iga2156" and "umu78").
 4 additional plasma proteins were measured on Luminex and their log2 normalized concentrations were added to the plasma Olink data. Merging different types of data can result in bias, but since the Luminex data is on a similar log2 scale as the Olink NPX data and the univariate analysis is performed per-protein, this should be okay. As a sanity check, a PCA visualization of the centered and scaled expression levels of all plasma proteins (see Figure \@ref(fig:sourcePca)) shows the proteins measured by Luminex group in general with the Olink data. 
 
 ```{r sourcePca, fig.show='hold', out.width="75%", fig.align='center', fig.cap="Visualization of plasma protein PCA. Proteins measured by Olink in grey and by Luminex in red"}
-knitr::include_graphics(c("Results/Plasma/QC/plasma_olink_lum_pca.png"))
+knitr::include_graphics(c("Results/Plasma/QC/plasma_olink_lum_pca.pdf"))
 ```
 
 ## Access raw data
@@ -74,8 +74,8 @@ technical QC, but a further investigation has to show whether to remove them
 from the dataset.
 
 ```{r plDistrBox, out.width="49%",out.height="49%",fig.show='hold', fig.align='center', fig.cap="Boxplots of NPX distribution per sample by panel ordered by median NPX value", fig.subcap=c("Cardiovascular III", "Inflammation")}
-knitr::include_graphics(c("Results/Plasma/QC/plasma_CVIII_dist.png",
-"Results/Plasma/QC/plasma_INF_dist.png"))
+knitr::include_graphics(c("Results/Plasma/QC/plasma_CVIII_dist.pdf",
+"Results/Plasma/QC/plasma_INF_dist.pdf"))
 ```
 
 The distribution plot can get difficult to read when there are a large number
@@ -88,7 +88,7 @@ tutorial, this means the samples can be kept for downstream analysis so they
 were retained for further analysis.
 
 ```{r plIQR, fig.show='hold', out.width="100%", fig.align='center', fig.cap="Interquartile range versus median per sample by panel ordered by median NPX value. Dashed lines indicate 3 standard deviations from the median or IQR mean."}
-knitr::include_graphics(c("Results/Plasma/QC/plasma_qc.png"))
+knitr::include_graphics(c("Results/Plasma/QC/plasma_qc.pdf"))
 ```
 
 ## PCA
@@ -108,7 +108,7 @@ Also, the healthy control samples seem to cluster more together than the active
 or other control samples, suggesting they are more homogeneous. From this PCA plot one can infer differences exist between the groups and there do not appear to be major outliers among the samples.
 
 ```{r plPCA, fig.show='hold', out.width="100%", fig.align='center', fig.cap="PCA plot of all plasma samples coloured by biological group."}
-knitr::include_graphics(c("Results/Plasma/QC/disease_pca_100.png"))
+knitr::include_graphics(c("Results/Plasma/QC/disease_pca_100.pdf"))
 ```
 
 In the QC folder you will find additionally a PCA plot of PC1 vs PC3, a

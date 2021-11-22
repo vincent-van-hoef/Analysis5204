@@ -11,7 +11,7 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:crpCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
 ```{r crpCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively crp correlated protein in GPA (Left) Most significant negatively crp correlated protein in GPA (Right). Indicated is the pearson correlation coefficient per phenotype and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/crp/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/crp/regression_plots/PON3_GPA_MPA_regression.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/crp/regression_plots/CCL18_PARC_GPA_MPA_regression.pdf", "Results/Plasma/Correlation/crp/regression_plots/PON3_GPA_MPA_regression.pdf"))
 ```
 
 
@@ -21,7 +21,7 @@ create_crp_table <- function(source = "Plasma", marker = "crp", type = "GPA") {
   readxl::read_excel(paste0("~/Results/", source, "/Correlation/", marker, "/", marker, "_", type, "_pearson_correlation.xlsx")) %>%
   dplyr::select(-c(method, alternative)) %>%
   mutate_if(is.numeric, round, 4) %>%
-  mutate("plot" = if(type == "GPA" | type == "MPA") { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_GPA_MPA_regression.png"  target="_blank">', Assay, '</a>') } else { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_MP_PR3_regression.png"  target="_blank">', Assay, '</a>')}) %>%
+  mutate("plot" = if(type == "GPA" | type == "MPA") { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_GPA_MPA_regression.pdf"  target="_blank">', Assay, '</a>') } else { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_MP_PR3_regression.png"  target="_blank">', Assay, '</a>')}) %>%
   datatable(class = 'cell-border stripe compact', 
             extensions = 'Buttons', 
             options = list(
@@ -76,7 +76,7 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see Figure \@ref(fig:srCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
 ```{r srCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively sr correlated protein in GPA (Left) Most significant negatively sr correlated protein in GPA (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/sr/regression_plots/CCL18_PARC_GPA_MPA_regression.png", "Results/Plasma/Correlation/sr/regression_plots/CD6_GPA_MPA_regression.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/sr/regression_plots/CCL18_PARC_GPA_MPA_regression.pdf", "Results/Plasma/Correlation/sr/regression_plots/CD6_GPA_MPA_regression.pdf"))
 ```
 
 
@@ -123,7 +123,7 @@ The full list of protein-wise Pearson correlation results for the different phen
 All individuals regressions are plotted and collected in the subfolder **regression_plots/** (see example Figure \@ref(fig:bvasCorr)). MPA and GPA or MPO and PR3 are each plotted on the same plot, but visualized in a different color. 
 
 ```{r bvasCorr, fig.show='hold', out.width="49%", fig.align='center', fig.cap="Most significant positively bvas correlated protein  in GPA (Left) Most significant negatively bvas correlated protein in GPA (Right). Indicated in red is the pearson correlation coefficient and 95% confidence interval in grey"}
-knitr::include_graphics(c("Results/Plasma/Correlation/bvas/regression_plots/ST2_GPA_MPA_regression.png", "Results/Plasma/Correlation/bvas/regression_plots/Flt3L_GPA_MPA_regression.png"))
+knitr::include_graphics(c("Results/Plasma/Correlation/bvas/regression_plots/ST2_GPA_MPA_regression.pdf", "Results/Plasma/Correlation/bvas/regression_plots/Flt3L_GPA_MPA_regression.pdf"))
 ```
 
 ::::: {.panelset}
