@@ -2,15 +2,6 @@
 
 To assess how each protein's expression associates with the severity of the disease in different organs, correlation coefficients were calculated between each protein's NPX value and the organ scores. The resulting p-values were corrected for multiple testing using the Benjamini-Hochberg procedure.
 
-```{r, echo = FALSE}
-reg_plots <- list.files("~/Results/Plasma/Organ/general/regression_plots", full.names = TRUE, pattern = "*.pdf")
-names(reg_plots) <- stringr::str_replace_all(reg_plots, 
-                                      c("\\_regression.pdf" = "", 
-                                        ".*/" = ""))
-bsselect(reg_plots, type = "iframe", selected = "OSM", 
-         live_search = TRUE, show_tick = TRUE)
-```
-
 ## Plasma
 
 The full list of protein-wise Pearson correlation results for the different organs is collected in excel files in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlation.xlsx**. In addition, the partial correlation coefficients (i.e. correlation when NPX values are adjusted for age and ckd_epi) can be found in **Results/Plasma/Organ/[organ]/[organ]_pearson_correlationn_adjusted_age_ckd_epi.xlsx**. These results are quite similar to the unadjusted correlation coefficients but are added here if they would be needed later. All individuals regressions are plotted and collected in the subfolder **regression_plots/**. 

@@ -106,7 +106,7 @@ plasma_orgs <- readxl::read_excel(organ_info,
   mutate(ID = tolower(gsub(" ", "", ID))) %>%
   mutate(ID = gsub("vaska089_!", "vaska089_1", ID),
         ID = gsub("daniel56", "danie56", ID)) %>%
-  rename("muc_memb_eyes" = `MUC MEMB /EYES`,
+  dplyr::rename("muc_memb_eyes" = `MUC MEMB /EYES`,
          "nerv_system" = `NERV SYSTEM`,
          "final_score" = `FINAL SCORE`) %>%
   rename_with(tolower)

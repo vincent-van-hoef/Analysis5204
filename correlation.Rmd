@@ -20,11 +20,12 @@ create_crp_table <- function(source = "Plasma", marker = "crp", type = "GPA") {
   
   readxl::read_excel(paste0("~/Results/", source, "/Correlation/", marker, "/", marker, "_", type, "_pearson_correlation.xlsx")) %>%
   dplyr::select(-c(method, alternative)) %>%
-  mutate_if(is.numeric, round, 4) %>%
+  mutate_if(is.numeric, round, 3) %>%
   mutate("plot" = if(type == "GPA" | type == "MPA") { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_GPA_MPA_regression.pdf"  target="_blank">', Assay, '</a>') } else { paste0('<a href ="./../Results/', source, '/Correlation/', marker, '/regression_plots/', Assay, '_MP_PR3_regression.png"  target="_blank">', Assay, '</a>')}) %>%
   datatable(class = 'cell-border stripe compact', 
             extensions = 'Buttons', 
             options = list(
+              scrollX = TRUE,
               dom = 'Bfrtip',
               buttons = c('copy', 'csv', 'excel', 'pdf')),
             escape = FALSE)

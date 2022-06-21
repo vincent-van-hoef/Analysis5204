@@ -3,6 +3,7 @@ rm(list=ls())
 setwd("/home/rstudio/")
 unlink("Results", recursive=TRUE)
 
+devtools::load_all()
 library("Analysis5204")
 data(list=c("plasma_metadata", "plasma_npx", "serum_metadata", "serum_npx", "gsea_sets", "lum_dat"), package = "Analysis5204")
 library("ggplot2")
@@ -214,7 +215,9 @@ obj <- plasma_npx %>%
   filter(SampleID %in% colnames(plasma)) %>% 
   left_join(tibble::rownames_to_column(as.data.frame(colData(plasma))), by = c("SampleID" = "rowname")) %>%
   mutate(phenoGroups = paste(group, diagnosis, sep = "_")) %>%
-  mutate(phenoGroups = gsub("_NA", "", phenoGroups))
+  mutate(phenoGroups = gsub("_NA", "", phenoGroups)) 
+#%>%
+#  mutate(phenoGroups = factor(phenoGroups, levels = c("aav_remission_GPA", "aav_remission_MPA", "active_disease_GPA", "active_disease_MPA", "RA", "SLE_nephritis", "healthy_controls")))
 
 # Add pro and mpo to phenogroups
 pro <- subset(obj, pr3.anca == 1)
@@ -264,8 +267,23 @@ comps <- c(
   "aav_remission_GPA - active_disease_GPA",
   "aav_remission_PR3 - active_disease_PR3",
   "aav_remission_MPA - active_disease_MPA",
-  "aav_remission_MPO - active_disease_MPO"
+  "aav_remission_MPO - active_disease_MPO",
+  
+  "aav_remission_PR3 - healthy_controls",
+  "aav_remission_MPO - healthy_controls",
+  "RA - healthy_controls",
+  "SLE_nephritis - healthy_controls"
 )
+
+con_ch <- grps[grps$contrast %in% c("healthy_controls - RA", "healthy_controls - SLE_nephritis"), ]
+con_new <- con_ch %>% mutate(contrast = ifelse(contrast == "healthy_controls - RA", "RA - healthy_controls", "SLE_nephritis - healthy_controls"),
+                  estimate = -1*estimate,
+                  conf.low.new = -1*conf.high,
+                  conf.high.new = -1*conf.low,
+                  conf.low = conf.low.new,
+                  conf.high = conf.high.new) %>%
+  select(-conf.high.new, - conf.low.new)
+grps <- rbind(grps, con_new)
 
 univariate_results <- grps %>% filter(contrast %in% comps)
 
@@ -762,7 +780,9 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       filter(SampleID %in% colnames(serum)) %>% 
       left_join(tibble::rownames_to_column(as.data.frame(colData(serum))), by = c("SampleID" = "rowname")) %>%
       mutate(phenoGroups = paste(group, diagnosis, sep = "_")) %>%
-      mutate(phenoGroups = gsub("_NA", "", phenoGroups))
+      mutate(phenoGroups = gsub("_NA", "", phenoGroups)) 
+    #%>%
+     # mutate(phenoGroups = factor(phenoGroups, levels = c("aav_remission_GPA", "aav_remission_MPA", "active_disease_GPA", "active_disease_MPA", "SLE_nephritis", "healthy_controls")))
     
     
     # Add pro and mpo to phenogroups
@@ -809,8 +829,22 @@ serum_npx <- serum_npx[!(serum_npx$Assay %in% doubles & serum_npx$Panel == "Olin
       "aav_remission_GPA - active_disease_GPA",
       "aav_remission_PR3 - active_disease_PR3",
       "aav_remission_MPA - active_disease_MPA",
-      "aav_remission_MPO - active_disease_MPO"
+      "aav_remission_MPO - active_disease_MPO",
+      
+      "aav_remission_PR3 - healthy_controls",
+      "aav_remission_MPO - healthy_controls",
+      "SLE_nephritis - healthy_controls"
     )
+    
+    con_ch <- grps[grps$contrast %in% c("healthy_controls - SLE_nephritis"), ]
+    con_new <- con_ch %>% mutate(contrast = "SLE_nephritis - healthy_controls",
+                                 estimate = -1*estimate,
+                                 conf.low.new = -1*conf.high,
+                                 conf.high.new = -1*conf.low,
+                                 conf.low = conf.low.new,
+                                 conf.high = conf.high.new) %>%
+      select(-conf.high.new, - conf.low.new)
+    grps <- rbind(grps, con_new)
     
     univariate_results <- grps %>% filter(contrast %in% comps)
     

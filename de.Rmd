@@ -35,6 +35,10 @@ Following comparisons were looked at:
 * active_disease_PR3 vs healthy_controls
 * active_disease_PR3 vs RAs
 * active_disease_PR3 vs SLE_nephritis
+* aav_remission_PR3 vs healthy_controls
+* aav_remission_MPO vs healthy_controls
+* RA vs healthy_controls
+* SLE_nephritis vs healthy_controls
 
 :::note
 All results for each comparison are collected in either **/Plasma/Comparisons**
